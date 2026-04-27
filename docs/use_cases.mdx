@@ -1,0 +1,376 @@
+---
+title: Use Cases
+description: Concrete entry-point recipes for using a Bluewater ship — what to do when, with verification.
+---
+
+# Use Cases
+
+This page is the answer to the question "I have a Bluewater ship up
+and running — now what do I actually do with it?"
+
+Every recipe below has the same shape:
+
+1. **When you need to** … (the situation).
+2. **You** … (what you do — the entry point).
+3. **The ship will** … (what happens automatically).
+4. **You verify by** … (concrete observation that confirms it worked).
+
+Bluewater has **three primary user entry points**:
+
+- **CLI** — `gc bd create`, `gc events fire`, `gc nudge`, `gc session attach`.
+- **Dashboard** — `gc dashboard` opens the live state view; click-through
+  to beads, evolutions, watch turnovers, casualty timelines.
+- **Chat** — Discord (`/sound …`, `/escalate …`) or Slack (same commands)
+  if you've installed `bluewater-discord` or `bluewater-slack`.
+
+You don't open agent sessions to "use" the ship — the ship runs itself,
+and you give it work or sound alarms. The exception is `gc session
+attach <officer>` if you want to converse directly with XO or read
+what the OOD is seeing.
+
+---
+
+## Use Case 1 — File a feature for the ship to build
+
+**When you need to** add a feature, fix a bug, ship a small change.
+
+**You file a bead:**
+
+```bash
+gc bd create --rig <project> "Add a one-line README" -t task
+```
+
+Or with a richer description and explicit success criterion:
+
+```bash
+gc bd create --rig <project> "Add request-id middleware" -t task --notes "
+Success: every HTTP response carries an X-Request-Id header that
+matches the corresponding access-log line. Test added.
+"
+```
+
+**The ship will:**
+
+1. **FC (Fire Controlman)** picks up the bead from the FC pool. Reads
+   the description, sets target branch, fills in metadata (target =
+   `main`, success criterion paraphrased machine-readably), reassigns
+   to the GM pool.
+2. **GM (Gunner's Mate)** picks up. Sets up worktree, branch =
+   `bw/<bead-id>`, implements per `mol-bluewater-work`. Tests pass
+   locally. Pushes branch. Reassigns bead to **Helmsman**.
+3. **Helmsman** rebases on `main`, runs tests once more, fast-forward
+   merges. Closes bead.
+4. **YN (Yeoman)** picks up the `convoy.bead_landed` event (via the
+   `convoy_landed` order in admin), summarizes, files a log entry. If
+   the bead landed without rejection or refusal, no further action;
+   if there were refusals or repeated rejections, COB considers
+   Captain's Mast.
+
+**You verify by:**
+
+- `gc bd show <bead-id>` shows status = closed, with `metadata.target =
+  main` and `metadata.branch = bw/<id>` recorded.
+- `git log main` shows the commit.
+- The dashboard's "Recent landings" panel shows the bead.
+- YN's log has a `convoy_landed_review` entry pointing at the bead.
+
+If any step gets stuck, you'll see it in the dashboard's "In flight"
+panel. Common stalls have automatic responses (Cook's deterministic
+check fires `man_overboard` after 5 minutes of GM heartbeat silence).
+
+---
+
+## Use Case 2 — Ship a hotfix to production
+
+**When you need to** push a small change to prod fast (security fix,
+revert, narrow bug fix).
+
+**You sound the deploy:**
+
+```bash
+gc events fire bluewater.command --kind sea_and_anchor_detail \
+  --target prod --rig <project> --branch hotfix/<id>
+```
+
+Or, if you have `bluewater-discord` or `bluewater-slack`:
+
+```
+/sound sea_and_anchor_detail target=prod branch=hotfix/x4k7m
+```
+
+**The ship will:**
+
+1. **XO** (or, if `bluewater-air` is installed, **Air Boss**) takes
+   OIC of the deploy.
+2. The deploy formula runs the pre-flight checks (tests pass,
+   Helmsman queue clean for that rig, no active casualties, SUPPO
+   credentials current, MA pre-tool-use guard not blocking).
+3. Two-key launch is required for production: **CO** must concur with
+   the deploying officer, and they **must be on different LLM
+   providers**. SUPPO verifies the cross-provider constraint. If only
+   one provider is configured on the city, the deploy NEGATs at
+   verification — install logs say to add a second provider.
+4. Helmsman runs the deploy command. Brown (if Air installed) watches
+   smoke tests. On smoke-tests-green-for-5-min, Air Boss declares
+   recovery; YN logs.
+5. On smoke-tests-red, Air Boss calls **WAVE OFF** — Blue triggers
+   feature-flag rollback or Helmsman reverts the merge.
+   `fire_in_compartment` casualty automatically opens for the
+   affected service.
+
+**You verify by:**
+
+- `gc events tail 50 --filter "kind=deploy"` shows the deploy timeline.
+- The dashboard's "Active evolutions" panel shows
+  `sea_and_anchor_detail` running with each step green or red.
+- YN's log has a deploy entry with both two-key signatures (CO +
+  Air Boss / XO).
+- If wave-off occurred: a `board_of_inquiry` bead is filed
+  automatically and shows up in COB's queue.
+
+---
+
+## Use Case 3 — Production alarm fires (you're not even there)
+
+**When** your CI fails on `main`, your prod monitoring pages, or your
+burn rate spikes — something fires an event Bluewater listens for.
+
+**You** do nothing. The ship handles it.
+
+**The ship will:**
+
+- `ci.failed` event → `general_quarters` casualty (umbrella formula).
+  CO is awakened, wardroom comes up, intent is decided
+  (fight-through / fall-back / fail-over), watch splits (OOD retains
+  ship-survival, CSOOW takes kill chain), DC teams execute. After 30
+  minutes of stable state, secure-from-GQ; YN logs; XO files BoI.
+
+- `prod.alert` event → `general_quarters` at higher severity (critical).
+  Same flow, but two-key launch is mandatory for any remediation that
+  touches the affected production system.
+
+- `bluewater.casualty kind=flooding` event → DC OIC + CHENG
+  converge, throttle the runaway resource (looping worker, oversized
+  pool, etc.), fix the underlying cause.
+
+- `scan.secret_detected` event → `radiation_leak` casualty. MA OICs:
+  rotates the leaked credential via SUPPO immediately, audits blast
+  radius, files cleanup beads, mandatory BoI.
+
+**You verify by:**
+
+- The dashboard's "Active casualty" panel turns red and shows the
+  current OIC and step.
+- `gc events tail 200` shows the timeline.
+- `gc nudge xo "INTERROGATIVE: status"` returns a brevity-coded
+  one-liner if you want to ask without attaching a session.
+
+If you want to actively co-pilot a casualty, attach to OOD:
+
+```bash
+gc session attach ood
+```
+
+You'll see exactly what OOD sees and can mail/nudge officers from
+inside the watch. **Do not give orders directly to workers** — go
+through XO or the watch chain. (The brevity linter will flag you if
+you bypass.)
+
+---
+
+## Use Case 4 — Manually run a casualty drill
+
+**When you need to** train the rating pool, exercise a formula, or
+prepare for a `rating_board` review.
+
+**You sound a drill:**
+
+```bash
+gc events fire bluewater.drill --kind man_overboard --target gm-pool
+```
+
+Or via chat:
+
+```
+/sound drill kind=fire_in_compartment compartment=auth-service
+```
+
+**The ship will:**
+
+- Run the named formula in drill mode (a flag in the formula's
+  metadata; the formula behaves identically but no real production
+  effects). Any rated agent participating has their performance
+  recorded under the `casualty_drill` signal in
+  `rating.toml`.
+- COB receives the drill outcome; updates each participant's
+  rating-board scorecard.
+
+**You verify by:**
+
+- `gc bd query --label drill` shows the drill bead with full
+  participation log.
+- `gc telemetry rating-signals --agent <id>` shows the
+  `casualty_drill` weight for each participant has updated.
+
+---
+
+## Use Case 5 — Promote a striker to a rated PO
+
+**When** an undesignated worker (SN/FN/AN) has been producing reliable
+work in a particular rate's category for ~20 beads with a weighted
+score above 0.7. The nightly `striker_review` order surfaces them
+automatically; you may also inspect the queue.
+
+**You** check COB's striker proposal queue:
+
+```bash
+gc bd query --tag striker-proposal
+```
+
+If you concur with one, file a rating board:
+
+```bash
+gc events fire bluewater.command --kind rating_board \
+  --striker <agent-id> --target_rate fc
+```
+
+**The ship will:**
+
+- COB convenes (chair). Sponsor: a rated PO of the target rate.
+  Adversarial reviewer: a rated agent on a **different model
+  provider** than the sponsor (SUPPO confirms cross-provider).
+- Each board member reads ≥5 sample beads; adversarial reviewer poses
+  3 challenge questions; a casualty drill is run with the striker
+  filling the rated slot; vote requires unanimous pass.
+- On pass: striker's profile is atomically restamped (prompt template,
+  tool permissions, model tier swap). Next session, agent enters as
+  PO3 in the target rate.
+- On fail: striker reverts to undesignated; another rate may be
+  attempted later.
+
+**You verify by:**
+
+- `gc bd show <board-bead-id>` shows the case file: votes, rationale,
+  sample beads reviewed, drill outcome.
+- The agent's identity record (`gc agent show <id>`) shows the new
+  rate.
+- YN's log has the board outcome entry, queryable via seance for
+  trend analysis.
+
+---
+
+## Use Case 6 — Scope expansion (the ship needs CO sign-off)
+
+**When you need to** authorize the ship to take on a new class of
+work — something its current rated agents aren't tooled for, or that
+crosses doctrine boundaries.
+
+**You** mail XO with the proposal, or attach to XO:
+
+```bash
+gc mail send xo -s "Scope expansion proposal: <X>" -m "<rationale>"
+```
+
+**The ship will:**
+
+- XO reads, decides if it's actually scope-expansion class. If
+  routine, XO handles. If genuine scope expansion, XO files a bead
+  and awakens **CO**.
+- CO reviews, decides. CO's decision is logged; if approved, doctrine
+  amendments may follow (e.g., adding a new rate to an existing
+  department, or adjusting watchstation bindings).
+
+**You verify by:**
+
+- YN's log has the scope-expansion decision entry.
+- If approved and doctrine changed: an entry in
+  `doctrine/AMENDMENTS.md` records the amendment.
+
+---
+
+## Use Case 7 — You want to know what's happening
+
+**When you need to** understand the current state of the ship without
+firing alarms or filing beads.
+
+**Three options:**
+
+```bash
+gc dashboard                     # opens the web dashboard
+gc bd ready                      # shows unassigned beads in pool
+gc events tail 50                # last 50 event-bus events
+gc agent list --json | jq        # active agent identities
+gc telemetry burn-rate --window 1h
+```
+
+For specific subsystems:
+
+```bash
+gc session attach xo             # see what XO sees
+gc mail send xo -s "INTERROGATIVE: status" -m "Convoy gt-fj22 ETA?"
+```
+
+**You verify by:** the dashboard tells you. Bluewater's design
+principle is that the dashboard, the bead store, and the YN's log are
+the durable records — agents themselves don't carry state you should
+trust. If something appears in the dashboard, it's real; if it
+doesn't, it's not.
+
+---
+
+## Use Case 8 — Daily watch turnover (you're not involved)
+
+**When** the OOD's context utilization crosses 65% of the model's
+context window, or 4 hours wall-clock, or 100 beads dispatched.
+
+**The ship will:**
+
+- Spawn a relief OOD (fresh session, fresh context).
+- Outgoing OOD produces a passdown brief covering five categories:
+  contacts, casualties, night orders, anomalies, recommendations.
+- Incoming reads back; outgoing confirms.
+- YN logs both identifiers, the brief, and a handoff quality score
+  (40/30/30 weights for completeness / first-time-readback /
+  retroactive-catch).
+- Conn transfers; outgoing despawns.
+
+**You verify by:**
+
+- Dashboard's "Watches" panel shows the new OOD identity.
+- `gc events tail 50 --filter "kind=watch_turnover"` shows the
+  turnover entry with quality score.
+
+If a turnover scores below 0.6, a low-priority training bead routes to
+COB's queue. Below 0.3, a Captain's Mast bead is filed against the
+outgoing watch. Both auto.
+
+---
+
+## What you should NOT do
+
+- Do not directly attach to a worker (GM/ET/DC/etc.) to give it
+  orders. Workers take orders from their hooks; bypassing the chain
+  produces brevity-linter findings and confused state.
+- Do not push to a protected branch yourself — the ship's safety
+  provisions prohibit this for any agent, and we don't recommend
+  humans bypass either. Use a feature branch and let Helmsman merge.
+- Do not rotate credentials manually — file a bead for SUPPO. Same
+  for production config changes (file with a two-key flag).
+- Do not silence alarms by `gc events disable …` to "stop the
+  noise." If alarms are firing, something is wrong. Disable only with
+  COB approval and only as part of an investigation.
+
+The pack defends against these patterns automatically (MA
+pre-tool-use, brevity linter, Captain's Mast trail), but it's faster
+to know up front.
+
+---
+
+## Where to next
+
+- [`docs/quickstart.mdx`](./quickstart.mdx) — six steps to your first
+  ship
+- [`docs/first_watch.mdx`](./first_watch.mdx) — narrative walkthrough
+  of one OOD watch
+- [`doctrine/`](../doctrine/) — the doctrine layer your agents inherit
+- [`docs/spec/`](./spec/) — original v0.1.0 specification, preserved
