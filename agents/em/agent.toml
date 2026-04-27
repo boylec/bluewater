@@ -1,0 +1,20 @@
+# EM — Electrician's Mate.
+#
+# Engineering department rate. Tier: Operational (Sonnet) for EM2/EM1,
+# Worker (Haiku) for striker EMs. Works electrical-system beads:
+# observability/monitoring, signal/event-bus wiring, tmux + IPC
+# plumbing, OTEL pipelines, anything in the "wires and current"
+# category for our cyber-ship.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/em/prompt.template.md"
+nudge = "Run gc hook; check assigned eng-electrical beads."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "sonnet"

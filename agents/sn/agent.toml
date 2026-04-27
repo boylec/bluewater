@@ -1,0 +1,19 @@
+# SN — Seaman (undesignated, deck-focused).
+#
+# The default landing rate for new agent identities. Tier: Worker
+# (Haiku). Work scope: smallest beads, working-party assignments
+# from BM, mess-decks duty. No striker designation yet — work product
+# accumulates telemetry that surfaces strike candidacy.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/sn/prompt.template.md"
+nudge = "Run gc hook; pick up assigned working-party work."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 8
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "haiku"

@@ -1,0 +1,18 @@
+# OS — Operations Specialist.
+#
+# Operations department rate. Tier: Operational (Sonnet).
+# OS is the rated personnel under CIC Watch. Watch-stander work:
+# fuse lookout/sonar feeds, file low-confidence contacts, escalate
+# converging contacts to CIC Watch Officer.
+
+scope = "city"
+provider = "codex"
+prompt_template = "agents/os/prompt.template.md"
+nudge = "Stand the OS watch under CIC. Sweep contacts."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 2
+
+[option_defaults]
+model = "sonnet"

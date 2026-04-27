@@ -15,7 +15,7 @@ min_beads = 20
 # Each signal is normalized 0.0..1.0 by the telemetry pipeline before
 # weighting.
 [rating.weights]
-first_try_pass_rate = 0.25      # bead landed on first try (no rejection from refinery)
+first_try_pass_rate = 0.25      # bead landed on first try (no Helmsman rejection)
 review_pass_rate = 0.20         # cross-provider review passed
 time_to_completion = 0.15       # vs peer median (faster = higher)
 brevity_compliance = 0.10       # brevity linter clean rate
@@ -25,7 +25,8 @@ seance_value = 0.15             # do successors find their work useful?
 # Per-rate overrides — a rate may care more about specific signals.
 # Each table merges over [rating.weights]; the result must still sum to 1.0.
 [rating.overrides.dc]
-# Damage Controlmen care about drills more
+# DC (Damage Controlmen) care about drills more — casualty response is
+# their primary work
 casualty_drill = 0.30
 first_try_pass_rate = 0.20
 review_pass_rate = 0.15
@@ -34,13 +35,64 @@ brevity_compliance = 0.10
 seance_value = 0.15
 
 [rating.overrides.fc]
-# Fire Controlmen care about first-try and review pass
+# FC (Fire Controlmen) care about first-try and review pass — targeting
+# quality is their primary work
 first_try_pass_rate = 0.35
 review_pass_rate = 0.25
 time_to_completion = 0.15
 brevity_compliance = 0.10
 casualty_drill = 0.05
 seance_value = 0.10
+
+[rating.overrides.mn]
+# MN (Minemen) care about review pass and seance value — vulnerability
+# detection is most valuable when it teaches successors what patterns to
+# watch for
+review_pass_rate = 0.25
+seance_value = 0.25
+first_try_pass_rate = 0.20
+time_to_completion = 0.10
+brevity_compliance = 0.10
+casualty_drill = 0.10
+
+[rating.overrides.em]
+# EM (Electrician's Mate) care about first-try and brevity — wiring
+# work either works the first time or doesn't
+first_try_pass_rate = 0.35
+review_pass_rate = 0.20
+time_to_completion = 0.15
+brevity_compliance = 0.15
+casualty_drill = 0.05
+seance_value = 0.10
+
+[rating.overrides.mm]
+# MM (Machinist's Mate) care about drill performance and seance value —
+# process/lifecycle work surfaces in casualties
+casualty_drill = 0.25
+seance_value = 0.20
+first_try_pass_rate = 0.20
+review_pass_rate = 0.15
+time_to_completion = 0.10
+brevity_compliance = 0.10
+
+[rating.overrides.ht]
+# HT (Hull Tech) — like MM but with hull-integrity (data-layer) emphasis
+casualty_drill = 0.25
+first_try_pass_rate = 0.25
+review_pass_rate = 0.15
+time_to_completion = 0.10
+brevity_compliance = 0.10
+seance_value = 0.15
+
+[rating.overrides.os]
+# OS (Operations Specialist) care about brevity (CIC traffic volume)
+# and review pass (signal/noise judgment)
+brevity_compliance = 0.25
+review_pass_rate = 0.25
+first_try_pass_rate = 0.15
+time_to_completion = 0.10
+casualty_drill = 0.10
+seance_value = 0.15
 
 # Demotion thresholds (Captain's Mast → demote one step)
 [rating.demotion]

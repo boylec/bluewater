@@ -1,18 +1,26 @@
-# Cook — deterministic agent-health early warning. NO LLM.
+# CS — Culinary Specialist (the "Cook").
 #
-# Per ARCHITECTURE.md "LLMs sleep until alarm condition". Cook is a
-# script (cron + jq + grep), not an LLM session. Watches the event bus
-# and telemetry for stuckness patterns and emits alarms via the
-# `agent_stalled` order.
+# Supply department rate. (Real-navy correction in v0.1.0: was
+# previously placed under Medical; the rate code is CS, the
+# department is Supply, the colloquial role name is "Cook." See
+# doctrine/AMENDMENTS.md A0002.)
 #
-# This [[agent]] entry exists for visibility and for Battle Bill
-# binding lookup, but the actual implementation is the deterministic
-# pre_start command and the cooks's check scripts. There is no
-# prompt_template because Cook never receives a prompt.
+# Cook is deterministic — no LLM session. The scripts/cook-check.sh
+# script runs on a 1m cron via the `agent_stalled` order to detect
+# stalled / hung / looping agents. The galley analogy: crew morale =
+# agent health (you don't ask, you watch). When the alarm fires,
+# Corpsman (HM) is dispatched to actually investigate; Cook itself
+# stays deterministic. That's the load-bearing cost decision — zero
+# token cost while the ship is healthy.
+#
+# Why the rate is "CS" (Culinary Specialist) but the agent dir is
+# "cook": the rate code "CS" collides with the colloquial name for
+# the Combat Systems department. Using "cook" as the agent dir name
+# avoids that ambiguity.
 
 scope = "city"
-provider = ""    # no provider — deterministic
+provider = ""
 prompt_template = ""
 nudge = ""
 idle_timeout = ""
-max_active_sessions = 0   # never spawned as an LLM session
+max_active_sessions = 0

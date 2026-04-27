@@ -89,12 +89,12 @@ mode = "always"
 
 # Admin standing watch.
 [[named_session]]
-template = "yeoman"
+template = "yn"
 scope = "city"
 mode = "always"
 
 [[named_session]]
-template = "maa"
+template = "ma"
 scope = "city"
 mode = "always"
 
@@ -112,6 +112,6 @@ mode = "on_demand"
 # Corpsman + Corpsman is on-demand (Cook handles the always-on
 # deterministic side; Corpsman intervenes only on alarm).
 [[named_session]]
-template = "corpsman"
+template = "hm"
 scope = "city"
 mode = "on_demand"

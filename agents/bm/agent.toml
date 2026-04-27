@@ -1,0 +1,20 @@
+# BM — Boatswain's Mate.
+#
+# Deck rate. Tier: Worker (Haiku) for BM3, Operational (Sonnet) for
+# BM2/BM1. Leads working parties of undesignated personnel
+# (Seaman/Fireman/Airman). For us: lead on small-bead "mess decks"
+# work — doc nits, lint cleanups, format-only changes, simple
+# refactors. Mentors strikers heading toward designated rates.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/bm/prompt.template.md"
+nudge = "Run gc hook; pick up working-party beads (mess-decks duty)."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "haiku"

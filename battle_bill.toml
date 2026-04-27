@@ -98,7 +98,7 @@ description = "Flight-deck deploy choreography (carrier-class)."
 id = "unrep"
 trigger = "command"
 oic = "suppo"
-watchstations = ["suppo", { rating = "sk", count = 1 }]
+watchstations = ["suppo", { rating = "ls", count = 1 }]
 formula = "formulas/unrep.toml"
 description = "Underway replenishment — refresh external context without stopping work."
 
@@ -106,7 +106,7 @@ description = "Underway replenishment — refresh external context without stopp
 id = "replenish_credits"
 trigger = "alarm"
 oic = "suppo"
-watchstations = ["suppo", { rating = "sk", count = 1 }]
+watchstations = ["suppo", { rating = "ls", count = 1 }]
 formula = "formulas/replenish_credits.toml"
 description = "Provider-credit exhaustion recovery."
 

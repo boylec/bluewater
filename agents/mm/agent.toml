@@ -1,0 +1,20 @@
+# MM — Machinist's Mate.
+#
+# Engineering department rate. Tier: Operational (Sonnet).
+# Works "mechanical/process" beads: daemon supervision, controller
+# behavior, polecat lifecycle, restart loops, scaling rules,
+# convergence loop bugs. Anything that moves moving parts inside the
+# ship's runtime.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/mm/prompt.template.md"
+nudge = "Run gc hook; check assigned eng-mechanical beads."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "sonnet"

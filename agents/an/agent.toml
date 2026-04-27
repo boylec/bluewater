@@ -1,0 +1,17 @@
+# AN — Airman (undesignated, air-focused). Optional.
+#
+# Used only when bluewater-air is installed. Same tier and boundaries
+# as SN/FN.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/an/prompt.template.md"
+nudge = "Run gc hook; pick up assigned flight-deck working-party work."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 2
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "haiku"

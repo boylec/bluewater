@@ -1,0 +1,19 @@
+# FN — Fireman (undesignated, engineering-focused).
+#
+# Variant of SN whose work tends toward engineering beads. Same tier
+# (Haiku) and same boundaries as SN. The split into SN/FN/AN exists
+# so that telemetry signals show which department a striker is
+# trending toward.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/fn/prompt.template.md"
+nudge = "Run gc hook; pick up assigned engineering working-party work."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "haiku"

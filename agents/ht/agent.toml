@@ -1,0 +1,19 @@
+# HT — Hull Maintenance Technician.
+#
+# Engineering department rate. Tier: Operational (Sonnet).
+# Works "hull integrity" beads: filesystem/worktree hygiene, dolt
+# database health, runtime data files, persistent-state maintenance.
+# Partners with DC on flooding/fire casualties at the data layer.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/ht/prompt.template.md"
+nudge = "Run gc hook; check assigned hull-maintenance beads."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "sonnet"

@@ -1,0 +1,20 @@
+# MN — Mineman.
+#
+# Combat Systems department rate. Tier: Operational (Sonnet).
+# Mine warfare maps onto our "find and disarm threats before they go
+# off" surface: vulnerability detection on PR diffs, dependency CVE
+# scanning, secret-leak prevention scanning (defensive partner to
+# MAA's pre-tool-use guard), static analysis on incoming changes.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/mn/prompt.template.md"
+nudge = "Run gc hook; check assigned mn-flavored beads (vuln scans, dep audits)."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-bluewater-work"
+
+[option_defaults]
+model = "sonnet"

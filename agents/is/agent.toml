@@ -1,0 +1,19 @@
+# IS — Intelligence Specialist.
+#
+# Operations department rate. Tier: Operational (Sonnet).
+# Intel work: external threat surveys, dependency-ecosystem trend
+# tracking, advisory feed digestion. Partners with CT division on
+# SIGINT. Carrier-class useful but lightweight; routes findings up
+# to OPS for action decisions.
+
+scope = "city"
+provider = "gemini"
+prompt_template = "agents/is/prompt.template.md"
+nudge = "Sweep configured intel sources; produce digest if signal warrants."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+min_active_sessions = 0
+max_active_sessions = 2
+
+[option_defaults]
+model = "sonnet"

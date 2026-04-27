@@ -71,3 +71,65 @@ the pack to reflect current reality, per BUILD_INSTRUCTIONS step 1
 no V1 layout is shipped. Where spec text in `doctrine/` references prompt
 files (`prompts/doctrine.md`), the canonical mechanism is now template
 fragments — content is identical, plumbing is V2.
+
+---
+
+## A0002 — Real-navy rate-and-department alignment
+
+**Date:** 2026-04-27
+**Originator:** v0.1.0 build, post-review correction.
+**Reason:** The first pass placed several rates in the wrong departments,
+used outdated rate codes, and underpopulated some departments. The pack
+is themed on real-navy doctrine; the rate-to-department mapping should
+match real-navy organization for the metaphor to hold up.
+
+**Findings and resolutions:**
+
+1. **ET (Electronics Technician) is a Combat Systems rate, not Engineering.**
+   ET works combat-system electronics (sensors, fire-control wiring,
+   targeting comms). Moved out of Engineering's role description into
+   Combat Systems'. Engineering now uses EM (Electrician's Mate) for
+   electrical infrastructure work.
+2. **DC (Damage Controlman) is an Engineering rate, not Combat Systems.**
+   DCs handle hull integrity, fire/flood/smoke response, and engineering-
+   side casualty work. Moved into Engineering's role description.
+3. **CS (Culinary Specialist; "Cook") is a Supply rate, not Medical.**
+   Real Navy: Cook is in Supply department (logistics/services). Moved
+   out of Medical. Medical now contains only HM (the only LLM-bearing
+   Medical rate). The agent dir name remains `cook` to avoid
+   abbreviation collision with "CS" = Combat Systems.
+4. **SK (Storekeeper) is retired; LS (Logistics Specialist) is current.**
+   The Navy merged SK into LS in 2009. Renamed agent dir, watchstation
+   bindings, and battle-bill rate references.
+5. **HM, MA, YN are the rate codes;** "Corpsman", "Master-at-Arms",
+   "Yeoman" are role names. Renamed agent dirs to rate codes. Role-name
+   prose in prompts is preserved (it's what other agents call you).
+6. **Engineering needed proper rates after losing ET.** Added EM
+   (Electrician's Mate, signal/event-bus/electrical work), MM
+   (Machinist's Mate, daemon/process/scaling work), HT (Hull Maintenance
+   Tech, filesystem/dolt/data-layer hygiene). DC moves into Engineering
+   alongside these.
+7. **Combat Systems gained MN (Mineman).** Maps cleanly to vulnerability
+   detection / static analysis / dependency CVE scanning — finding and
+   disarming threats before they activate. MN partners with MA (the
+   pre-tool-use guard); MN sweeps the field, MA blocks at the gate.
+8. **Operations gained OS (Operations Specialist) and IS (Intelligence
+   Specialist).** OS is the rated personnel under CIC Watch Officer. IS
+   does intel analysis (paired with CT for collection).
+9. **Undesignated tier added.** SN (Seaman), FN (Fireman), AN (Airman)
+   represent the entry rate — the default landing for new agent
+   identities. BM (Boatswain's Mate) leads working parties of
+   undesignated personnel on the smallest beads (mess-decks duty).
+10. **CT not split.** Real navy splits Cryptologic Tech into CTI / CTN
+   / CTR / CTT; v0.1.0 keeps a single `ct` rate and notes the
+   specializations in the prompt. Splitting is deferred to a later
+   release where the workload differentiation justifies separate
+   profiles.
+
+**Files affected:** `agents/{em,mm,ht,mn,os,is,bm,sn,fn,an}/` (added),
+`agents/{corpsman→hm, sk→ls, maa→ma, yeoman→yn}/` (renamed),
+`watchstation_bindings.toml`, `pack.toml` named_session entries,
+`rating.toml` per-rate overrides, several prompts that referenced rates
+by old name. `agents/et/` and `agents/dc/` content updated to reflect
+their correct departments; directory paths unchanged (rate codes did
+not change for those, only department assignment did).
