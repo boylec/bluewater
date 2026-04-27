@@ -1,0 +1,28 @@
+# slack_intake_route — process one Slack event.
+formula = "slack_intake_route"
+description = "Process a single Slack event (slash command, app mention, message) routed by the underlying slack-intake service."
+version = 1
+
+[vars.payload]
+description = "JSON payload from slack-intake."
+required = true
+
+[[steps]]
+id = "classify"
+title = "Classify the message"
+description = "Slash command? App mention? Routine chatter? Decide based on payload shape."
+type = "task"
+
+[[steps]]
+id = "authorize"
+title = "Authorize for the chosen action"
+description = "Check that the user has permission for the action: channel allowlist, user role list, evolution severity max for non-officer roles."
+needs = ["classify"]
+type = "task"
+
+[[steps]]
+id = "execute"
+title = "Execute the routing"
+description = "Mail the target, file the bead, fire the evolution, or emit a brief reply (Block Kit preferred for structured responses). YN logs."
+needs = ["authorize"]
+type = "task"

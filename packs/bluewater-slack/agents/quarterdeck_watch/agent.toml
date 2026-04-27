@@ -1,0 +1,18 @@
+# Quarterdeck Watch — Slack intake.
+#
+# Same role as the Discord variant; differs only in the underlying
+# intake adapter. Two QW instances can coexist in a city if both
+# bluewater-discord and bluewater-slack are installed (one per
+# platform); each runs independently and routes to the same set of
+# watchstanders.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/quarterdeck_watch/prompt.template.md"
+nudge = "Process the next slack-intake event."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

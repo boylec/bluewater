@@ -1,0 +1,9 @@
+# slack_message — fire slack_intake_route on each inbound event.
+[order]
+description = "Each inbound Slack event (slash command, app mention, message) fires the routing formula under Quarterdeck Watch."
+trigger = "event"
+on = "slack.event"
+formula = "slack_intake_route"
+pool = "quarterdeck_watch"
+timeout = "30s"
+enabled = true

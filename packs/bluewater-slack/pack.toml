@@ -1,0 +1,31 @@
+# Bluewater Slack — Quarterdeck Watch (Slack intake adapter).
+#
+# Peer to bluewater-discord. Both are optional and independent — pick
+# whichever chat platform your team uses, or both, or neither. The
+# Quarterdeck Watch role is platform-agnostic; only the underlying
+# intake adapter differs.
+#
+# Slack intake assumes a slack-intake adapter at
+# gastownhall/gascity-packs/slack-intake (mirroring the discord-intake
+# pattern). If that upstream pack isn't yet published when you install
+# this pack, you can either: (a) write a local slack-intake adapter
+# following the discord-intake reference shape, or (b) wait for the
+# upstream landing. The QW logic in this pack is decoupled from the
+# adapter — what changes is only `[imports.slack_intake]` source.
+
+[pack]
+name = "bluewater-slack"
+version = "0.1.0"
+schema = 2
+requires_gc = ">= 1.0.0"
+description = "Slack adapter — Quarterdeck Watch routes inbound Slack traffic to the appropriate watchstander."
+
+# Upstream Slack intake adapter (assumed; mirror of discord-intake).
+# Override locally if you ship your own implementation.
+[imports.slack_intake]
+source = "github.com/gastownhall/gascity-packs/slack-intake"
+
+[[named_session]]
+template = "quarterdeck_watch"
+scope = "city"
+mode = "always"
