@@ -1,12 +1,24 @@
 # Bluewater — naval-doctrine multi-agent orchestration pack.
 #
-# Composes department sub-packs (bluewater-{ops,cs,eng,supply,air,medical,
-# admin,discord}) plus ship-wide officer ratings and ship-wide evolutions
-# (General Quarters, Liberty Call, Watch Turnover).
+# This pack IS the ship. It contains the wardroom (CO/XO/OOD/COB/CSOOW)
+# plus all six required departments inline:
 #
-# This pack is the umbrella. Each department lives in packs/bluewater-<dept>/.
-# A small ship needs at minimum: this pack + bluewater-eng + bluewater-ops +
-# bluewater-cs. See docs/quickstart.mdx and examples/small_ship.city.toml.
+#   Engineering — CHENG, EOOW, ET-replaced-by-EM/MM/HT, DC; token-burn governance
+#   Operations  — OPS, CIC Watch Officer, QM, OS, IS, CT*, lookouts, sonar
+#   Combat Sys  — CSO, FC, GM, ET, MN, DC, Helmsman; the kill chain
+#   Supply      — SUPPO, LS (formerly SK), CS (Cook); provider routing, credentials
+#   Medical     — HM (Hospital Corpsman); agent-health intervention
+#   Admin       — Yeoman, MA (Master-at-Arms), JAG; records, security, compliance
+#
+# Optional sub-packs under packs/ are added to the city by separate
+# [imports.<name>] entries:
+#
+#   bluewater-air     — flight-deck choreography (carrier-class deploys)
+#   bluewater-discord — Quarterdeck Watch Discord intake
+#   bluewater-slack   — Quarterdeck Watch Slack intake
+#
+# A bare `gc pack add github.com/boylec/bluewater` gives you a fully
+# functional ship without any of the optional pieces.
 
 [pack]
 name = "bluewater"
@@ -15,35 +27,8 @@ schema = 2
 requires_gc = ">= 1.0.0"
 description = "Naval-doctrine multi-agent orchestration: CO/XO/OOD chain of command, watch standing, pre-composed casualty response, cross-provider two-key launches."
 
-# Sub-pack imports. Departments are local-path imports within this monorepo;
-# downstream consumers can import the umbrella alone or any subset directly.
-[imports.eng]
-source = "./packs/bluewater-eng"
-
-[imports.supply]
-source = "./packs/bluewater-supply"
-
-[imports.admin]
-source = "./packs/bluewater-admin"
-
-[imports.medical]
-source = "./packs/bluewater-medical"
-
-[imports.ops]
-source = "./packs/bluewater-ops"
-
-[imports.cs]
-source = "./packs/bluewater-cs"
-
-[imports.air]
-source = "./packs/bluewater-air"
-
-[imports.discord]
-source = "./packs/bluewater-discord"
-
-# Wardroom officers (CO, XO, OOD, COB, CSOOW) are city-scoped and always-on
-# during waking hours. CSOOW is on-demand (only spawns at General Quarters
-# or higher).
+# Wardroom officers (CO, XO, OOD, COB, CSOOW) are city-scoped.
+# OOD and XO are always-on; CO/COB/CSOOW are on-demand.
 
 [[named_session]]
 template = "co"
@@ -67,5 +52,66 @@ mode = "on_demand"
 
 [[named_session]]
 template = "csoow"
+scope = "city"
+mode = "on_demand"
+
+# Department-head officers (always per-department, always on-demand).
+[[named_session]]
+template = "cheng"
+scope = "city"
+mode = "on_demand"
+
+[[named_session]]
+template = "cso"
+scope = "city"
+mode = "on_demand"
+
+[[named_session]]
+template = "ops"
+scope = "city"
+mode = "on_demand"
+
+[[named_session]]
+template = "suppo"
+scope = "city"
+mode = "on_demand"
+
+# Watchstanders (always-on).
+[[named_session]]
+template = "eoow"
+scope = "city"
+mode = "always"
+
+[[named_session]]
+template = "cic_watch_officer"
+scope = "city"
+mode = "always"
+
+# Admin standing watch.
+[[named_session]]
+template = "yeoman"
+scope = "city"
+mode = "always"
+
+[[named_session]]
+template = "maa"
+scope = "city"
+mode = "always"
+
+[[named_session]]
+template = "jag"
+scope = "city"
+mode = "on_demand"
+
+# QM is on-demand (Plan of the Day is morning-only).
+[[named_session]]
+template = "qm"
+scope = "city"
+mode = "on_demand"
+
+# Corpsman + Corpsman is on-demand (Cook handles the always-on
+# deterministic side; Corpsman intervenes only on alarm).
+[[named_session]]
+template = "corpsman"
 scope = "city"
 mode = "on_demand"
