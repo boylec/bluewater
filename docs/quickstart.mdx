@@ -1,0 +1,118 @@
+---
+title: Quickstart
+description: Get a Bluewater small ship running in a fresh directory.
+---
+
+# Quickstart
+
+Goal: ten minutes to a running small ship with watch standing,
+deterministic monitors, and the brevity linter live.
+
+## 1. Initialize a city
+
+```bash
+mkdir my-ship && cd my-ship
+gc init
+```
+
+`gc init` creates `city.toml`, the `.gc/` runtime directory, and a
+`rigs/` placeholder.
+
+## 2. Replace the default city.toml
+
+Replace the generated `city.toml` with the small-ship example:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/boylec/bluewater/main/examples/small_ship.city.toml > city.toml
+```
+
+(Or copy the file directly from your local clone of this repository.)
+
+Edit `[workspace] name` to your ship's name.
+
+## 3. Configure providers
+
+Add provider configuration. Two providers recommended:
+
+```toml
+[providers.claude]
+# anthropic API key via env or here
+
+[providers.codex]
+# codex config
+```
+
+## 4. Start the ship
+
+```bash
+gc start
+```
+
+The wardroom comes up:
+- XO spawns (always-on per pack named_session).
+- OOD spawns (always-on; takes the conn).
+- Yeoman spawns (always-on, log keeper).
+- MAA spawns (always-on, pre-tool-use guard).
+- Cook does NOT spawn (deterministic — its check script is wired into
+  the `agent_stalled` order on a 1-minute interval).
+
+CO and COB are not spawned at startup; they wake on demand.
+
+## 5. Smoke-test convoy
+
+Add a rig (any project will do):
+
+```bash
+gc rig add ../some-project
+```
+
+File a bead:
+
+```bash
+gc bd create --rig some-project "Add a one-line README for the project" -t task
+```
+
+The flow:
+
+1. FC pool (under CSO) picks up; produces a structured bead with target
+   branch and success criteria.
+2. GM polecat picks up; writes the change in a worktree on a feature
+   branch; pushes; reassigns to Helmsman.
+3. Helmsman rebases, runs tests, merges (fast-forward only).
+4. `convoy_landed` order fires; Yeoman summarizes.
+
+Watch the dashboard:
+
+```bash
+gc dashboard
+```
+
+You should see the watch turnover happen automatically when OOD's
+context-utilization crosses the threshold (default 65%). The brevity
+linter should show 'advisory' findings (not blocking) on early agent-
+to-agent traffic.
+
+## 6. Sound general_quarters (drill)
+
+Manually trigger the casualty alarm to verify the wardroom comes up:
+
+```bash
+gc events fire ci.failed --rig some-project
+```
+
+Expected:
+
+- Yeoman stamps the GQ entry with timestamp and source.
+- CIC Watch broadcasts BREAK BREAK FLASH.
+- CO spawns; XO and CSO are awakened.
+- Wardroom reads the situation brief and decides intent.
+- After 30 minutes of stable state, CO calls 'secure from general
+  quarters' and BoI bead is filed.
+
+If any of these steps does not happen, see the troubleshooting section
+of [`docs/install.mdx`](./install.mdx).
+
+## Next
+
+- [`docs/first_watch.mdx`](./first_watch.mdx) — your first watch end-to-end
+- [`doctrine/`](../doctrine/) — the doctrine layer agents inherit

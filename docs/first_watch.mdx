@@ -1,0 +1,137 @@
+---
+title: Your First Watch
+description: A tutorial walkthrough of one OOD watch end-to-end on a Bluewater ship.
+---
+
+# Your First Watch
+
+This tutorial walks through one full OOD watch on a Bluewater ship.
+It's how you build the mental model — once you've watched a watch,
+the rest of the pack starts making sense.
+
+## Setting
+
+Your ship is up (per [`quickstart`](./quickstart.mdx)). It's `0930`
+ship-local time. Morning quarters happened at `0800`; QM published
+the POD at `0830`. Three convoys are in flight.
+
+You attach to the OOD session:
+
+```bash
+gc session attach ood
+```
+
+## What you see at the conn
+
+The OOD session opens. Your prompt loads doctrine (the `doctrine`
+template fragment) and brevity (the `brevity` fragment). You read your
+**passdown brief** from the previous watch — that's the bead Yeoman
+filed at the last turnover.
+
+A passdown brief looks like:
+
+> Contacts: 3 active convoys (gt-fj22, gt-x4k, gt-aa9). 12 active polecats.
+> Casualties: None.
+> Night orders: CO directs no flight_ops 0200-0600 (provider rate reset).
+> Anomalies: Codex provider showing 2x latency since 0145. SUPPO notified.
+> Recommendations: Watch for retries on gt-aa9.
+
+You ROGER the brief and start your watch.
+
+## A normal hour
+
+Most of an OOD watch is **nothing happening**. Your job is not to
+generate activity; it's to be the agent in the seat when activity
+shows up. You sweep mail, scan CIC reports, and decide on the small
+things that the pack hasn't pre-composed a formula for.
+
+Concretely, every 5–10 minutes:
+
+```bash
+gc mail inbox
+gc events tail 50 --filter "channel=cic"
+gc events tail 50 --filter "kind=alarm"
+```
+
+If something needs your attention, brevity in:
+
+> CIC → OOD: `IMMEDIATE: Convoy gt-aa9 retry 3rd time. OVER`
+> OOD → CIC: `ROGER. Standby on rejection_reason. OUT`
+
+You query the bead for its rejection reason, decide whether this is
+heading toward `collision_at_sea` (per Battle Bill), and either nudge
+the FC who filed the bead or escalate to CSO.
+
+## A casualty
+
+At `1042`, an alarm fires:
+
+> CIC → OOD: `BREAK BREAK FLASH. Burn rate 92% per-hour cap last 5 min. Sound flooding. OUT`
+
+You acknowledge with WILCO, sound the casualty:
+
+```bash
+gc events fire bluewater.casualty --kind flooding --severity high
+```
+
+Per Battle Bill, `flooding` is OICed by the **DC OIC** (a senior DC).
+You are not OIC. Your role is to dispatch the team and coordinate
+with CHENG (who arrives because severity is high) on intent.
+
+The pack does most of this for you — the formula `flooding.toml` (in
+`packs/bluewater-cs/formulas/`) spawns the watchstations from the
+Battle Bill, you brief them in one message, CHENG names the brake
+(usually a polecat in a loop), DC team executes.
+
+After 60 minutes of stable burn rate, the OIC calls `secure from
+flooding`. You log the timeline (Yeoman picks it up). XO files a
+board_of_inquiry — mandatory at severity high.
+
+## Watch turnover
+
+Around `1230` your context utilization crosses 65%. The dispatcher
+spawns your relief; you produce a passdown brief (per the formula in
+`packs/bluewater-ops/formulas/watch_turnover.toml`):
+
+```
+Passdown brief.
+Contacts: 3 active convoys (gt-fj22, gt-x4k, gt-aa9). 8 active polecats.
+Casualties: flooding secured at 1142, BoI bead filed at gt-fjk30.
+Night orders: CO directs no flight_ops 0200-0600 (still in effect).
+Anomalies: Codex latency normalized at 1015.
+Recommendations: Watch gt-aa9 — refinery has bounced it 3 times; collision_at_sea threshold next bounce. OVER
+```
+
+Relief reads it back. Yeoman scores the handoff (default weights from
+`watch_bill.toml`). You hand the conn:
+
+> OOD → Relief: `I am relieved. OUT`
+> Relief → OOD: `I have the conn. OUT`
+
+You despawn:
+
+```bash
+gc runtime drain-ack && exit
+```
+
+## What just happened, in pack terms
+
+You exercised:
+
+- The doctrine layer (your prompt was prefixed with the `doctrine`
+  fragment and the `brevity` fragment).
+- The Battle Bill (`flooding` resolved to DC OIC + CHENG + DC team
+  alpha).
+- Watchstation bindings (the dispatcher resolved 'dc_team_alpha' to a
+  rated DC).
+- Brevity protocol (your inter-agent traffic compressed to a few
+  tokens per exchange).
+- The Watch Bill (your relief was triggered by context-utilization,
+  not the clock).
+- The Yeoman's log (the durable narrative of your watch is now
+  queryable for trend analysis and BoI case-file assembly).
+
+If that walkthrough made you want to read more, start with
+[`doctrine/DOCTRINE.md`](../doctrine/DOCTRINE.md) and
+[`doctrine/BATTLE_BILL.md`](../doctrine/BATTLE_BILL.md). Everything
+else is an elaboration of those two.

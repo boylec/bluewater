@@ -1,0 +1,86 @@
+---
+title: Install
+description: Install Bluewater into a Gas City deployment.
+---
+
+# Install
+
+Bluewater is a [Gas City](https://github.com/gastownhall/gascity) pack.
+You install it the same way as any other pack: with `gc pack add`, or by
+declaring an `[imports.<name>]` entry in your `city.toml`.
+
+## Prerequisites
+
+- **Gas City `>= 1.0.0`.** Pack V2 is mandatory; v0.x layouts are not
+  supported.
+- **A beads provider.** `bd` (default) or `file`.
+- **Standard Gas City tooling.** `tmux`, `git`, `jq`, `pgrep`, `lsof`.
+- **Two or more LLM providers configured.** Cross-provider concurrence
+  on two-key launches assumes at least two of `claude`, `codex`,
+  `gemini`.
+
+## Install — minimum running ship
+
+A small ship needs the umbrella plus four sub-packs. The umbrella
+imports them transitively, so a single import is enough:
+
+```bash
+gc pack add github.com/boylec/bluewater
+```
+
+If you want to be explicit (or to pin sub-pack versions independently):
+
+```bash
+gc pack add github.com/boylec/bluewater
+gc pack add github.com/boylec/bluewater/packs/bluewater-eng
+gc pack add github.com/boylec/bluewater/packs/bluewater-ops
+gc pack add github.com/boylec/bluewater/packs/bluewater-cs
+gc pack add github.com/boylec/bluewater/packs/bluewater-admin
+gc pack add github.com/boylec/bluewater/packs/bluewater-medical
+```
+
+## Install — carrier-class
+
+Adds `bluewater-air`, `bluewater-supply`, `bluewater-discord`:
+
+```bash
+gc pack add github.com/boylec/bluewater/packs/bluewater-air
+gc pack add github.com/boylec/bluewater/packs/bluewater-supply
+gc pack add github.com/boylec/bluewater/packs/bluewater-discord
+```
+
+## Configure providers
+
+Bluewater ratings are pre-stamped with model tiers (Strategic/Tactical/
+Operational/Worker) that map onto Opus/Sonnet/Haiku. Provider per-
+rating is set so that two-key launches naturally span providers:
+
+| Officer / role | Default provider | Default model tier |
+|----------------|------------------|--------------------|
+| CO             | claude           | opus               |
+| XO             | codex            | sonnet             |
+| COB            | gemini           | opus               |
+| OOD            | claude           | sonnet             |
+| CSOOW          | codex            | sonnet             |
+
+If your ship only has one provider configured, the install-time check
+(below) emits a warning and disables two-key features that require
+cross-provider concurrence.
+
+## Verify install
+
+```bash
+gc doctor
+```
+
+Expected output includes:
+
+- `[ok] bluewater pack imported`
+- `[ok] battle_bill.toml present`
+- `[ok] watchstation_bindings.toml lints clean`
+- `[warn] only one provider configured` — only if you have one provider
+
+## Next
+
+- [`docs/quickstart.mdx`](./quickstart.mdx) — get a small ship running
+- [`docs/first_watch.mdx`](./first_watch.mdx) — your first end-to-end watch

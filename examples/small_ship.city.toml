@@ -1,0 +1,68 @@
+# Small-ship Bluewater deployment.
+#
+# The minimum running ship: umbrella + bluewater-eng + bluewater-ops +
+# bluewater-cs + bluewater-admin (mandatory per requires) + bluewater-
+# medical (mandatory for long-running ships per requires).
+#
+# This example assumes you have at least two of {claude, codex, gemini}
+# configured as providers. The cross-provider concurrence required for
+# two-key launches will fail if only one provider is available.
+
+[workspace]
+name = "small-ship"
+provider = "claude"
+formula_v2 = true
+
+[imports.bluewater]
+source = "github.com/boylec/bluewater"
+
+# (bluewater imports its own sub-packs transitively — eng, ops, cs,
+# admin, medical — and pulls them into the city via that bind. Air,
+# supply, discord are not pulled by the umbrella; consumers add them
+# explicitly via separate [imports.<name>] entries.)
+
+[daemon]
+patrol_interval = "30s"
+max_restarts = 5
+restart_window = "1h"
+shutdown_timeout = "5s"
+
+# Cross-provider configuration. Tier mapping per ARCHITECTURE.md and
+# encoded in each rating's option_defaults.model. To enable two-key
+# launches with cross-provider concurrence, configure at least two:
+#
+# [providers.claude]
+# (claude config — anthropic API key, etc)
+#
+# [providers.codex]
+# (codex config)
+#
+# [providers.gemini]
+# (gemini config)
+#
+# Defaults:
+#   CO -> claude (Opus)
+#   XO -> codex  (Sonnet)
+#   COB -> gemini (Opus)
+#   OOD, MAA, EOOW, CSOOW etc rotate per the per-rating option_defaults
+#
+# Override any of these here if your provider availability differs.
+
+# Bluewater-specific overlay (optional). All Bluewater knobs live under
+# [bluewater.<dept>] for clarity.
+
+[bluewater.eng]
+# Burn-rate envelope (in tokens). CHENG refuses spawn requests when
+# breached. Override the defaults here:
+# per_hour_cap = 10_000_000
+# per_day_cap  = 80_000_000
+
+[bluewater.brevity]
+# Promote to "strict" after 30 days. Until then "advisory" is the
+# pack default and warnings flow to COB without rejecting messages.
+# level = "advisory"
+
+# Crew members (rated agents) are not declared here; they are pack-
+# stamped via the rating system. Officers (CO, XO, OOD, COB, CSOOW)
+# are declared as named_session in pack.toml of bluewater (the
+# umbrella).
