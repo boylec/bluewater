@@ -12,7 +12,7 @@ inject_fragments = ["doctrine", "brevity"]
 idle_timeout = "1h"
 min_active_sessions = 0
 max_active_sessions = 4
-default_sling_formula = "mol-polecat-work"
+default_sling_formula = "mol-bluewater-work"
 
 [option_defaults]
 model = "sonnet"

@@ -17,8 +17,8 @@ id = "throttle"
 title = "Throttle the runaway resource"
 description = """
 Action depends on the source:
-- Polecat in a loop: gc agent drain <name>; if drain fails, suspend.
-- Polecat pool too large: lower max_active_sessions on the pool.
+- Worker in a loop: gc agent drain <name>; if drain fails, suspend.
+- Worker pool too large: lower max_active_sessions on the pool.
 - A formula that's spawning subroots faster than they finish: pause
   dispatch on that formula via `gc orders disable <name>`.
 - Provider rate-limit interaction (rare): SUPPO routes to alternate
@@ -37,7 +37,7 @@ type = "task"
 [[steps]]
 id = "remediate"
 title = "Fix the underlying cause"
-description = "After the bleed is stopped, file a fix bead. Typical: a polecat looping on a bad input → fix the input validation; a pool sized wrong → adjust the pool config in the city; a formula's spawn pattern misbehaving → file a formula bug bead in the originating pack."
+description = "After the bleed is stopped, file a fix bead. Typical: a worker looping on a bad input → fix the input validation; a pool sized wrong → adjust the pool config in the city; a formula's spawn pattern misbehaving → file a formula bug bead in the originating pack."
 needs = ["verify"]
 type = "task"
 

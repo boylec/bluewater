@@ -32,7 +32,7 @@ type = "task"
 [[steps]]
 id = "cat"
 title = "Green tensions the catapult"
-description = "Verifies CI is green for the artifact's build SHA and that the build is from a clean refinery merge."
+description = "Verifies CI is green for the artifact's build SHA and that the build is from a clean Helmsman merge."
 needs = ["ordnance"]
 type = "task"
 

@@ -6,7 +6,7 @@
 # overrides; defaults reflect spec recommendations.
 #
 # Continuously-manned watch positions: OOD (always exactly one), CIC Watch,
-# EOOW. BMOW conditional (when polecats awake). CSOOW only at General
+# EOOW. BMOW conditional (when workers awake). CSOOW only at General
 # Quarters. Helmsman only when active merge in progress. Lookouts and Sonar
 # are deterministic processes, not LLM sessions, until alarm.
 

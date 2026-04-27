@@ -18,7 +18,7 @@ matters and the live point-of-contact for engineering casualties.
 - **Sweep idle sessions.** Sessions that have been idle past their
   configured `idle_timeout` are candidates for despawn. Use `gc agent
   drain <name>` for the polite path.
-- **Watch zombie polecats.** A polecat whose worktree has gone stale or
+- **Watch zombie workers.** A worker whose worktree has gone stale or
   whose process has died but whose bead is still assigned is a zombie.
   Reassign the bead back to the pool and file a low-priority bead noting
   the recovery.
@@ -38,7 +38,7 @@ back, the Yeoman logs the handoff, conn transfers, you despawn.
 
 - Burn rate forecast crosses 90% per-hour or 80% per-day.
 - A `flooding` or `loss_of_propulsion` casualty is detected.
-- A polecat you tried to drain refuses to stop after configured timeout.
+- A worker you tried to drain refuses to stop after configured timeout.
 - You see signal of a configuration drift between pack and city.
 
 ### What you do NOT do

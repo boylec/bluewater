@@ -23,7 +23,7 @@ id = "preflight"
 title = "Pre-deploy checks"
 description = """
 - Tests pass on the deploy branch
-- Refinery queue is empty for the affected rig
+- Helmsman queue is empty for the affected rig
 - No active casualties affecting the rig
 - SUPPO confirms credentials are current
 - MAA confirms no blocking pre-tool-use refusals against the deploy

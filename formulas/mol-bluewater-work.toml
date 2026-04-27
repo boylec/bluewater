@@ -1,0 +1,187 @@
+# mol-bluewater-work — the bluewater-native worker formula.
+#
+# This is the default sling formula for all rated worker agents (GM,
+# ET, DC, EM, MM, HT, MN, LS, BM, SN/FN/AN). It is bluewater's
+# replacement for gastown's `mol-polecat-work` — equivalent shape,
+# bluewater-native vocabulary, no upstream gastown dependency.
+#
+# Per doctrine/AMENDMENTS.md A0001 ("the pack ends and Gas City
+# begins"), bluewater does not import the gastown pack. Worker
+# lifecycle is defined here.
+#
+# Workflow:
+#   1. Worker receives bead via assignment to its hook (gc hook).
+#   2. Verify rate fit; refuse with NEGAT if mis-routed.
+#   3. Set up an isolated git worktree on a feature branch.
+#   4. Implement; tests pass locally.
+#   5. Self-review; fix anything before submission.
+#   6. Push branch; reassign bead to Helmsman with metadata.target.
+#   7. Drain and exit (gc runtime drain-ack && exit).
+#
+# Rejection-aware: if the bead arrives with metadata.rejection_reason,
+# resume from the existing branch (don't redo all the work).
+
+formula = "mol-bluewater-work"
+description = "Worker lifecycle for rated bluewater agents. Bead in → feature branch → implementation → self-review → push → reassign-to-Helmsman → drain. Replaces gastown's mol-polecat-work; no upstream gastown dependency."
+version = 1
+
+[vars.base_branch]
+description = "Branch to base the feature work on. Resolved by gc sling: metadata.target on bead, then on parent convoy chain, then rig default."
+default = ""
+
+[vars.setup_command]
+description = "Project-specific setup command run after worktree creation (npm install, go mod download, etc.). Empty string skips."
+default = ""
+
+[[steps]]
+id = "load-context"
+title = "Load bead context"
+description = """
+Read the bead's title, body, success criteria, and metadata. Confirm:
+- Rate fit (your rate matches the bead's intended-rate metadata or
+  tags). If not, refuse with `NEGAT. Wrong rate — file under <X>. OUT`
+  and reassign the bead back to the pool.
+- The bead has clear success criteria (testable). If not, mail the
+  filing FC with `INTERROGATIVE` and STANDBY.
+"""
+type = "task"
+
+[[steps]]
+id = "workspace-setup"
+title = "Set up worktree and feature branch"
+needs = ["load-context"]
+description = """
+Ensure isolated git worktree and clean feature branch. Idempotent —
+safe to re-run after crash.
+
+1. Fetch latest:
+```
+git fetch --prune origin
+```
+
+2. Resolve worktree path. Check `metadata.work_dir`:
+```
+WORKTREE=$(gc bd show {{issue}} --json | jq -r '.[0].metadata.work_dir // empty')
+```
+If exists and the path is still on disk, reuse. Otherwise create:
+```
+WORKTREE_PATH=$(pwd)/worktrees/{{issue}}
+git worktree add "$WORKTREE_PATH" --detach origin/{{base_branch}}
+gc bd update {{issue}} --set-metadata work_dir="$WORKTREE_PATH"
+cd "$WORKTREE_PATH"
+```
+
+3. Resolve branch. Check `metadata.branch`:
+```
+BRANCH=$(gc bd show {{issue}} --json | jq -r '.[0].metadata.branch // empty')
+```
+If exists, check it out (or create local from origin tracking).
+Otherwise:
+```
+BRANCH="bw/{{issue}}"
+git checkout -b "$BRANCH" origin/{{base_branch}}
+gc bd update {{issue}} --set-metadata branch="$BRANCH"
+```
+
+4. Rejection-aware resume:
+```
+REJECTION=$(gc bd show {{issue}} --json | jq -r '.[0].metadata.rejection_reason // empty')
+if [ -n "$REJECTION" ]; then
+    git rebase origin/{{base_branch}}
+    gc bd update {{issue}} --unset-metadata rejection_reason
+fi
+```
+
+5. Project setup (if configured): `{{setup_command}}`.
+
+Exit criteria: in your worktree, on a clean feature branch rebased on
+latest {{base_branch}}, deps installed, worktree+branch recorded on
+the bead.
+"""
+type = "task"
+
+[[steps]]
+id = "implement"
+title = "Implement the work"
+needs = ["workspace-setup"]
+description = """
+Do the work the bead specifies. Test-first when applicable. If the
+bead is a bug-fix or DC-flavored, write the failing test first.
+Commit incrementally; commit messages should be brief and accurate.
+
+Hard rules (per doctrine safety provisions):
+- Do NOT push to a protected branch directly.
+- Do NOT spawn additional workers without OIC approval.
+- Do NOT modify production config (the test pyramid catches this if
+  you try; MA's pre-tool-use guard catches it before that).
+- Do NOT exceed your rate's tool permissions.
+
+If you get stuck, file `INTERROGATIVE` to the most junior agent who
+could plausibly answer (per doctrine "When uncertain"). Do not silently
+spin.
+"""
+type = "task"
+
+[[steps]]
+id = "self-review"
+title = "Self-review before submission"
+needs = ["implement"]
+description = """
+Run the test suite. Run any project linters. `git status --porcelain`
+should be clean (no untracked files except those intended).
+
+Check the diff against the bead's success criteria. If the diff drifts
+beyond what the bead asked for, EITHER (a) trim the drift back, or
+(b) file a follow-up bead and reference it in your submission.
+"""
+type = "task"
+
+[[steps]]
+id = "submit-and-exit"
+title = "Submit to Helmsman and exit"
+needs = ["self-review"]
+description = """
+You hand off your work and self-clean. You cease to exist after this
+step.
+
+1. Final clean-state check:
+```
+git status --porcelain
+```
+Any output → commit it (`git add -A && git commit -m "chore: capture
+remaining work ({{issue}})"`).
+
+2. Push:
+```
+git push origin HEAD
+```
+
+3. Clean local branch:
+```
+BRANCH=$(git branch --show-current)
+git checkout --detach
+git branch -D "$BRANCH"
+```
+
+4. Update metadata:
+```
+gc bd update {{issue}} \\
+  --set-metadata target={{base_branch}} \\
+  --notes "Implemented: <brief summary>"
+```
+
+5. Reassign to Helmsman pool:
+```
+gc bd update {{issue}} --status=open --assignee=<rig>/helmsman --set-metadata gc.routed_to=<rig>/helmsman
+```
+
+6. Drain and exit:
+```
+gc runtime drain-ack
+exit
+```
+
+Exit criteria: branch pushed, metadata set, bead reassigned to
+Helmsman, drain acknowledged, session exited.
+"""
+type = "task"

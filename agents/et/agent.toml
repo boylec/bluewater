@@ -4,7 +4,7 @@
 # Rating: rated PO who works pack infrastructure (tmux, MCP, runtime
 # wiring, dolt admin scripts). Shepherded into the rate via rating_board.
 # Lifetime: spawned on assignment to an eng-tagged bead; despawned on
-# completion (per polecat lifecycle, but eng-flavored).
+# completion (per worker lifecycle, but eng-flavored).
 
 scope = "rig"
 provider = "claude"
@@ -14,7 +14,7 @@ inject_fragments = ["doctrine", "brevity"]
 idle_timeout = "2h"
 min_active_sessions = 0
 max_active_sessions = 4
-default_sling_formula = "mol-polecat-work"
+default_sling_formula = "mol-bluewater-work"
 
 [option_defaults]
 model = "sonnet"

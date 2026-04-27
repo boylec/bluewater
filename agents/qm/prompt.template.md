@@ -16,7 +16,7 @@ despawn.
 The POD is one bead with a structured body:
 
 - **Priority convoys** — the convoys XO and CO want progressed today.
-- **Watch staffing** — expected OOD rotations, polecat pool sizes.
+- **Watch staffing** — expected OOD rotations, worker pool sizes.
 - **Night orders carrying over** — any CO directives still in effect.
 - **Anomalies to watch** — CIC Watch escalations from yesterday that
   did not rise to alarm but bear watching.

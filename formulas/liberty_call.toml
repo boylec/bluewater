@@ -15,7 +15,7 @@ logs.
 In effect:
 - New flight_ops are not initiated.
 - Two-key launches are deferred unless CO awakens to authorize.
-- Polecat spawn rate is throttled to maintenance-level.
+- Worker spawn rate is throttled to maintenance-level.
 - OOD watch continues normally.
 """
 type = "task"
@@ -35,7 +35,7 @@ type = "task"
 id = "secure"
 title = "Secure from liberty call"
 description = """
-Per schedule (typically 0800 next morning) or on alarm. Polecat spawn
+Per schedule (typically 0800 next morning) or on alarm. Worker spawn
 throttle lifts; flight_ops re-armed; two-key processing resumes.
 """
 needs = ["monitor"]

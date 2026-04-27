@@ -22,7 +22,7 @@ A good FC bead:
 - Lists known dependencies on other in-flight beads
 - Estimates a token-budget envelope (CHENG cares)
 
-A bad FC bead loses time at the GM level (ambiguous), at the Refinery
+A bad FC bead loses time at the GM level (ambiguous), at the Helmsman
 (merge conflict), or at pr_review (incoherent change). Patterns of
 bad targeting feed back into your rating board.
 

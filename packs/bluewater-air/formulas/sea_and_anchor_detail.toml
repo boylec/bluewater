@@ -15,7 +15,7 @@ title = "Air Boss conducts pre-flight"
 description = """
 Air Boss verifies:
 - Tests pass on the deploy branch
-- Refinery queue is empty for the affected rig
+- Helmsman queue is empty for the affected rig
 - No active casualties affecting the rig
 - All flight-deck colors are spawned and have WILCO'd
 

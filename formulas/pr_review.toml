@@ -61,7 +61,7 @@ type = "task"
 id = "land"
 title = "Land or refuse"
 description = """
-On approve: Helmsman picks up the bead from the Refinery and merges.
+On approve: Helmsman picks up the bead from the Helmsman and merges.
 On request-changes: bead routes back to GM pool with rejection_reason.
 On JAG-blocked: stays in JAG queue until JAG resolves.
 """

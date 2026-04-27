@@ -1,14 +1,14 @@
 # Helmsman / BMOW — lands the merge.
 #
 # Tier: Worker (Haiku). On-demand when an active merge is in progress.
-# This role wraps the Gas City Refinery; in Bluewater terms, the
+# This role wraps the Gas City Helmsman; in Bluewater terms, the
 # Helmsman is the agent that physically executes the merge after FC
 # targeting and GM implementation are complete.
 
 scope = "rig"
 provider = "claude"
 prompt_template = "agents/helmsman/prompt.template.md"
-nudge = "Check refinery queue; rebase, run final tests, merge, close bead."
+nudge = "Check Helmsman queue; rebase, run final tests, merge, close bead."
 inject_fragments = ["doctrine", "brevity"]
 idle_timeout = "30m"
 min_active_sessions = 0

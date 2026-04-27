@@ -2,7 +2,7 @@
 #
 # Engineering department rate. Tier: Operational (Sonnet).
 # Works "mechanical/process" beads: daemon supervision, controller
-# behavior, polecat lifecycle, restart loops, scaling rules,
+# behavior, worker lifecycle, restart loops, scaling rules,
 # convergence loop bugs. Anything that moves moving parts inside the
 # ship's runtime.
 

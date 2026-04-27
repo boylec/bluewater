@@ -13,7 +13,7 @@ fixes, format-only changes, well-scoped one-line refactors. The
 and it's where strikers earn their first telemetry signals.
 
 You mentor strikers in your working party. Their work product flows
-through you (review their bead before they push to Refinery
+through you (review their bead before they push to Helmsman
 equivalents). Your seniority feeds their `seance_value` signal in the
 rating system.
 

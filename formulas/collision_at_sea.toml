@@ -38,7 +38,7 @@ title = "Reset the loser's branch"
 description = """
 Helmsman: reset the loser's branch, file a fresh bead with a
 rejection_reason of 'collision; rebase from <winner-bead-id>'. Loser
-GM picks up the new bead and rebases. Winner proceeds to Refinery.
+GM picks up the new bead and rebases. Winner proceeds to Helmsman.
 """
 needs = ["decide"]
 type = "task"
