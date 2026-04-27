@@ -1,0 +1,25 @@
+# Bluewater Discord — quarterdeck watch (intake adapter).
+#
+# Wraps the gastownhall/gascity-packs Discord adapter pattern. The
+# Quarterdeck Watch is the named role; the underlying Discord intake
+# service lives as a proxy_process per the upstream pattern.
+#
+# Spec: docs/spec/REQUIREMENTS-discord.md
+
+[pack]
+name = "bluewater-discord"
+version = "0.1.0"
+schema = 2
+requires_gc = ">= 1.0.0"
+description = "Discord adapter — Quarterdeck Watch routes inbound traffic to the appropriate watchstander."
+
+# Reuse the upstream discord-intake service definition. Consumers can
+# either import discord-intake directly or rely on this pack's
+# Quarterdeck Watch to wrap and route.
+[imports.discord_intake]
+source = "github.com/gastownhall/gascity-packs/discord-intake"
+
+[[named_session]]
+template = "quarterdeck_watch"
+scope = "city"
+mode = "always"

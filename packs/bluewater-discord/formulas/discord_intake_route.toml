@@ -1,0 +1,28 @@
+# discord_intake_route — process one Discord interaction.
+formula = "discord_intake_route"
+description = "Process a single Discord interaction (slash command, mention, message) routed by the underlying discord-intake service."
+version = 1
+
+[vars.payload]
+description = "JSON payload from discord-intake."
+required = true
+
+[[steps]]
+id = "classify"
+title = "Classify the message"
+description = "Slash command? Officer mention? Routine chatter? Decide based on payload shape."
+type = "task"
+
+[[steps]]
+id = "authorize"
+title = "Authorize for the chosen action"
+description = "Check that the user has permission for the action: channel allowlist, user role list, evolution severity max for non-officer roles."
+needs = ["classify"]
+type = "task"
+
+[[steps]]
+id = "execute"
+title = "Execute the routing"
+description = "Mail the target, file the bead, fire the evolution, or emit a brief reply. Yeoman logs."
+needs = ["authorize"]
+type = "task"

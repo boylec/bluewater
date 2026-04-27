@@ -1,0 +1,16 @@
+# Quarterdeck Watch — Discord intake.
+#
+# Tier: Operational (Sonnet). Always-on (intake never closes).
+# Authenticates inbound Discord traffic, logs to Yeoman, routes to the
+# right watchstander based on content.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/quarterdeck_watch/prompt.template.md"
+nudge = "Process the next discord-intake event."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"
