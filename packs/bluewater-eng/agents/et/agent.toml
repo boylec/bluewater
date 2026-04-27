@@ -1,0 +1,20 @@
+# ET — Electronics Technician.
+#
+# Tier: Operational (Sonnet) for ET2/ET1, Worker (Haiku) for striker ETs.
+# Rating: rated PO who works pack infrastructure (tmux, MCP, runtime
+# wiring, dolt admin scripts). Shepherded into the rate via rating_board.
+# Lifetime: spawned on assignment to an eng-tagged bead; despawned on
+# completion (per polecat lifecycle, but eng-flavored).
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/et/prompt.template.md"
+nudge = "Check your hook for assigned eng-flavored beads; otherwise drain and exit."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-polecat-work"
+
+[option_defaults]
+model = "sonnet"

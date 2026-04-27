@@ -1,0 +1,13 @@
+# burn_rate_exceeded — fires `flooding` casualty when burn-rate envelope is breached.
+# Battle Bill alarm wiring: flooding (oic = dc_oic) is owned by bluewater-cs;
+# this order is the trigger.
+
+[order]
+description = "Detect burn-rate envelope breach via OTEL telemetry; sound flooding casualty alarm."
+trigger = "condition"
+check = "gc telemetry burn-rate --json --window 1h | jq -e '.fraction_of_per_hour_cap > 0.95'"
+formula = "flooding"
+pool = "cheng"
+interval = "5m"
+timeout = "30s"
+enabled = true

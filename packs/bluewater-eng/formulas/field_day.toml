@@ -1,0 +1,81 @@
+# field_day — weekly tech-debt/cleanup convoy.
+# Battle Bill: routine, OIC = COB, watchstations = [cob, cheng, et*]
+# Spec: docs/spec/CATALOG.md (field_day section)
+
+formula = "field_day"
+description = "Weekly cleanup convoy. COB orchestrates; CHENG holds the budget envelope; ET division does the work. Targets: stale worktrees, idle sessions past their idle_timeout, dolt orphan databases, brevity-linter rule drift, runtime config divergence."
+version = 1
+
+[vars.budget_tokens]
+description = "Maximum tokens this field_day evolution may consume."
+default = "5000000"
+type = "int"
+
+[vars.target_classes]
+description = "Comma-separated cleanup targets: stale_worktrees,idle_sessions,dolt_orphans,linter_drift,config_drift"
+default = "stale_worktrees,idle_sessions,dolt_orphans,linter_drift,config_drift"
+
+[[steps]]
+id = "cob_brief"
+title = "COB issues field-day intent"
+description = """
+COB convenes the ET division (and any volunteers from other departments)
+and broadcasts the field-day intent: targets, budget, scope.
+
+Brief:
+- Targets: {{target_classes}}
+- Budget: {{budget_tokens}} tokens
+- Severity floor: nothing critical-class; if you find one, escalate.
+- Brevity in effect.
+
+Outgoing message format (one per ET):
+> COB → ET-N: `Sweep <target>. Budget {{budget_tokens}} divided by team
+> size. WILCO when ready. OUT`
+"""
+type = "task"
+
+[[steps]]
+id = "cheng_envelope"
+title = "CHENG confirms burn-rate envelope"
+description = """
+CHENG verifies the field_day budget fits inside the per-day cap.
+If not, CHENG NEGATs back to COB with the reason; COB scales scope or
+defers to next field-day.
+"""
+needs = ["cob_brief"]
+type = "task"
+
+[[steps]]
+id = "et_sweep"
+title = "ETs work assigned cleanup beads"
+description = """
+Each ET works their assigned target class. Cleanup beads are flat — no
+sub-formulas. Each ET reports COMPLETE/FAILED to COB on each item.
+
+Stop conditions (any one):
+- COB calls END FIELD DAY.
+- Burn-rate envelope reached 80% (CHENG signals).
+- Wall clock exceeds 4 hours.
+"""
+needs = ["cheng_envelope"]
+type = "task"
+
+[[steps]]
+id = "yeoman_log"
+title = "Yeoman logs the field-day outcomes"
+description = """
+Yeoman records: targets attempted, items cleaned, items failed, total
+burn rate consumed, any anomalies. Routes to COB and CHENG.
+"""
+needs = ["et_sweep"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from field day"
+description = """
+COB calls 'secure from field day'. ETs drain and despawn. CHENG resets
+the envelope counters. Yeoman closes the molecule.
+"""
+needs = ["yeoman_log"]
+type = "task"

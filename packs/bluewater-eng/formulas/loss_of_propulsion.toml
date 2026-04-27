@@ -1,0 +1,91 @@
+# loss_of_propulsion — provider-wide outage; CHENG OIC.
+# Battle Bill: casualty, severity high. CO awakened, BoI mandatory.
+
+formula = "loss_of_propulsion"
+description = "Provider-wide outage. CHENG decides fight-through (continue with degraded latency), fall-back (queue work, stop dispatching), or fail-over (route via SUPPO to alternate provider). Two-key launch required for fail-over (cross-provider concurrence)."
+version = 1
+
+[vars.failed_provider]
+description = "Provider name that is reporting outage (claude/codex/gemini/...)"
+required = true
+
+[[steps]]
+id = "alarm_received"
+title = "CHENG receives provider_outage alarm"
+description = """
+The order `provider_outage` (in packs/bluewater-supply/orders/) has
+fired. Payload includes the failed provider name and the SUPPO-detected
+symptom (latency spike, error rate, total connection refusal).
+
+CHENG acknowledges with `WILCO. EXECUTING.` and assumes OIC.
+"""
+type = "task"
+
+[[steps]]
+id = "spawn_response_team"
+title = "Spawn EOOW + SUPPO + Yeoman; awaken CO"
+description = """
+Battle Bill says: oic = cheng, watchstations = [cheng, eoow, suppo, yeoman].
+Severity high, so CO is awakened (do not nudge XO and skip — CO must
+be in the loop).
+
+Brief incoming team in one message: failed provider, SUPPO's symptom,
+proposed plan options.
+"""
+needs = ["alarm_received"]
+type = "task"
+
+[[steps]]
+id = "decide_intent"
+title = "CHENG proposes intent; CO decides"
+description = """
+CHENG presents three options to CO:
+
+| Option        | Description                                                       | Two-key required? |
+|---------------|-------------------------------------------------------------------|-------------------|
+| Fight through | Continue dispatching to {{failed_provider}}; accept degraded latency | No                |
+| Fall back     | Stop dispatching new work; queue beads; let in-flight finish     | No                |
+| Fail over     | Route new work to alternate provider via SUPPO                   | YES (cross-provider) |
+
+CO returns intent. CHENG executes via SUPPO (for fail-over) or via the
+EOOW pool-control commands (for fight-through / fall-back).
+"""
+needs = ["spawn_response_team"]
+type = "task"
+
+[[steps]]
+id = "execute"
+title = "Execute the chosen intent"
+description = """
+Fight through: no action; SUPPO continues routing; CHENG monitors.
+Fall back: `gc agent suspend <pool>` for affected pools; mail XO so
+in-flight beads can be tracked.
+Fail over: TWO-KEY LAUNCH. CO + (CSO or another dept head running on a
+different provider) must concur. SUPPO swaps provider routing in the
+city-level config, propagating via `gc reload`.
+"""
+needs = ["decide_intent"]
+type = "task"
+
+[[steps]]
+id = "monitor_recovery"
+title = "Monitor provider recovery"
+description = """
+EOOW polls provider health every 10 minutes (deterministic check, not
+LLM-billed) until the failed provider is healthy again. CHENG decides
+when to revert (or whether to stay on the alternate as the new normal,
+if recovery is not imminent).
+"""
+needs = ["execute"]
+type = "task"
+
+[[steps]]
+id = "secure_and_boi"
+title = "Secure from casualty; mandatory Board of Inquiry"
+description = """
+When the situation is stable for 60 minutes, CHENG calls 'secure from
+loss_of_propulsion'. Yeoman logs the timeline. XO files a
+board_of_inquiry bead — severity high requires it.
+"""
+needs = ["monitor_recovery"]
+type = "task"

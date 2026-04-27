@@ -1,0 +1,18 @@
+# CHENG — Chief Engineer.
+#
+# Tier: Tactical (Sonnet). Department head.
+# Authority: technical authority over token burn rate. May refuse XO
+# orders to spawn more workers if breach of configured burn rate is
+# imminent. Override only by CO (and logged).
+# Lifetime: on-demand (spawn at start of duty day, despawn at end).
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/cheng/prompt.template.md"
+nudge = "Check burn-rate dashboard, mail, and any active loss_of_propulsion or flooding evolutions."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"
