@@ -1,0 +1,10 @@
+# provider_credit_low — fires `replenish_credits` evolution.
+[order]
+description = "Detect any provider crossing 80% of per-day credit cap; fire replenish_credits."
+trigger = "condition"
+check = "gc telemetry credit-balance --json | jq -e '.providers[] | select(.fraction_of_per_day_cap > 0.8)'"
+formula = "replenish_credits"
+pool = "suppo"
+interval = "10m"
+timeout = "30s"
+enabled = true

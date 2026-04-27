@@ -1,0 +1,17 @@
+# SK — Storekeeper.
+#
+# Tier: Operational (Sonnet). Rated PO.
+# Manages credential and dependency inventories under SUPPO.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/sk/prompt.template.md"
+nudge = "Check assigned supply-flavored beads (credential rotations, dependency audits)."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 2
+default_sling_formula = "mol-polecat-work"
+
+[option_defaults]
+model = "sonnet"

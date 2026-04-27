@@ -1,0 +1,18 @@
+# SUPPO — Supply Officer.
+#
+# Tier: Tactical (Sonnet). Department head.
+# Authority: refusal authority on provider routing and credential
+# disclosure. Routes work to provider with budget headroom; refuses to
+# expose secrets outside the documented channels (MAA enforces with
+# pre-tool-use guard).
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/suppo/prompt.template.md"
+nudge = "Check provider credit balances and any in-flight unrep / replenish_credits."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

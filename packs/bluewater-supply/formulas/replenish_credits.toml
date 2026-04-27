@@ -1,0 +1,37 @@
+# replenish_credits — provider credit exhaustion recovery.
+# Battle Bill: operational/casualty hybrid, OIC = SUPPO, alarm-triggered.
+
+formula = "replenish_credits"
+description = "Provider credit at or near per-day cap. SUPPO rotates to alternate provider for that tier and files notification bead for human top-up."
+version = 1
+
+[vars.exhausted_provider]
+description = "Provider name that crossed the per-day credit threshold."
+required = true
+
+[[steps]]
+id = "alarm"
+title = "SUPPO receives credit-exhaustion alarm"
+description = "Order `provider_credit_low` has fired. Payload includes provider name and current usage fraction."
+type = "task"
+
+[[steps]]
+id = "rotate"
+title = "Rotate routing to alternate provider for the tier"
+description = "Update routing policy: every pool currently routing to {{exhausted_provider}} now routes to its tier's alternate. Update via `gc reload`. Verify with `gc agent list --json`."
+needs = ["alarm"]
+type = "task"
+
+[[steps]]
+id = "notify"
+title = "File top-up bead"
+description = "File a bead addressed to ops with title 'Top up credits for {{exhausted_provider}}'. Include current usage, projected exhaustion time at current rate, and suggested top-up amount."
+needs = ["rotate"]
+type = "task"
+
+[[steps]]
+id = "log"
+title = "Yeoman logs replenish_credits"
+description = "Yeoman records: provider, alarm time, alternate selected, top-up bead ID."
+needs = ["notify"]
+type = "task"

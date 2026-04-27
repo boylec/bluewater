@@ -1,0 +1,13 @@
+# provider_outage — fires `loss_of_propulsion` casualty.
+# Battle Bill alarm wiring: loss_of_propulsion (oic = cheng) is owned by
+# bluewater-eng; this order is the trigger.
+
+[order]
+description = "Detect provider-wide outage via SUPPO health checks; sound loss_of_propulsion casualty alarm."
+trigger = "condition"
+check = "gc telemetry provider-health --json | jq -e '.providers[] | select(.healthy == false)'"
+formula = "loss_of_propulsion"
+pool = "suppo"
+interval = "2m"
+timeout = "30s"
+enabled = true

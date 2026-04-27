@@ -1,0 +1,30 @@
+# unrep — Underway Replenishment.
+# Battle Bill: operational, OIC = SUPPO, command-triggered.
+
+formula = "unrep"
+description = "Refresh external context (docs, dependencies, credential rotations) without stopping in-flight work. SUPPO orchestrates; SK does the work."
+version = 1
+
+[vars.targets]
+description = "Comma-separated refresh targets: docs,deps,creds"
+default = "docs,deps,creds"
+
+[[steps]]
+id = "suppo_brief"
+title = "SUPPO briefs the unrep team"
+description = "SUPPO declares targets and budget. SK acknowledges with WILCO and pulls assignments."
+type = "task"
+
+[[steps]]
+id = "sk_refresh"
+title = "SK refreshes each target"
+description = "Per-target refresh: docs (sync upstream), deps (renovate batch), creds (rotation per schedule). Each refresh is its own bead. In-flight work continues — unrep does not block dispatch."
+needs = ["suppo_brief"]
+type = "task"
+
+[[steps]]
+id = "verify"
+title = "Verify and close"
+description = "SUPPO verifies each refresh; Yeoman logs. Failed refreshes file follow-up beads with reason."
+needs = ["sk_refresh"]
+type = "task"
