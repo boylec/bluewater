@@ -1,11 +1,20 @@
 # provider_outage — fires `loss_of_propulsion` casualty.
-# Battle Bill alarm wiring: loss_of_propulsion (oic = cheng) is owned by
-# bluewater-eng; this order is the trigger.
+#
+# In plain SE terms: detects when an LLM provider (claude/codex/gemini)
+# is failing for the ship as a whole — not just one occasional
+# timeout, but a persistent pattern. Triggers the loss_of_propulsion
+# response which decides fight-through, fall-back, or fail-over.
+#
+# Battle Bill wiring: loss_of_propulsion's OIC is CHENG. Formula at
+# formulas/loss_of_propulsion.toml.
+#
+# Telemetry plumbing: reads bluewater.provider.error events. See
+# docs/install.mdx "Telemetry plumbing" to wire real signal.
 
 [order]
-description = "Detect provider-wide outage via SUPPO health checks; sound loss_of_propulsion casualty alarm."
+description = "Detect provider-wide outage from recent error events; sound loss_of_propulsion casualty."
 trigger = "condition"
-check = "gc telemetry provider-health --json | jq -e '.providers[] | select(.healthy == false)'"
+check = "scripts/check-provider-health.sh"
 formula = "loss_of_propulsion"
 pool = "suppo"
 interval = "2m"

@@ -20,7 +20,9 @@ Action depends on the source:
 - Worker in a loop: gc agent drain <name>; if drain fails, suspend.
 - Worker pool too large: lower max_active_sessions on the pool.
 - A formula that's spawning subroots faster than they finish: pause
-  dispatch on that formula via `gc orders disable <name>`.
+  dispatch by editing the relevant order's TOML (set `enabled =
+  false`) and running `gc reload`. The order stops firing without a
+  controller restart.
 - Provider rate-limit interaction (rare): SUPPO routes to alternate
   provider tier.
 """

@@ -1,8 +1,17 @@
 # provider_credit_low — fires `replenish_credits` evolution.
+#
+# In plain SE terms: detects when an LLM provider's API credit balance
+# has crossed 80% of the configured per-day cap. SUPPO rotates new
+# work to alternate providers and files a notification bead so a human
+# can top up.
+#
+# Telemetry plumbing: reads bluewater.provider.credit_balance events.
+# See docs/install.mdx "Telemetry plumbing" to wire real signal.
+
 [order]
 description = "Detect any provider crossing 80% of per-day credit cap; fire replenish_credits."
 trigger = "condition"
-check = "gc telemetry credit-balance --json | jq -e '.providers[] | select(.fraction_of_per_day_cap > 0.8)'"
+check = "scripts/check-provider-credits.sh"
 formula = "replenish_credits"
 pool = "suppo"
 interval = "10m"

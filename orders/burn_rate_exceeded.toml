@@ -1,11 +1,24 @@
-# burn_rate_exceeded — fires `flooding` casualty when burn-rate envelope is breached.
-# Battle Bill alarm wiring: flooding (oic = dc_oic) is owned by bluewater-cs;
-# this order is the trigger.
+# burn_rate_exceeded — fires `flooding` casualty when burn-rate
+# envelope is breached.
+#
+# In plain SE terms: monitors LLM token-spend rate against a configured
+# per-hour cap and alarms (sev1-equivalent) when consumption exceeds
+# 95% of the cap. The "flooding" casualty is the alarm-class formula
+# that handles the response.
+#
+# Battle Bill wiring: flooding's OIC is dc_oic (a senior Damage
+# Controlman). This order is just the trigger; the formula is in
+# formulas/flooding.toml.
+#
+# Telemetry plumbing: the check script reads bluewater.burn_rate.minute
+# events. See docs/install.mdx "Telemetry plumbing" for how to wire
+# real signal; the default install runs the script with no events
+# present (safe — returns "no alarm").
 
 [order]
-description = "Detect burn-rate envelope breach via OTEL telemetry; sound flooding casualty alarm."
+description = "Detect burn-rate envelope breach; sound flooding casualty alarm. Reads bluewater.burn_rate.minute events from the last hour."
 trigger = "condition"
-check = "gc telemetry burn-rate --json --window 1h | jq -e '.fraction_of_per_hour_cap > 0.95'"
+check = "scripts/check-burn-rate.sh"
 formula = "flooding"
 pool = "cheng"
 interval = "5m"

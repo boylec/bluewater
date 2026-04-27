@@ -1,0 +1,167 @@
+---
+title: Glossary
+description: Two-column lookup — every naval term Bluewater uses, with its plain-English meaning.
+---
+
+# Glossary
+
+For the metaphor as a whole, see [`docs/concepts.mdx`](./concepts.mdx).
+This page is the lookup table.
+
+## Command and watch
+
+| Naval term | What it means here |
+|---|---|
+| **Wardroom** | The command layer — CO, XO, OOD, COB, CSOOW agents collectively |
+| **CO** (Captain) | Strategic command — your incident commander; spawns on-demand for sev1, two-key auths, scope expansions |
+| **XO** (Executive Officer) | Day-to-day driver — the agent humans talk to; runs the duty day; hot failover for CO |
+| **OOD** (Officer of the Deck) | The agent currently on watch — your on-call rotation; always exactly one OOD has the conn |
+| **COB** (Chief of the Boat) | Senior enlisted — runs rating boards, training queue, doctrine amendments below CO sign-off |
+| **CSOOW** (Combat Systems Officer of the Watch) | Splits off from OOD during sev1 to run the kill chain (FC retargeting, DC dispatch, Helmsman coordination) |
+| **The conn** | Authority for routine on-watch decisions; "I have the conn" = "I am on-call" |
+| **Watch standing** | Holding the on-call slot for a stretch; rotates on context-pressure |
+| **Watch turnover** | Formal handoff between outgoing and incoming watch-stander — passdown brief → readback → log → conn transfer |
+| **Passdown brief** | The handoff document the outgoing watch-stander writes for the incoming one (five categories: contacts, casualties, night orders, anomalies, recommendations) |
+| **Night orders** | Standing CO directives in effect for the current operational period; propagated by YN across watch turnovers |
+
+## Department heads
+
+| Naval term | What it means here |
+|---|---|
+| **CHENG** (Chief Engineer) | Engineering dept head; refusal authority over token-burn rate |
+| **CSO** (Combat Systems Officer) | Combat Systems dept head; OICs pr_review and CS-flavored casualties |
+| **OPS** | Operations dept head; situational awareness, ops planning |
+| **SUPPO** (Supply Officer) | Supply dept head; refusal authority on credentials and provider routing |
+| **JAG** | Sea Lawyer — license/compliance/Board of Inquiry adversary |
+| **AirBoss** | Air dept head (when bluewater-air installed); commands flight-deck deploys |
+| **EOOW** (Engineering Officer of the Watch) | CHENG's watch surrogate — the agent on Engineering watch when CHENG is asleep |
+
+## Worker rates
+
+| Rate code | Department | What they do |
+|---|---|---|
+| **FC** Fire Controlman | Combat Systems | Targeting analyst — translates intent into structured work items (target branch, success criteria, dependency graph) |
+| **GM** Gunner's Mate | Combat Systems | Implementation worker — writes the code against the FC's work item; the most common worker |
+| **DC** Damage Controlman | Engineering | Bug-fix and casualty-response specialist; test-first discipline |
+| **EM** Electrician's Mate | Engineering | Signal/event-bus, OTEL pipeline, electrical infrastructure work |
+| **MM** Machinist's Mate | Engineering | Daemon/process supervision, scaling rules, lifecycle hooks |
+| **HT** Hull Maintenance Tech | Engineering | Filesystem/dolt/data-layer hygiene |
+| **ET** Electronics Tech | Combat Systems | Combat-system electronics — sensors, fire-control wiring, comms |
+| **MN** Mineman | Combat Systems | Vulnerability detection / dependency CVE / static analysis (defensive partner to MA) |
+| **OS** Operations Specialist | Operations | Rated personnel under CIC Watch Officer |
+| **IS** Intelligence Specialist | Operations | Threat-intel analysis (paired with CT for collection) |
+| **CT** Cryptologic Tech | Operations | SIGINT collection — advisory feeds, CVE digests |
+| **LS** Logistics Specialist | Supply | Credential rotations, dependency audits, inventory work |
+| **HM** Hospital Corpsman | Medical | Agent intervention — investigates stalls, hangs, looping; runs man_overboard |
+| **MA** Master-at-Arms | Admin | Pre-tool-use security guard; refuses bad actions before they execute |
+| **YN** Yeoman | Admin | Durable log keeper — writes the canonical narrative of decisions, casualties, watch turnovers |
+| **BM** Boatswain's Mate | Deck | Leads working parties of undesignated workers on small jobs |
+| **Helmsman** | Combat Systems | Lands merges via the merge queue (fast-forward only) |
+| **SN/FN/AN** | Undesignated | Seaman/Fireman/Airman — entry rates; default landing for new agent identities |
+
+## Routing and configuration
+
+| Naval term | What it means here |
+|---|---|
+| **Battle Bill** | `battle_bill.toml` — routing table mapping each incident type to its OIC, supporting watchstations, and formula |
+| **Watch Bill** | `watch_bill.toml` — context-pressure rotation thresholds, handoff scoring weights, duty-day window |
+| **OIC** | Officer in Charge — the agent that commands a specific incident or evolution |
+| **Watchstation** | A slot in a formula or watch bill; resolves to a rating + count via `watchstation_bindings.toml` |
+| **Evolution** | A pre-composed multi-step procedure — same thing as a formula |
+| **Formula** | TOML in `formulas/` defining steps, vars, dependencies; SE equivalent: a runbook |
+
+## Casualties (alarms)
+
+| Naval term | What it means here |
+|---|---|
+| **Casualty** | A condition that triggers an alarm-class evolution |
+| **General Quarters** | Ship-wide alarm response; SE equivalent: sev1 incident response |
+| **Man Overboard** | Stalled/hung/looping agent recovery procedure |
+| **Fire in Compartment** | Localized subsystem failure; isolate first, fix later |
+| **Flooding** | Runaway resource consumption — burn rate, session count, etc. |
+| **Loss of Propulsion** | Provider-wide outage; CHENG decides fight-through / fall-back / fail-over |
+| **Collision at Sea** | Two agents produced conflicting changes that can't be auto-merged |
+| **Grounding** | An agent executed a forbidden action (severity critical) |
+| **Radiation Leak** | Secret or sensitive-data exposure detected |
+
+## Operations
+
+| Naval term | What it means here |
+|---|---|
+| **Sea and Anchor Detail** | Choreographed deploy procedure — pre-flight checks, two-key gate, smoke-test verification |
+| **Flight Ops** | Carrier-class production deploy choreography (in `bluewater-air` sub-pack); flight-deck colors execute the deploy |
+| **Unrep** (Underway Replenishment) | Refresh external context (docs, deps, creds) without stopping in-flight work |
+| **Replenish Credits** | Provider-credit exhaustion recovery; SUPPO rotates routing + files top-up notification |
+| **Pr_review** | Multi-provider code review with cross-provider concurrence |
+
+## Routine
+
+| Naval term | What it means here |
+|---|---|
+| **Morning Quarters** | Daily 0800 brief — XO presents the day's intent, departments report status |
+| **Plan of the Day (POD)** | The day's work plan; QM produces at 0830 |
+| **Eight O'clock Reports** | End-of-day department status roll-up to XO at 2000 |
+| **Liberty Call** | Designated overnight quiet hours; risky evolutions paused, polecat spawn rate throttled |
+| **Field Day** | Weekly cleanup convoy — tech-debt, runtime hygiene |
+| **Change of Command** | Periodic CO/XO identity refresh (Jan 1 / Jul 1) — rotates models or prompts wholesale |
+
+## Administrative
+
+| Naval term | What it means here |
+|---|---|
+| **Captain's Mast** | Review of an agent that misbehaved; outcome is counsel / demote one step / remove |
+| **Board of Inquiry** | Post-incident formal review with adversarial cross-provider reviewer; mandatory after high+ casualties |
+| **Rating Board** | Striker → rated PO promotion review; unanimous-pass adversarial board |
+| **Striker** | Undesignated agent on a designated path toward a specific rate |
+| **Mess Decks Duty** | Smallest-bead work — doc nits, lint fixes, format-only changes — done by undesignated workers |
+| **Doctrine Amendment** | Proposed change to a doctrine document; process per `doctrine/AMENDMENTS.md` |
+| **Yeoman's Log** | Durable narrative — what YN writes; canonical record of decisions and casualties |
+
+## Safety mechanisms
+
+| Naval term | What it means here |
+|---|---|
+| **Two-key launch** | Action requiring concurrence from two officers running on different LLM providers (defends against same-provider blind spots) |
+| **Pre-tool-use guard** | MA reviews every tool call before execution; refuses if it violates safety provisions |
+| **Brevity protocol** | Constrained vocabulary for agent-to-agent communication (ROGER/WILCO/NEGAT/INTERROGATIVE/BREAK BREAK/etc.) |
+| **The conn** | See above — on-call authority |
+| **Insanity check** | One of the five exceptions where the chain of command is broken — peer/superior is operating incoherently |
+
+## Doctrine
+
+| Naval term | What it means here |
+|---|---|
+| **Doctrine** | The long-lived behavioral contract — `doctrine/DOCTRINE.md` injected into every agent's prompt |
+| **Tactics** | Formula-level guidance — applies during a specific evolution |
+| **Orders** | Per-invocation context — applies right now for this single dispatch |
+| **The chain of command** | CO → XO → OOD/Dept Heads → Division Officers/Chiefs → Petty Officers → Seamen |
+| **Five exceptions** | The five cases where you break the chain (safety, casualty, order conflict, capability gap, insanity check) |
+
+## Other
+
+| Naval term | What it means here |
+|---|---|
+| **Quarterdeck** | Pack intake — the chat-platform adapter (Discord or Slack) |
+| **Carrier-class** | A ship configuration that does production deploys (uses `bluewater-air`) |
+| **Ship** | A `gc start` city instance running the bluewater pack |
+| **Department** | A functional team — Engineering, Combat Systems, Operations, Supply, Medical, Admin, Air |
+| **Crew** | All active agents on the ship |
+
+## Gas City primitives (no naval analog needed)
+
+These are Gas City SDK terms — they keep their original names because
+there's no naval simplification that helps:
+
+| Term | What it is |
+|---|---|
+| **Bead** | A unit of work — task, mail, message, log entry, etc. |
+| **Convoy** | A bundle of related beads worked together |
+| **Rig** | A registered project / git repo |
+| **Hook** | The work queue an agent watches |
+| **Mail** | Inter-agent message queue (a kind of bead) |
+| **Nudge** | Light, ephemeral prompt to an agent (zero-cost, no bead) |
+| **Sling** | Assigning a bead to a worker |
+| **Seance** | Reading the predecessor session's handoff (when an agent restarts) |
+| **Worktree** | A git worktree where a worker does its work |
+
+If a term is in the codebase but not on this page, file an issue.

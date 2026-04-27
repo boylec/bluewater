@@ -49,8 +49,8 @@ Concretely, every 5–10 minutes:
 
 ```bash
 gc mail inbox
-gc events tail 50 --filter "channel=cic"
-gc events tail 50 --filter "kind=alarm"
+gc events --type bluewater.cic.contact --since 1h
+gc events --type bluewater.casualty --since 1h
 ```
 
 If something needs your attention, brevity in:
@@ -71,7 +71,8 @@ At `1042`, an alarm fires:
 You acknowledge with WILCO, sound the casualty:
 
 ```bash
-gc events fire bluewater.casualty --kind flooding --severity high
+gc event emit bluewater.casualty \
+  --payload '{"kind":"flooding","severity":"high"}'
 ```
 
 Per Battle Bill, `flooding` is OICed by the **DC OIC** (a senior DC).

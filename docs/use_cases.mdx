@@ -17,7 +17,7 @@ Every recipe below has the same shape:
 
 Bluewater has **three primary user entry points**:
 
-- **CLI** — `gc bd create`, `gc events fire`, `gc nudge`, `gc session attach`.
+- **CLI** — `gc bd create`, `gc event emit`, `gc nudge`, `gc session attach`.
 - **Dashboard** — `gc dashboard` opens the live state view; click-through
   to beads, evolutions, watch turnovers, casualty timelines.
 - **Chat** — Discord (`/sound …`, `/escalate …`) or Slack (same commands)
@@ -88,8 +88,8 @@ revert, narrow bug fix).
 **You sound the deploy:**
 
 ```bash
-gc events fire bluewater.command --kind sea_and_anchor_detail \
-  --target prod --rig <project> --branch hotfix/<id>
+gc event emit bluewater.command \
+  --payload '{"kind":"sea_and_anchor_detail","target":"prod","rig":"<project>","branch":"hotfix/<id>"}'
 ```
 
 Or, if you have `bluewater-discord` or `bluewater-slack`:
@@ -120,7 +120,7 @@ Or, if you have `bluewater-discord` or `bluewater-slack`:
 
 **You verify by:**
 
-- `gc events tail 50 --filter "kind=deploy"` shows the deploy timeline.
+- `gc events --type bluewater.command --since 30m` shows the deploy timeline.
 - The dashboard's "Active evolutions" panel shows
   `sea_and_anchor_detail` running with each step green or red.
 - YN's log has a deploy entry with both two-key signatures (CO +
@@ -161,7 +161,7 @@ burn rate spikes — something fires an event Bluewater listens for.
 
 - The dashboard's "Active casualty" panel turns red and shows the
   current OIC and step.
-- `gc events tail 200` shows the timeline.
+- `gc events --since 30m` shows the timeline.
 - `gc nudge xo "INTERROGATIVE: status"` returns a brevity-coded
   one-liner if you want to ask without attaching a session.
 
@@ -186,7 +186,8 @@ prepare for a `rating_board` review.
 **You sound a drill:**
 
 ```bash
-gc events fire bluewater.drill --kind man_overboard --target gm-pool
+gc event emit bluewater.drill \
+  --payload '{"kind":"man_overboard","target":"gm-pool"}'
 ```
 
 Or via chat:
@@ -209,8 +210,9 @@ Or via chat:
 
 - `gc bd query --label drill` shows the drill bead with full
   participation log.
-- `gc telemetry rating-signals --agent <id>` shows the
-  `casualty_drill` weight for each participant has updated.
+- `gc bd query --tag rating-signals --notes-contains <agent-id>`
+  shows the participant's updated `casualty_drill` signal weight (or
+  view the rating panel in `gc dashboard`).
 
 ---
 
@@ -230,8 +232,8 @@ gc bd query --tag striker-proposal
 If you concur with one, file a rating board:
 
 ```bash
-gc events fire bluewater.command --kind rating_board \
-  --striker <agent-id> --target_rate fc
+gc event emit bluewater.command \
+  --payload '{"kind":"rating_board","striker":"<agent-id>","target_rate":"fc"}'
 ```
 
 **The ship will:**
@@ -298,9 +300,11 @@ firing alarms or filing beads.
 ```bash
 gc dashboard                     # opens the web dashboard
 gc bd ready                      # shows unassigned beads in pool
-gc events tail 50                # last 50 event-bus events
+gc events --since 30m            # recent event-bus events
+gc events --follow               # stream events live
 gc agent list --json | jq        # active agent identities
-gc telemetry burn-rate --window 1h
+scripts/check-burn-rate.sh       # current burn-rate alarm state
+gc events --type bluewater.burn_rate.minute --since 1h --json   # raw burn telemetry
 ```
 
 For specific subsystems:
@@ -337,7 +341,7 @@ context window, or 4 hours wall-clock, or 100 beads dispatched.
 **You verify by:**
 
 - Dashboard's "Watches" panel shows the new OOD identity.
-- `gc events tail 50 --filter "kind=watch_turnover"` shows the
+- `gc events --type bluewater.watch_turnover --since 1h` shows the
   turnover entry with quality score.
 
 If a turnover scores below 0.6, a low-priority training bead routes to
@@ -356,9 +360,10 @@ outgoing watch. Both auto.
   humans bypass either. Use a feature branch and let Helmsman merge.
 - Do not rotate credentials manually — file a bead for SUPPO. Same
   for production config changes (file with a two-key flag).
-- Do not silence alarms by `gc events disable …` to "stop the
-  noise." If alarms are firing, something is wrong. Disable only with
-  COB approval and only as part of an investigation.
+- Do not silence alarms by editing an order's `enabled = false` and
+  running `gc reload` to "stop the noise." If alarms are firing,
+  something is wrong. Disable only with COB approval and only as part
+  of a documented investigation.
 
 The pack defends against these patterns automatically (MA
 pre-tool-use, brevity linter, Captain's Mast trail), but it's faster

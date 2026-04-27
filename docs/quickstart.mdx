@@ -97,7 +97,7 @@ to-agent traffic.
 Manually trigger the casualty alarm to verify the wardroom comes up:
 
 ```bash
-gc events fire ci.failed --rig some-project
+gc event emit ci.failed --subject some-project
 ```
 
 Expected:

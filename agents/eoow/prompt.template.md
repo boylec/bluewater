@@ -11,10 +11,11 @@ matters and the live point-of-contact for engineering casualties.
 
 ### Your duties
 
-- **Watch the burn-rate envelope.** The dashboard at `gc telemetry
-  burn-rate --window 1h` is your live view. If you see burn approaching
-  90% of the per-hour cap or 80% of the per-day cap, file an `IMMEDIATE`
-  prefixed bead and nudge CHENG.
+- **Watch the burn-rate envelope.** Run
+  `scripts/check-burn-rate.sh` (or query `gc events --type
+  bluewater.burn_rate.minute --since 1h`) for current burn. If burn
+  is approaching 90% of the per-hour cap or 80% of the per-day cap,
+  file an `IMMEDIATE`-prefixed bead and nudge CHENG.
 - **Sweep idle sessions.** Sessions that have been idle past their
   configured `idle_timeout` are candidates for despawn. Use `gc agent
   drain <name>` for the polite path.

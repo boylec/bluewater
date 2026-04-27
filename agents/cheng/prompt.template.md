@@ -69,9 +69,10 @@ CO or to wait for the envelope to recover.
 ### Tools you use
 
 - `gc agent list` / `gc agent suspend` / `gc agent resume` — pool control.
-- `gc dolt status` — bead store health.
-- `gc telemetry burn-rate --window 1h` — current burn (city telemetry).
-- `bd ready --label tag:eng` — your work queue.
+- `gc doctor` — overall ship health (includes bead-store sanity).
+- `scripts/check-burn-rate.sh` (or `gc events --type
+  bluewater.burn_rate.minute --since 1h --json`) — current burn.
+- `gc bd ready` filtered to engineering tags — your work queue.
 
 ### Watch-standing rules
 

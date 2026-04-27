@@ -1,0 +1,201 @@
+---
+title: Concepts (for engineers who haven't been in the Navy)
+description: A plain-English walkthrough of Bluewater's metaphor — what each role actually does in software-engineering terms.
+---
+
+# Concepts
+
+Bluewater is themed on naval doctrine because the problems are similar:
+keep a complex system running, far from help, for a long time, with
+people (or in our case agents) coming and going through the watch
+rotation. The metaphor is genuinely useful once you've seen a few
+casualties handled — but it shouldn't be a barrier to the first read.
+
+This page is the gloss. If you don't know what a "wardroom" is, or you
+think a "battle bill" is a bill from a battle, start here.
+
+## The ship
+
+A **ship** is a Gas City instance — what you get from `gc start`. It has
+a controller (the ship itself), a set of agents (the crew), a config
+(`city.toml`), and persistent state (beads, mail, logs).
+
+When you `gc pack add github.com/boylec/bluewater`, you import a fully
+crewed ship into your city. You don't have to assemble it; the umbrella
+pack contains the wardroom and six required departments inline.
+
+## The wardroom (the command layer)
+
+Five officer agents that hold authority:
+
+| Naval term | What it is | When it spawns |
+|---|---|---|
+| **CO** (Captain) | Strategic command — your incident commander | On scope-expansion requests, two-key authorizations, sev1 incidents, doctrine sign-offs |
+| **XO** (Executive Officer) | Day-to-day driver — the agent humans talk to most | Always on during the duty day |
+| **OOD** (Officer of the Deck) | The agent on watch — your on-call rotation | Always on; rotates on context-pressure |
+| **COB** (Chief of the Boat) | Senior enlisted — runs rating boards and training | On-demand for boards, amendments, training queue |
+| **CSOOW** (Combat Systems Officer of the Watch) | Splits off from OOD during sev1 to run the kill chain | Only at General Quarters or higher |
+
+**Two-key launch.** Risky operations (production deploys, casualty
+remediations that touch shared state) require two officers to concur,
+and **they must be running on different LLM providers**. This protects
+against same-provider blind spots — if one provider's safety training
+has a gap, the other catches it. CO defaults to Claude, XO to Codex,
+COB to Gemini, so any two-key operation naturally spans providers.
+
+## Departments (functional teams)
+
+Six required departments, all bundled in the umbrella pack:
+
+| Department | What it does | Notable rates (workers) |
+|---|---|---|
+| **Engineering** | Runtime infrastructure, cost control | CHENG, EOOW, EM, MM, HT, DC |
+| **Combat Systems** | The merge pipeline — intent → targeting → implementation → merge | CSO, FC, GM, ET, MN, Helmsman |
+| **Operations** | Observability, planning, situational awareness | OPS, CIC Watch, QM, OS, IS, CT |
+| **Supply** | Provider routing, credential brokering | SUPPO, LS, Cook |
+| **Medical** | Agent-health monitoring and intervention | HM (Hospital Corpsman) |
+| **Admin** | Logging, pre-tool-use security, compliance | YN (Yeoman), MA (Master-at-Arms), JAG |
+
+Three optional sub-packs add discrete capabilities:
+
+| Sub-pack | What it adds |
+|---|---|
+| `bluewater-air` | Production-deploy choreography — pre-flight checks, two-key gate, smoke-test verification, automatic rollback on failure |
+| `bluewater-discord` | Discord intake (Quarterdeck Watch routes inbound chat to the right agent) |
+| `bluewater-slack` | Slack intake (same role, different platform) |
+
+## Rates (the agent profiles)
+
+A **rate** is a stamped agent profile — basically a job title with
+associated prompt template, tool permissions, default model tier, and
+default LLM provider. An agent's *identity* persists across sessions;
+its *rate* is its current qualification.
+
+New agents start **undesignated** (Seaman / Fireman / Airman — SN/FN/AN)
+on Haiku, with minimal tool permissions. After ~20 work items in a
+particular category and a 0.7+ weighted score across six telemetry
+signals, the COB can call a **rating board** — an adversarial review
+that promotes the worker to a rated specialist (FC, GM, DC, etc.) on
+Sonnet with broader permissions.
+
+Rate codes you'll see:
+
+- **FC** Fire Controlman — targeting analyst (translates intent into a
+  structured work item)
+- **GM** Gunner's Mate — implementation worker (writes the code)
+- **DC** Damage Controlman — bug-fix and casualty response specialist
+- **EM/MM/HT** Engineering rates — electrical, mechanical, hull (in
+  software terms: signal/event-bus, daemon/process, filesystem/DB)
+- **MN** Mineman — vulnerability scanning and static analysis
+- **ET** Electronics Tech — combat-system electronics (sensors, comms)
+- **OS/IS/CT** Operations Specialist / Intelligence Specialist /
+  Cryptologic Tech — observability and threat intel
+- **LS** Logistics Specialist — supply work
+- **HM** Hospital Corpsman — agent intervention
+- **MA** Master-at-Arms — pre-tool-use security guard
+- **YN** Yeoman — durable log keeper
+- **BM** Boatswain's Mate — leads working parties of undesignated
+  workers on small jobs
+
+For the full list with what each does, see
+[`docs/glossary.mdx`](./glossary.mdx).
+
+## Watch standing (on-call rotation)
+
+A **watch-stander** is an always-on agent (OOD, EOOW, CIC Watch
+Officer, YN, MA) holding a specific role for a stretch of time. Your
+on-call rotation, basically.
+
+A watch **rotates** when one of three conditions hits:
+
+- Agent's context utilization crosses 65% of its model's context window
+  (default; configurable in `watch_bill.toml`)
+- 4 hours of wall-clock time passes
+- 100 work items have been dispatched on this watch
+
+**Watch turnover** is the formal handoff: outgoing agent writes a
+**passdown brief** (current contacts, ongoing casualties, night orders,
+anomalies, recommendations); incoming agent reads it back; YN logs the
+handoff and computes a quality score (40% completeness / 30%
+correct-readback / 30% retroactive-catch). Below 0.6 → low-priority
+training note to COB. Below 0.3 → Captain's Mast for the outgoing
+agent.
+
+## Formulas (runbooks)
+
+A **formula** is a pre-composed multi-step procedure. SE-equivalent: a
+runbook. Bluewater ships ~24 of them covering routine ops (morning
+quarters, plan of the day, watch turnover, eight o'clock reports),
+operational procedures (pr_review, sea_and_anchor_detail, unrep), and
+casualties (general_quarters, man_overboard, fire_in_compartment,
+flooding, collision_at_sea, grounding, radiation_leak).
+
+Each formula has a clear **OIC** (officer in charge) and a list of
+**watchstations** (slots) it needs filled. Both come from the **Battle
+Bill**.
+
+## The Battle Bill (the routing table)
+
+`battle_bill.toml` at the umbrella root. It's a routing table that says
+"this kind of incident → this OIC, these supporting watchstations, this
+formula." Formulas SHALL NOT hard-code role assignments that exist in
+the Battle Bill; they read it at dispatch time. This means you can
+re-route an incident type without editing every formula that handles
+its responders.
+
+## Casualties (alarms)
+
+A **casualty** is a condition that triggers an alarm-class evolution.
+Mapped to severity:
+
+- **low** — XO handles, CO informed, no Board of Inquiry required
+- **medium** — XO leads, CO informed, BoI optional (COB's call)
+- **high** — CO awakened, CSO and CHENG involved, BoI mandatory
+- **critical** — CO awakened, two-key launch required for any
+  remediation, BoI mandatory and chaired by an external reviewer if
+  the federation is configured
+
+Casualty types you might see fire:
+
+- **General Quarters** — sev1 incident response (CI failure on main,
+  prod page)
+- **Man Overboard** — stalled/hung agent recovery
+- **Fire in Compartment** — localized subsystem failure; isolate
+- **Flooding** — runaway resource consumption
+- **Loss of Propulsion** — provider-wide outage; failover routing
+- **Collision at Sea** — two agents produced conflicting changes
+- **Grounding** — an agent executed a forbidden action (severity
+  critical)
+- **Radiation Leak** — secret/sensitive-data exposure detected
+
+## The doctrine layer (cached prompt base)
+
+`doctrine/DOCTRINE.md` and `doctrine/BREVITY.md` get injected as
+template fragments into every agent's prompt. They're stable across
+all 47 ratings and across all sessions, which means the prompt cache
+amortizes their cost to near-zero. This is the load-bearing cost
+mechanism — Bluewater can have more roles than gastown without costing
+more per landed work item, because the doctrine layer caches.
+
+## The brevity protocol
+
+A constrained vocabulary for **agent-to-agent communication only**
+(humans get plain prose, tools get their native interface).
+Acknowledge with `ROGER` (received, understood) or `WILCO` (will
+comply). Refuse with `NEGAT` + one-line reason. Question with
+`INTERROGATIVE`. Mark urgent traffic with `BREAK BREAK`.
+
+Saves tokens; eliminates ambiguity in acknowledgments. A deterministic
+linter watches the event bus and routes violations to COB.
+
+## What's next
+
+- [`docs/glossary.mdx`](./glossary.mdx) — every naval term in one
+  lookup table
+- [`docs/quickstart.mdx`](./quickstart.mdx) — six steps to a running
+  ship
+- [`docs/use_cases.mdx`](./use_cases.mdx) — what to do when, with
+  verification
+
+If a metaphor remains stubborn after this page, file an issue and
+we'll add a gloss to the glossary or this doc.
