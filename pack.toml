@@ -1,0 +1,71 @@
+# Bluewater — naval-doctrine multi-agent orchestration pack.
+#
+# Composes department sub-packs (bluewater-{ops,cs,eng,supply,air,medical,
+# admin,discord}) plus ship-wide officer ratings and ship-wide evolutions
+# (General Quarters, Liberty Call, Watch Turnover).
+#
+# This pack is the umbrella. Each department lives in packs/bluewater-<dept>/.
+# A small ship needs at minimum: this pack + bluewater-eng + bluewater-ops +
+# bluewater-cs. See docs/quickstart.mdx and examples/small_ship.city.toml.
+
+[pack]
+name = "bluewater"
+version = "0.1.0"
+schema = 2
+requires_gc = ">= 1.0.0"
+description = "Naval-doctrine multi-agent orchestration: CO/XO/OOD chain of command, watch standing, pre-composed casualty response, cross-provider two-key launches."
+
+# Sub-pack imports. Departments are local-path imports within this monorepo;
+# downstream consumers can import the umbrella alone or any subset directly.
+[imports.eng]
+source = "./packs/bluewater-eng"
+
+[imports.supply]
+source = "./packs/bluewater-supply"
+
+[imports.admin]
+source = "./packs/bluewater-admin"
+
+[imports.medical]
+source = "./packs/bluewater-medical"
+
+[imports.ops]
+source = "./packs/bluewater-ops"
+
+[imports.cs]
+source = "./packs/bluewater-cs"
+
+[imports.air]
+source = "./packs/bluewater-air"
+
+[imports.discord]
+source = "./packs/bluewater-discord"
+
+# Wardroom officers (CO, XO, OOD, COB, CSOOW) are city-scoped and always-on
+# during waking hours. CSOOW is on-demand (only spawns at General Quarters
+# or higher).
+
+[[named_session]]
+template = "co"
+scope = "city"
+mode = "on_demand"
+
+[[named_session]]
+template = "xo"
+scope = "city"
+mode = "always"
+
+[[named_session]]
+template = "ood"
+scope = "city"
+mode = "always"
+
+[[named_session]]
+template = "cob"
+scope = "city"
+mode = "on_demand"
+
+[[named_session]]
+template = "csoow"
+scope = "city"
+mode = "on_demand"
