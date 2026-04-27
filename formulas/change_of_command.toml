@@ -1,0 +1,41 @@
+# change_of_command — periodic CO/XO refresh.
+# Battle Bill: administrative, OIC = COB, scheduled (Jan 1 / Jul 1).
+
+formula = "change_of_command"
+description = "Periodic identity refresh for CO and XO. Rotates models or prompts wholesale to defend against same-identity drift. Effects: CO and XO seance-handoff to fresh sessions; old sessions despawn."
+version = 1
+
+[[steps]]
+id = "convene"
+title = "COB convenes change of command"
+description = "COB notifies CO and XO 24 hours in advance. They prepare seance handoffs."
+type = "task"
+
+[[steps]]
+id = "co_handoff"
+title = "CO seance handoff"
+description = """
+Outgoing CO writes a seance handoff: open scope-expansion items, in-
+flight two-key authorizations, current night orders, any active BoI
+or Captain's Mast. New CO spawns, reads the handoff, acknowledges
+WILCO.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "xo_handoff"
+title = "XO seance handoff"
+description = """
+Same pattern as CO handoff. Outgoing XO summarizes the day's posture,
+in-flight evolutions, dept-head escalations.
+"""
+needs = ["co_handoff"]
+type = "task"
+
+[[steps]]
+id = "log"
+title = "Yeoman logs change of command"
+description = "Permanent record. Outgoing identities are archived (queryable via seance for institutional memory)."
+needs = ["xo_handoff"]
+type = "task"

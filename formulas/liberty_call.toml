@@ -1,0 +1,42 @@
+# liberty_call — designated rest period.
+# Battle Bill: routine, OIC = CO, scheduled.
+
+formula = "liberty_call"
+description = "Designated quiet hours. Risky evolutions are paused; on-demand spawns require CO authorization (or CO's pre-issued night order). Reduces overnight burn."
+version = 1
+
+[[steps]]
+id = "declare"
+title = "CO declares liberty call"
+description = """
+CO (or, by standing night order, XO) declares liberty call. Yeoman
+logs.
+
+In effect:
+- New flight_ops are not initiated.
+- Two-key launches are deferred unless CO awakens to authorize.
+- Polecat spawn rate is throttled to maintenance-level.
+- OOD watch continues normally.
+"""
+type = "task"
+
+[[steps]]
+id = "monitor"
+title = "Liberty call active"
+description = """
+Lookouts and Sonar continue (deterministic, no LLM). Burn-rate
+monitor (CHENG-spec'd EOOW poll) continues. Casualty alarms still
+fire — liberty call does not silence them.
+"""
+needs = ["declare"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from liberty call"
+description = """
+Per schedule (typically 0800 next morning) or on alarm. Polecat spawn
+throttle lifts; flight_ops re-armed; two-key processing resumes.
+"""
+needs = ["monitor"]
+type = "task"

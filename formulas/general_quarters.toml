@@ -1,0 +1,110 @@
+# general_quarters — full-crew alarm response.
+# Battle Bill: casualty, severity high, OIC = CO.
+# Wired from orders/ci_failed_on_main.toml and orders/prod_alert.toml.
+
+formula = "general_quarters"
+description = "Ship-threatening casualty. Full-crew alarm. CO awakened, wardroom spawned, watch splits (OOD retains ship-survival, CSOOW takes kill chain). Intent: fight through / fall back / fail over. BoI mandatory."
+version = 1
+
+[vars.alarm_source]
+description = "Which order fired this (ci_failed_on_main, prod_alert, escalation from another casualty)."
+required = true
+
+[vars.severity]
+description = "Severity at firing time (high or critical)."
+default = "high"
+
+[[steps]]
+id = "sound_alarm"
+title = "Sound the alarm"
+description = """
+Yeoman stamps a GQ entry with timestamp, originating alarm, severity.
+CIC Watch broadcasts:
+
+> CIC → ALL: `BREAK BREAK FLASH. General Quarters. {{alarm_source}}. OUT`
+
+Every active watch-stander acknowledges with `WILCO` and prepares for
+GQ posture.
+"""
+type = "task"
+
+[[steps]]
+id = "awaken_wardroom"
+title = "Awaken the wardroom"
+description = """
+Spawn (or wake): CO, XO, CSO, CHENG. CSOOW spawns (severity high+).
+Yeoman, OOD, CIC Watch, EOOW already on watch.
+
+Brief the wardroom in one message: alarm source, current observed
+state of the ship, immediate-scope concerns.
+"""
+needs = ["sound_alarm"]
+type = "task"
+
+[[steps]]
+id = "assess"
+title = "Assess"
+description = """
+CIC Watch produces a one-page situation brief: what alarmed, current
+state, immediate scope (which rigs, which beads, which agents). CO
+and XO read it.
+"""
+needs = ["awaken_wardroom"]
+type = "task"
+
+[[steps]]
+id = "decide_intent"
+title = "CO decides intent"
+description = """
+Three options:
+- **Fight through** — continue operations with mitigation.
+- **Fall back** — graceful degradation; pause non-critical work.
+- **Fail over** — provider/region/service swap (TWO-KEY required).
+
+CO declares intent in one sentence; XO and CSOOW WILCO.
+"""
+needs = ["assess"]
+type = "task"
+
+[[steps]]
+id = "split_watch"
+title = "OOD/CSOOW watch split"
+description = """
+OOD retains: ship survival, navigation, intent execution.
+CSOOW assumes: kill chain — FC retargeting, DC team dispatch, Helmsman
+coordination.
+
+Yeoman logs the split.
+"""
+needs = ["decide_intent"]
+type = "task"
+
+[[steps]]
+id = "execute"
+title = "Execute"
+description = """
+DC teams run their playbook formulas (fire_in_compartment, flooding,
+collision_at_sea — whichever maps). CHENG governs burn-rate envelope
+(may be temporarily relaxed for casualty response — CO authorizes the
+relaxation; logged).
+
+OOD monitors ship-wide; CSOOW monitors kill chain. Status to CO every
+10 minutes (or sooner on material change).
+"""
+needs = ["split_watch"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from general quarters"
+description = """
+When the situation has been stable for 30 consecutive minutes, CO
+calls `Secure from general quarters. OUT`. Watch unsplits (CSOOW hands
+the kill chain back to OOD), wardroom returns to normal posture
+(department heads despawn unless duty hours, etc.).
+
+Yeoman logs the timeline. XO files board_of_inquiry — mandatory at
+severity high+.
+"""
+needs = ["execute"]
+type = "task"

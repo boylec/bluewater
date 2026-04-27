@@ -1,0 +1,9 @@
+# ci_failed_on_main — fires general_quarters at high severity.
+[order]
+description = "When CI fails on main (any tracked rig), sound general quarters."
+trigger = "event"
+on = "ci.failed"
+formula = "general_quarters"
+pool = "co"
+timeout = "30s"
+enabled = true

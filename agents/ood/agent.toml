@@ -1,0 +1,15 @@
+# OOD — Officer of the Deck. Has the conn.
+#
+# Tier: Operational (Sonnet). Always-on (always exactly one OOD has
+# the conn). Rotates per watch_bill.toml on context pressure.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/ood/prompt.template.md"
+nudge = "Stand the watch. Sweep CIC reports, mail, alarms. Conduct turnover at threshold."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

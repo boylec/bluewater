@@ -1,0 +1,20 @@
+# CO — Captain. Strategic command.
+#
+# Tier: Strategic (Opus). On-demand only — CO is asleep until awakened
+# for: scope expansion approval, two-key launch authorization, casualty
+# of high+ severity, captain's mast, board of inquiry, doctrine
+# amendment sign-off (DOCTRINE.md or BATTLE_BILL.md changes).
+#
+# Different provider than XO so any two-key requiring CO + dept head
+# spans providers.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/co/prompt.template.md"
+nudge = "Wardroom is calling. Read the brief, decide, return to standby."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "15m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "opus"

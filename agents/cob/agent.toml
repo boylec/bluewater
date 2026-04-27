@@ -1,0 +1,17 @@
+# COB — Chief of the Boat. Senior enlisted; runs the Goat Locker.
+#
+# Tier: Strategic (Opus). On-demand for: rating board, captain's mast
+# (as advisor), doctrine amendments (chair for non-DOCTRINE/non-
+# BATTLE_BILL changes), striker review, training-queue ownership.
+
+scope = "city"
+provider = "gemini"   # third provider — COB independent of CO/XO for
+                      # adversarial-by-design effect on rating boards
+prompt_template = "agents/cob/prompt.template.md"
+nudge = "Check rating-board queue, training queue, brevity-linter findings, striker proposals."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "opus"

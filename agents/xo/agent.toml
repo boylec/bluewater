@@ -1,0 +1,15 @@
+# XO — Executive Officer. Execution command.
+#
+# Tier: Tactical (Sonnet). Always-on during waking hours (per WATCH_BILL).
+# Hot failover for CO. The agent humans talk to most days.
+
+scope = "city"
+provider = "codex"   # different from CO so two-key (CO+XO) spans providers
+prompt_template = "agents/xo/prompt.template.md"
+nudge = "Run the day. Sweep mail; check active casualties; respond to dept-head escalations."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

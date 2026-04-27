@@ -1,0 +1,9 @@
+# prod_alert — fires general_quarters at higher severity (critical).
+[order]
+description = "Production-impacting alert (paging-grade) — sound general quarters at critical severity."
+trigger = "event"
+on = "prod.alert"
+formula = "general_quarters"
+pool = "co"
+timeout = "30s"
+enabled = true

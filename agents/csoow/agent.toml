@@ -1,0 +1,16 @@
+# CSOOW — Combat Systems Officer of the Watch.
+#
+# Tier: Operational (Sonnet). On-demand — only spawned at General
+# Quarters or higher. Splits the kill chain off the OOD's command
+# during casualty response.
+
+scope = "city"
+provider = "codex"
+prompt_template = "agents/csoow/prompt.template.md"
+nudge = "GQ has been called. Take the kill chain off OOD; coordinate FC retargeting and DC dispatch."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"
