@@ -1,0 +1,17 @@
+# Brown — Plane Captain. Service-owning engineer agent.
+#
+# Tier: Operational (Sonnet). On-demand per deploy.
+# The live LLM rep for whichever service is being deployed. Different
+# services pull different prompts (configured via city overlay).
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/brown/prompt.template.md"
+nudge = "You own a service. The Air Boss is calling for a deploy. Verify your service is ready, brief on any ongoing concerns."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+min_active_sessions = 0
+max_active_sessions = 2
+
+[option_defaults]
+model = "sonnet"

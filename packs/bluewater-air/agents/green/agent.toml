@@ -1,0 +1,7 @@
+# Green — Catapult / arresting gear. CI/build system wrapper.
+scope = "city"
+provider = ""
+prompt_template = ""
+nudge = ""
+idle_timeout = ""
+max_active_sessions = 0

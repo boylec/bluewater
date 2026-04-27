@@ -1,0 +1,29 @@
+# Bluewater Air — flight-deck choreography for production deploys.
+#
+# Carrier-class. Optional. When installed, the Air Boss takes ownership
+# of sea_and_anchor_detail from CSO. Flight-deck colors map onto the
+# specific roles a careful production deploy needs: aircraft handler,
+# fueler, ordnance, arresting gear, plane captain, chocks/chains, safety.
+#
+# Most deck colors are deterministic or near-deterministic — they
+# trigger scripts (CI, deploy commands, rollback hooks). Only Air Boss
+# and the Plane Captain (Brown) routinely use an LLM.
+#
+# Spec: docs/spec/REQUIREMENTS-air.md
+
+[pack]
+name = "bluewater-air"
+version = "0.1.0"
+schema = 2
+requires_gc = ">= 1.0.0"
+description = "Air department: Air Boss + Yellow/Purple/Red/Green/Brown/Blue/White flight-deck colors. Production-deploy choreography."
+
+[[named_session]]
+template = "air_boss"
+scope = "city"
+mode = "on_demand"
+
+[[named_session]]
+template = "brown"
+scope = "rig"
+mode = "on_demand"

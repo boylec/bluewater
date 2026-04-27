@@ -1,0 +1,7 @@
+# Purple — Fuel. Wraps SUPPO's credential delivery for deploys.
+scope = "city"
+provider = ""
+prompt_template = ""
+nudge = ""
+idle_timeout = ""
+max_active_sessions = 0

@@ -1,0 +1,8 @@
+# White — Safety. Compliance / policy gate at deck edge.
+# Talks to MAA and JAG when something needs adjudication mid-deploy.
+scope = "city"
+provider = ""
+prompt_template = ""
+nudge = ""
+idle_timeout = ""
+max_active_sessions = 0

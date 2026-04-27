@@ -1,0 +1,80 @@
+# flight_ops — flight-deck deploy choreography.
+# Battle Bill: operational, OIC = Air Boss, command-triggered.
+
+formula = "flight_ops"
+description = "Production deploy choreography for carrier-class ships. Air Boss conducts; flight-deck colors execute. Two-key launch required if target is production. White SHALL NEGAT and ground the launch on any compliance gate failure."
+version = 1
+
+[vars.target]
+description = "Deploy target (rig, environment, version)."
+required = true
+
+[[steps]]
+id = "spot"
+title = "Yellow signals deck clear; Brown spots the aircraft"
+description = "Brown declares which artifact version is being launched. Yellow signals 'deck clear'."
+type = "task"
+
+[[steps]]
+id = "fuel"
+title = "Purple delivers credentials"
+description = "Purple requests deploy credentials from SUPPO via a scoped, short-lived token bound to the deploy bead."
+needs = ["spot"]
+type = "task"
+
+[[steps]]
+id = "ordnance"
+title = "Red verifies artifact integrity"
+description = "Checksum and signature verification on the artifact. NEGAT and ground if mismatch."
+needs = ["fuel"]
+type = "task"
+
+[[steps]]
+id = "cat"
+title = "Green tensions the catapult"
+description = "Verifies CI is green for the artifact's build SHA and that the build is from a clean refinery merge."
+needs = ["ordnance"]
+type = "task"
+
+[[steps]]
+id = "chocks"
+title = "Blue verifies chocks"
+description = "Feature flags armed; rollback path tested in staging within last 24h. NEGAT if rollback path stale."
+needs = ["cat"]
+type = "task"
+
+[[steps]]
+id = "deck_edge"
+title = "White checks deck edge"
+description = "Compliance allowlist clean: no unresolved JAG flags on the artifact, no pending MAA refusals on the deploy identity. NEGAT and ground if any."
+needs = ["chocks"]
+type = "task"
+
+[[steps]]
+id = "two_key"
+title = "Two-key launch (if production)"
+description = "If target is production: Air Boss + (CO or other officer on a different provider) must both authorize. Yeoman logs both signatures."
+needs = ["deck_edge"]
+condition = "{{target_is_production}}"
+type = "task"
+
+[[steps]]
+id = "launch"
+title = "Yellow waves the launch; Green fires"
+description = "Deploy command runs. Brown watches smoke tests."
+needs = ["two_key"]
+type = "task"
+
+[[steps]]
+id = "recover_or_waveoff"
+title = "Recover or wave-off"
+description = """
+On smoke tests green: Yellow signals 'recovery' (deploy committed,
+flags can be flipped on at human discretion). Yeoman logs success.
+
+On smoke tests red: Air Boss calls 'WAVE OFF'. Blue triggers feature-
+flag rollback OR Helmsman-equivalent commit revert. fire_in_compartment
+casualty automatically opens for the affected service.
+"""
+needs = ["launch"]
+type = "task"

@@ -1,0 +1,7 @@
+# Red — Ordnance. Verifies artifact integrity (checksums, signatures).
+scope = "city"
+provider = ""
+prompt_template = ""
+nudge = ""
+idle_timeout = ""
+max_active_sessions = 0

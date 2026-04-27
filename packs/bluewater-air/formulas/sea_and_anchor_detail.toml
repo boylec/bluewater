@@ -1,0 +1,45 @@
+# sea_and_anchor_detail — Air-flavored variant.
+# Battle Bill: operational, OIC = Air Boss when bluewater-air installed.
+# This variant takes precedence over packs/bluewater-cs/formulas/sea_and_anchor_detail.toml
+# via Pack V2 import resolution (most-recent-import-wins; bluewater-air is
+# imported after bluewater-cs in the umbrella pack.toml).
+
+formula = "sea_and_anchor_detail"
+description = "Air-led deploy choreography. Wraps flight_ops for the deploy phase, plus pre-flight (testing, queue clearance, casualty checks) and post-flight (verification, BoI on rollback)."
+version = 1
+extends = ["flight_ops"]
+
+[[steps]]
+id = "preflight"
+title = "Air Boss conducts pre-flight"
+description = """
+Air Boss verifies:
+- Tests pass on the deploy branch
+- Refinery queue is empty for the affected rig
+- No active casualties affecting the rig
+- All flight-deck colors are spawned and have WILCO'd
+
+Then proceeds to spot/fuel/ordnance/cat/chocks/deck_edge per flight_ops.
+"""
+type = "task"
+
+[[steps]]
+id = "execute_flight_ops"
+title = "Execute flight_ops choreography"
+description = "Run the inherited flight_ops steps."
+needs = ["preflight"]
+type = "task"
+
+[[steps]]
+id = "postflight_verify"
+title = "Post-flight verification"
+description = "Smoke tests green for 5 minutes. Brown declares COMPLETE."
+needs = ["execute_flight_ops"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from sea and anchor detail"
+description = "If wave-off occurred, XO files BoI. Otherwise: Yeoman logs and Air Boss/colors despawn."
+needs = ["postflight_verify"]
+type = "task"
