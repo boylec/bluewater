@@ -1,0 +1,20 @@
+# Bluewater Medical — agent health monitoring and intervention.
+#
+# Cook is deterministic (no LLM). Reads agent telemetry; flags stuckness
+# patterns; escalates to Corpsman.
+# Corpsman is on-demand. Investigates stalls, hangs, looping, hallucination
+# patterns; performs the man_overboard recovery formula.
+#
+# Spec: docs/spec/REQUIREMENTS-medical.md
+
+[pack]
+name = "bluewater-medical"
+version = "0.1.0"
+schema = 2
+requires_gc = ">= 1.0.0"
+description = "Medical department: Cook (deterministic agent-health monitor) and Corpsman (intervention)."
+
+[[named_session]]
+template = "corpsman"
+scope = "city"
+mode = "on_demand"

@@ -1,0 +1,13 @@
+# agent_stalled — fires `man_overboard` casualty.
+# The Cook (deterministic, scripts) detects the stall pattern; this order
+# fires the formula.
+
+[order]
+description = "Detect stalled / hung / looping agent via Cook's deterministic checks; sound man_overboard."
+trigger = "condition"
+check = "scripts/cook-check.sh"   # provided in this sub-pack; emits exit 0 when alarm condition met
+formula = "man_overboard"
+pool = "ood"
+interval = "1m"
+timeout = "30s"
+enabled = true

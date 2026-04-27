@@ -1,0 +1,53 @@
+# man_overboard — stalled or hung agent recovery.
+# Battle Bill: casualty, severity medium, OIC = OOD.
+# Note: spec says OIC = OOD but Corpsman is the operator who actually
+# investigates. OOD has command authority; Corpsman is dispatched.
+
+formula = "man_overboard"
+description = "Stalled, hung, looping, or hallucinating agent. OOD has command authority; Corpsman investigates and intervenes. Outcome: nudge / drain / seance recovery / captains_mast (on pattern)."
+version = 1
+
+[vars.stalled_agent]
+description = "Identity of the agent that was reported stalled."
+required = true
+
+[[steps]]
+id = "ood_brief"
+title = "OOD reviews the alarm and dispatches Corpsman"
+description = "OOD reads the agent_stalled order's payload (which agent, what symptom). Spawns Corpsman with WILCO. Yeoman starts logging."
+type = "task"
+
+[[steps]]
+id = "triage"
+title = "Corpsman triage"
+description = "Corpsman runs the four-check triage from agents/corpsman/prompt.template.md (process, heartbeat, looping, hallucination)."
+needs = ["ood_brief"]
+type = "task"
+
+[[steps]]
+id = "intervene"
+title = "Corpsman intervenes"
+description = """
+Pick ONE intervention based on triage:
+- nudge (light): for plausibly-recoverable stalls
+- drain (polite): for stalled but not looping/hallucinating
+- seance recovery (firm): for looping or hallucinating; preserve work
+  context, replace the session
+- captains_mast (firm + record): if 3+ stalls within a watch
+"""
+needs = ["triage"]
+type = "task"
+
+[[steps]]
+id = "verify_recovery"
+title = "Verify"
+description = "After intervention, verify the agent is back on its feet (or fully gone with bead reassigned). Emit a `man_overboard.recovered` event so the OOD can clear the alarm."
+needs = ["intervene"]
+type = "task"
+
+[[steps]]
+id = "log"
+title = "Yeoman logs"
+description = "Stalled agent identity, symptom, intervention chosen, outcome. Routed to COB so patterns are visible at rating-board time."
+needs = ["verify_recovery"]
+type = "task"

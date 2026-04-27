@@ -1,0 +1,14 @@
+# Corpsman — agent intervention.
+#
+# Tier: Operational (Sonnet). On-demand.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/corpsman/prompt.template.md"
+nudge = "Investigate the stalled agent. Decide: nudge, drain, or recover via seance handoff."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

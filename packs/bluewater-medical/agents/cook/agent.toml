@@ -1,0 +1,18 @@
+# Cook — deterministic agent-health early warning. NO LLM.
+#
+# Per ARCHITECTURE.md "LLMs sleep until alarm condition". Cook is a
+# script (cron + jq + grep), not an LLM session. Watches the event bus
+# and telemetry for stuckness patterns and emits alarms via the
+# `agent_stalled` order.
+#
+# This [[agent]] entry exists for visibility and for Battle Bill
+# binding lookup, but the actual implementation is the deterministic
+# pre_start command and the cooks's check scripts. There is no
+# prompt_template because Cook never receives a prompt.
+
+scope = "city"
+provider = ""    # no provider — deterministic
+prompt_template = ""
+nudge = ""
+idle_timeout = ""
+max_active_sessions = 0   # never spawned as an LLM session
