@@ -13,59 +13,69 @@ reactions, and explicit token-cost authority at every tier.
 
 ```bash
 gc pack add github.com/boylec/bluewater
-gc pack add github.com/boylec/bluewater/packs/bluewater-eng
-gc pack add github.com/boylec/bluewater/packs/bluewater-cs
-# ...add the departments your ship needs
+```
+
+That's it for a fully functional ship — Wardroom, Engineering, Operations,
+Combat Systems, Supply, Medical, Admin all included. Optional add-ons:
+
+```bash
+gc pack add github.com/boylec/bluewater/packs/bluewater-air      # carrier-class deploys
+gc pack add github.com/boylec/bluewater/packs/bluewater-discord  # Discord intake
+gc pack add github.com/boylec/bluewater/packs/bluewater-slack    # Slack intake
 ```
 
 See [`docs/install.mdx`](docs/install.mdx) for the full walkthrough.
 
 ## Quickstart
 
-A small ship runs with three sub-packs:
-
 ```toml
 # city.toml
 [workspace]
 name = "my-ship"
 provider = "claude"
+formula_v2 = true
 
 [imports.bluewater]
 source = "github.com/boylec/bluewater"
-
-[imports.bluewater_eng]
-source = "github.com/boylec/bluewater/packs/bluewater-eng"
-
-[imports.bluewater_ops]
-source = "github.com/boylec/bluewater/packs/bluewater-ops"
-
-[imports.bluewater_cs]
-source = "github.com/boylec/bluewater/packs/bluewater-cs"
 ```
 
-See [`docs/quickstart.mdx`](docs/quickstart.mdx) and the worked example at
-[`examples/small_ship.city.toml`](examples/small_ship.city.toml).
-
-For a carrier-class deployment with all departments, see
+That single import gives you the wardroom (CO/XO/OOD/COB/CSOOW) plus all
+six required departments. See [`docs/quickstart.mdx`](docs/quickstart.mdx)
+and the worked examples at
+[`examples/small_ship.city.toml`](examples/small_ship.city.toml) and
 [`examples/carrier.city.toml`](examples/carrier.city.toml).
+
+## Use cases
+
+[`docs/use_cases.mdx`](docs/use_cases.mdx) is the answer to "I have the
+ship up — what do I actually do with it?" Each recipe has the shape:
+when you need to → you do → ship will → you verify by.
 
 ## Departments
 
-| Sub-pack              | Department      | Purpose                                                 |
-|-----------------------|-----------------|---------------------------------------------------------|
-| `bluewater`           | Umbrella        | Composes departments into a complete ship               |
-| `bluewater-ops`       | Operations      | Situational awareness, planning, lookouts, sonar, CT    |
-| `bluewater-cs`        | Combat Systems  | The kill chain: FC → polecats → helmsman → refinery     |
-| `bluewater-eng`       | Engineering     | Runtime infrastructure, token-burn governance           |
-| `bluewater-supply`    | Supply          | Credit/credential brokering across providers            |
-| `bluewater-air`       | Air             | Flight-deck choreography for production deploys         |
-| `bluewater-medical`   | Medical         | Agent health monitoring and intervention                |
-| `bluewater-admin`     | Admin           | Yeoman, MAA, JAG — records, security, compliance        |
-| `bluewater-discord`   | Adapter         | Discord intake, modeled on `gascity-packs/discord`      |
+The umbrella pack contains six required departments inline. Three more
+ship as optional sub-packs.
 
-Minimum running ship: `bluewater` + `bluewater-eng` + `bluewater-ops` +
-`bluewater-cs`. Carrier-class adds `bluewater-air`. Long-running production
-packs add `bluewater-supply` and `bluewater-medical`.
+### Required (in the umbrella)
+
+| Department      | Rates (real-navy)                          | Purpose                                           |
+|-----------------|--------------------------------------------|---------------------------------------------------|
+| **Wardroom**    | CO, XO, OOD, COB, CSOOW                    | Command continuity                                |
+| **Engineering** | CHENG, EOOW, EM, MM, HT, DC                | Token-burn governance, runtime hygiene           |
+| **Operations**  | OPS, CIC Watch Officer, QM, OS, IS, CT, lookout, sonar | Situational awareness                |
+| **Combat Sys**  | CSO, FC, GM, ET, MN, Helmsman              | The kill chain — intent → targeting → merge      |
+| **Supply**      | SUPPO, LS, CS (Cook)                       | Provider routing, credit + credential brokering   |
+| **Medical**     | HM (Hospital Corpsman)                     | Agent-health intervention                         |
+| **Admin**       | YN (Yeoman), MA (Master-at-Arms), JAG      | Records, pre-tool-use security, compliance        |
+| **Undesignated**| BM, SN, FN, AN                             | Working parties, mess-decks duty                  |
+
+### Optional sub-packs (under `packs/`)
+
+| Sub-pack              | Purpose                                                   |
+|-----------------------|-----------------------------------------------------------|
+| `bluewater-air`       | Flight-deck choreography for carrier-class production deploys |
+| `bluewater-discord`   | Quarterdeck Watch on Discord                              |
+| `bluewater-slack`     | Quarterdeck Watch on Slack                                |
 
 ## Why this pack instead of `gastown`
 
@@ -85,8 +95,9 @@ See [`docs/spec/ARCHITECTURE.md`](docs/spec/ARCHITECTURE.md) for the full case.
 Bluewater is designed to run *cheaper* than `gastown` at equivalent throughput,
 not more expensively, despite having more roles. The mechanism is in
 [`doctrine/DOCTRINE.md`](doctrine/DOCTRINE.md) under "Token Discipline" and
-in [`packs/bluewater-eng/`](packs/bluewater-eng/) (CHENG agent, refusal
-authority over token burn rate).
+in the CHENG agent ([`agents/cheng/`](agents/cheng/)) which holds technical
+authority over token burn rate the way a real ship's Engineering Officer
+of the Watch holds authority over the reactor.
 
 ## Prerequisites
 
@@ -98,12 +109,21 @@ authority over token burn rate).
 
 ## Where to start reading
 
+- [`docs/use_cases.mdx`](docs/use_cases.mdx) — what to do when, with verification
 - [`docs/quickstart.mdx`](docs/quickstart.mdx) — get a small ship running
 - [`docs/first_watch.mdx`](docs/first_watch.mdx) — your first end-to-end watch
-- [`doctrine/`](doctrine/) — the doctrine layer (read this *if* you're
-  modifying agent prompts; otherwise the agents read it for you)
-- [`docs/spec/`](docs/spec/) — original v0.1.0 specification, preserved as
-  historical reference
+- [`doctrine/`](doctrine/) — the doctrine layer (your agents already read it)
+- [`docs/spec/`](docs/spec/) — original v0.1.0 specification, preserved
+  for historical reference
+
+## Naval doctrine
+
+Real-navy rate codes and department assignments. See
+[`doctrine/AMENDMENTS.md`](doctrine/AMENDMENTS.md) entry A0002 for the
+correctness audit. Watch standing follows
+[`doctrine/WATCH_BILL.md`](doctrine/WATCH_BILL.md); the brevity protocol
+([`doctrine/BREVITY.md`](doctrine/BREVITY.md)) governs all inter-agent
+communication.
 
 ## License
 

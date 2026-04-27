@@ -1,12 +1,12 @@
 # Small-ship Bluewater deployment.
 #
-# The minimum running ship: umbrella + bluewater-eng + bluewater-ops +
-# bluewater-cs + bluewater-admin (mandatory per requires) + bluewater-
-# medical (mandatory for long-running ships per requires).
+# The umbrella pack alone gives you a fully functional ship: Wardroom,
+# Engineering, Operations, Combat Systems, Supply, Medical, Admin —
+# all six required departments inlined. No optional sub-packs.
 #
 # This example assumes you have at least two of {claude, codex, gemini}
-# configured as providers. The cross-provider concurrence required for
-# two-key launches will fail if only one provider is available.
+# configured as providers. Two-key launches require cross-provider
+# concurrence; single-provider ships degrade those features.
 
 [workspace]
 name = "small-ship"
@@ -16,23 +16,17 @@ formula_v2 = true
 [imports.bluewater]
 source = "github.com/boylec/bluewater"
 
-# (bluewater imports its own sub-packs transitively — eng, ops, cs,
-# admin, medical — and pulls them into the city via that bind. Air,
-# supply, discord are not pulled by the umbrella; consumers add them
-# explicitly via separate [imports.<name>] entries.)
-
 [daemon]
 patrol_interval = "30s"
 max_restarts = 5
 restart_window = "1h"
 shutdown_timeout = "5s"
 
-# Cross-provider configuration. Tier mapping per ARCHITECTURE.md and
-# encoded in each rating's option_defaults.model. To enable two-key
-# launches with cross-provider concurrence, configure at least two:
+# Provider configuration (uncomment and fill in for your environment).
+# Two providers minimum recommended for cross-provider concurrence:
 #
 # [providers.claude]
-# (claude config — anthropic API key, etc)
+# (claude config — anthropic API key via env or config)
 #
 # [providers.codex]
 # (codex config)
@@ -40,20 +34,17 @@ shutdown_timeout = "5s"
 # [providers.gemini]
 # (gemini config)
 #
-# Defaults:
-#   CO -> claude (Opus)
-#   XO -> codex  (Sonnet)
-#   COB -> gemini (Opus)
-#   OOD, MAA, EOOW, CSOOW etc rotate per the per-rating option_defaults
-#
-# Override any of these here if your provider availability differs.
+# Default per-rating provider mapping (override here if needed):
+#   CO  -> claude  XO  -> codex   COB -> gemini
+#   OOD -> claude  CSOOW -> codex
+#   MA  -> codex   YN  -> claude  JAG -> gemini
 
-# Bluewater-specific overlay (optional). All Bluewater knobs live under
+# Bluewater-specific overlay (optional). Knobs live under
 # [bluewater.<dept>] for clarity.
 
 [bluewater.eng]
 # Burn-rate envelope (in tokens). CHENG refuses spawn requests when
-# breached. Override the defaults here:
+# breached. Override defaults here:
 # per_hour_cap = 10_000_000
 # per_day_cap  = 80_000_000
 
@@ -63,6 +54,6 @@ shutdown_timeout = "5s"
 # level = "advisory"
 
 # Crew members (rated agents) are not declared here; they are pack-
-# stamped via the rating system. Officers (CO, XO, OOD, COB, CSOOW)
-# are declared as named_session in pack.toml of bluewater (the
-# umbrella).
+# stamped via the rating system in agents/<rate>/. Officers and
+# always-on watch standers are declared as [[named_session]] in the
+# umbrella's pack.toml.

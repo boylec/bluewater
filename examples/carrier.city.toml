@@ -1,12 +1,13 @@
 # Carrier-class Bluewater deployment.
 #
-# Adds bluewater-air (production deploy choreography), bluewater-supply
-# (provider routing and credential brokering — required for cross-
-# provider concurrence beyond ad-hoc), and bluewater-discord (intake
-# adapter). All eight sub-packs running.
+# Umbrella plus all three optional sub-packs:
+#   bluewater-air     — production deploy choreography
+#   bluewater-discord — Discord intake (Quarterdeck Watch)
+#   bluewater-slack   — Slack intake (Quarterdeck Watch)
 #
 # Suitable for: long-running production packs landing convoys daily,
-# multi-rig orgs, public-internet-facing deploys.
+# multi-rig orgs, public-internet-facing deploys, teams with chat-driven
+# operations.
 
 [workspace]
 name = "carrier"
@@ -16,19 +17,18 @@ formula_v2 = true
 [imports.bluewater]
 source = "github.com/boylec/bluewater"
 
-# Carrier-class additions (umbrella imports these transitively if they
-# are mandatory, but the umbrella's pack.toml declares all eight as
-# imports — they all come along automatically. The explicit imports
-# below are kept for clarity; they may be commented out without effect).
-
+# Optional sub-packs (each imported separately).
 [imports.bluewater_air]
 source = "github.com/boylec/bluewater/packs/bluewater-air"
 
-[imports.bluewater_supply]
-source = "github.com/boylec/bluewater/packs/bluewater-supply"
-
 [imports.bluewater_discord]
 source = "github.com/boylec/bluewater/packs/bluewater-discord"
+
+# Slack alongside Discord — Quarterdeck Watch runs on both; either
+# adapter routes to the same watchstander pool. Drop one of the two
+# imports if you only use one chat platform.
+[imports.bluewater_slack]
+source = "github.com/boylec/bluewater/packs/bluewater-slack"
 
 [daemon]
 patrol_interval = "30s"
@@ -36,25 +36,22 @@ max_restarts = 5
 restart_window = "1h"
 shutdown_timeout = "5s"
 
-# Provider configuration — three providers strongly recommended for
-# carrier-class so the COB/CO/XO three-way provider distribution
-# actually has three providers to land on.
-
-# Flight ops two-key launch always requires cross-provider concurrence;
-# Air Boss and CO must be on different providers when authorizing
-# production deploys.
+# Three providers strongly recommended for carrier-class so the
+# CO/XO/COB three-way provider distribution actually has three providers
+# to land on. Flight ops two-key launch always requires cross-provider
+# concurrence.
+#
+# [providers.claude]
+# [providers.codex]
+# [providers.gemini]
 
 [bluewater.air]
 # enable_flight_ops = true   # implicit when bluewater-air is imported
 
-[bluewater.supply]
-# Provider tier mapping (defaults shown; override here for your ship)
-# [bluewater.supply.tiers]
-# strategic   = ["claude"]
-# tactical    = ["claude", "codex"]
-# operational = ["claude", "codex", "gemini"]
-# worker      = ["claude", "codex", "gemini"]
-
 [bluewater.discord]
 # Configure the underlying discord-intake service here; see
 # gascity-packs/discord-intake/README.md.
+
+[bluewater.slack]
+# Configure the underlying slack-intake service here; mirrors
+# discord-intake. See packs/bluewater-slack/pack.toml.
