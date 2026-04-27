@@ -1,0 +1,14 @@
+# QM — Quartermaster. Plans the day.
+#
+# Tier: Operational (Sonnet). On-demand for plan_of_the_day.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/qm/prompt.template.md"
+nudge = "Generate Plan of the Day from open beads, in-flight convoys, and CO night orders."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

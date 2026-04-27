@@ -1,0 +1,30 @@
+# sigint_collection — CT division. Optional (carrier-class).
+# Battle Bill: not yet a row, but present in CATALOG as optional.
+
+formula = "sigint_collection"
+description = "CT walks configured external sources (advisory feeds, CVEs, abuse reports), produces a digest, files as a bead tagged sigint. Action belongs to OPS or CSO based on findings."
+version = 1
+
+[vars.targets]
+description = "Comma-separated source URIs or names from the configured intel catalog."
+default = "cve_feed,advisory_feed,abuse_report"
+
+[[steps]]
+id = "collect"
+title = "CT collects from each target"
+description = "For each target in {{targets}}, fetch and parse. Brevity does not apply (the digest is read by humans)."
+type = "task"
+
+[[steps]]
+id = "digest"
+title = "Produce digest"
+description = "One-page summary: top items by severity, items relevant to currently in-flight beads (cross-reference by dependency name and version)."
+needs = ["collect"]
+type = "task"
+
+[[steps]]
+id = "file"
+title = "File the digest bead"
+description = "Tag = sigint. OPS picks up; if any item appears actionable, OPS or CSO files a follow-up bead."
+needs = ["digest"]
+type = "task"

@@ -1,0 +1,10 @@
+# Lookout — deterministic surface-pattern matcher. NO LLM.
+# Configured via the city or per-rig overlay; reads a stream (logs,
+# events, metrics) and emits contacts to the event bus on pattern match.
+
+scope = "city"
+provider = ""
+prompt_template = ""
+nudge = ""
+idle_timeout = ""
+max_active_sessions = 0

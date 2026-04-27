@@ -1,0 +1,15 @@
+# CT — Cryptologic Technician. SIGINT and threat intel. Optional.
+#
+# Tier: Operational (Sonnet). On-demand for sigint_collection formula.
+
+scope = "city"
+provider = "gemini"
+prompt_template = "agents/ct/prompt.template.md"
+nudge = "Run the configured collection target; report findings."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+min_active_sessions = 0
+max_active_sessions = 2
+
+[option_defaults]
+model = "sonnet"

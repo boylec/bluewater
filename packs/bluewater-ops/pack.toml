@@ -1,0 +1,33 @@
+# Bluewater Operations — situational awareness, planning, lookouts, CT.
+#
+# OPS is the dept head. CIC Watch Officer fuses lookout + sonar feeds.
+# QM owns the Plan of the Day. Lookouts and Sonar are deterministic
+# (no LLM until alarm). CT division covers SIGINT and threat intel
+# (carrier-class optional).
+#
+# Owns the watch_turnover formula (the most-used formula in the pack)
+# and the morning/POD/eight-o'clock evolutions.
+#
+# Spec: docs/spec/REQUIREMENTS-ops.md
+
+[pack]
+name = "bluewater-ops"
+version = "0.1.0"
+schema = 2
+requires_gc = ">= 1.0.0"
+description = "Operations department: OPS / CIC Watch / QM / Lookouts / Sonar / CT. Situational awareness foundation."
+
+[[named_session]]
+template = "ops"
+scope = "city"
+mode = "on_demand"
+
+[[named_session]]
+template = "cic_watch_officer"
+scope = "city"
+mode = "always"
+
+[[named_session]]
+template = "qm"
+scope = "city"
+mode = "on_demand"

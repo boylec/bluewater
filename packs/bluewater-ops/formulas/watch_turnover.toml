@@ -1,0 +1,100 @@
+# watch_turnover — formal handoff between OOD watches.
+# Battle Bill: routine, OIC = OOD, scheduled (actually context-pressure).
+#
+# This is the most-frequently-run formula in the pack. Six steps per
+# WATCH_BILL.md.
+
+formula = "watch_turnover"
+description = "Six-step watch handoff: bell, passdown brief, read-back, Yeoman log, conn transfer, despawn. Yeoman computes handoff quality score (40/30/30 weights per watch_bill.toml) and routes anything below 0.6 to COB; below 0.3 triggers Captain's Mast against outgoing."
+version = 1
+
+[vars.outgoing_ood]
+description = "Identity of the OOD being relieved."
+required = true
+
+[vars.incoming_ood]
+description = "Identity of the OOD assuming the conn."
+required = true
+
+[[steps]]
+id = "bell"
+title = "Bell — outgoing signals one-minute warning"
+description = """
+Outgoing OOD: `IMMEDIATE: Relief in 1 minute. Standby. OUT`
+
+Incoming OOD acknowledges with `WILCO. Standing by. OUT`.
+
+Yeoman timestamps the bell.
+"""
+type = "task"
+
+[[steps]]
+id = "passdown"
+title = "Passdown brief"
+description = """
+Outgoing OOD produces a structured brief, in plain prose (brevity does
+not apply here — clarity is the goal). All five categories:
+
+1. **Contacts.** Active convoys, hot beads, in-flight evolutions.
+2. **Casualties.** Open Battle Bill conditions (anything in progress).
+3. **Night orders.** Standing CO directives in effect for this watch.
+4. **Anomalies.** Worth noting but not yet alarm-level.
+5. **Recommendations.** What next watch should consider.
+"""
+needs = ["bell"]
+type = "task"
+
+[[steps]]
+id = "readback"
+title = "Read-back"
+description = """
+Incoming OOD restates the situation in their own words, hitting all
+five categories. Outgoing confirms or corrects. Yeoman scores
+read-back accuracy (binary: correct first time = 1, otherwise 0).
+"""
+needs = ["passdown"]
+type = "task"
+
+[[steps]]
+id = "yeoman_log"
+title = "Yeoman commits the turnover record"
+description = """
+Yeoman writes a structured log entry: outgoing identity, incoming
+identity, timestamp, full passdown brief content, read-back accuracy,
+turnover quality score (computed below).
+
+Quality score formula:
+  score = 0.40 * complete_brief + 0.30 * correct_readback + 0.30 * retroactive
+
+complete_brief: 1 if all five categories present, else fractional.
+correct_readback: 1 if read-back was correct first time, else 0.
+retroactive: filled in within 1 hour by an automated check that
+  searches event-bus for items the outgoing brief missed but mattered.
+  Default 1; subtracted when retroactive checks find a gap.
+"""
+needs = ["readback"]
+type = "task"
+
+[[steps]]
+id = "conn_transfer"
+title = "Conn transfer"
+description = """
+Outgoing: `I am relieved. OUT`
+Incoming: `I have the conn. OUT`
+
+Authority transfers at incoming's statement. From this point, outgoing
+SHALL NOT continue to act on watch matters.
+"""
+needs = ["yeoman_log"]
+type = "task"
+
+[[steps]]
+id = "despawn"
+title = "Outgoing despawns"
+description = """
+Outgoing OOD enters cleanup: closes any tabs they were in the middle
+of, finishes any in-flight tool calls, then `gc runtime drain-ack &&
+exit`. The reconciler kills the session.
+"""
+needs = ["conn_transfer"]
+type = "task"

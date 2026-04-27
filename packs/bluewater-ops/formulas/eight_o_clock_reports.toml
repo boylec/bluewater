@@ -1,0 +1,41 @@
+# eight_o_clock_reports — end-of-day department status to XO.
+# Battle Bill: routine, OIC = XO, scheduled (2000).
+
+formula = "eight_o_clock_reports"
+description = "Department heads report status for end of duty day. XO compiles for CO. Brevity in effect."
+version = 1
+
+[[steps]]
+id = "convene"
+title = "XO calls eight o'clock reports"
+description = "Watchstations: XO (OIC), OPS, CSO, CHENG, SUPPO, Yeoman."
+type = "task"
+
+[[steps]]
+id = "reports"
+title = "Departments report"
+description = """
+Each department reports today's posture (brevity):
+- Beads landed today by department
+- In-flight casualties (if any)
+- Anomalies for tomorrow's watch
+- Provider/credit forecast for next 24h
+
+`COMPLETE` when each is done.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "compile"
+title = "XO compiles for CO"
+description = "XO produces a one-page summary; mails CO. CO reads at their leisure (no nudge unless CO is awake)."
+needs = ["reports"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure"
+description = "Yeoman logs the reports. Department heads despawn."
+needs = ["compile"]
+type = "task"

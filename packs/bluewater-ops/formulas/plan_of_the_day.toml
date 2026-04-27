@@ -1,0 +1,48 @@
+# plan_of_the_day — daily plan generation.
+# Battle Bill: routine, OIC = QM, scheduled (0830).
+
+formula = "plan_of_the_day"
+description = "QM produces the day's Plan of the Day from open beads, in-flight convoys, and CO night orders. Filed as one bead tagged 'pod'."
+version = 1
+
+[[steps]]
+id = "pull_state"
+title = "Pull current ship state"
+description = """
+QM reads:
+- Open beads (high priority and convoy-tagged)
+- In-flight convoys
+- Last 24h watch turnover summaries
+- CO night orders still in effect
+- Provider credit balances and burn-rate forecast
+"""
+type = "task"
+
+[[steps]]
+id = "draft"
+title = "Draft the plan"
+description = """
+Structured POD:
+1. Priority convoys (XO/CO emphasis)
+2. Watch staffing (rotations, polecat pool sizes)
+3. Night orders carrying over
+4. Anomalies to watch
+5. Risk register (credits, burn rate)
+
+Use plain prose. Brevity does not apply (humans read this).
+"""
+needs = ["pull_state"]
+type = "task"
+
+[[steps]]
+id = "file"
+title = "File the POD bead"
+description = """
+`gc bd create -t task --tag pod 'Plan of the Day {{date}}'` with the
+draft as body. Yeoman picks it up via the convoy_landed-style
+mechanism on its tag.
+
+Despawn.
+"""
+needs = ["draft"]
+type = "task"

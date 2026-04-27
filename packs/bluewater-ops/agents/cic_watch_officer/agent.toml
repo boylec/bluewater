@@ -1,0 +1,15 @@
+# CIC Watch Officer — Combat Information Center watch.
+#
+# Tier: Operational (Sonnet). Always-on watch role.
+# Fuses lookout + sonar feeds and decides whether something escalates.
+
+scope = "city"
+provider = "codex"
+prompt_template = "agents/cic_watch_officer/prompt.template.md"
+nudge = "Stand the CIC watch. Sweep recent lookout/sonar reports; escalate to OPS or OOD as appropriate."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

@@ -1,0 +1,14 @@
+# OPS — Operations Officer (department head).
+#
+# Tier: Tactical (Sonnet). On-demand.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/ops/prompt.template.md"
+nudge = "Check ops queue: morning_quarters, eight_o_clock_reports, situational anomalies routed up from CIC Watch."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

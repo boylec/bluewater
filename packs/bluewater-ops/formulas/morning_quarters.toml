@@ -1,0 +1,62 @@
+# morning_quarters — daily ops brief.
+# Battle Bill: routine, OIC = XO, scheduled (0800).
+
+formula = "morning_quarters"
+description = "XO opens the day. All department heads attend. XO sets day's intent, reviews overnight events, addresses any night-order changes."
+version = 1
+
+[[steps]]
+id = "convene"
+title = "XO calls morning quarters"
+description = """
+Watchstations: XO (OIC), OOD (current watch), OPS, CSO, CHENG, SUPPO,
+Yeoman. Department heads spawn from on_demand.
+
+XO opens with: 'Morning quarters. Departments report.'
+"""
+type = "task"
+
+[[steps]]
+id = "reports"
+title = "Department reports"
+description = """
+Each dept head reports in turn (brevity):
+- OPS: situational summary, any CIC anomalies overnight
+- CSO: in-flight combat-systems work, any review escalations
+- CHENG: burn-rate envelope health, runtime hygiene state
+- SUPPO: provider credit balances, any rotations needed
+
+OOD: passdown summary from last watch.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "pod_review"
+title = "POD review"
+description = """
+QM presents the Plan of the Day (filed at 0830 the previous duty cycle
+or just-now produced). XO confirms or amends.
+"""
+needs = ["reports"]
+type = "task"
+
+[[steps]]
+id = "intent"
+title = "XO sets intent"
+description = """
+XO declares the day's intent: priority convoys, any new directives,
+which casualties (if any) are in scope for casualty drills today.
+"""
+needs = ["pod_review"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from morning quarters"
+description = """
+Yeoman logs the meeting: attendees, key reports, intent. Department
+heads despawn unless they have other duties.
+"""
+needs = ["intent"]
+type = "task"
