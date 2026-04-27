@@ -9,6 +9,12 @@ Bluewater is a [Gas City](https://github.com/gastownhall/gascity) pack.
 You install it the same way as any other pack: with `gc pack add`, or by
 declaring an `[imports.<name>]` entry in your `city.toml`.
 
+> **Background reading:** [`docs/concepts.mdx`](./concepts.mdx) walks
+> through the metaphor in software-engineering terms — useful before
+> the first install if naval terms (wardroom, watchstation, battle
+> bill, two-key launch) are new to you. The
+> [`glossary`](./glossary.mdx) is a one-page lookup.
+
 ## Prerequisites
 
 - **Gas City `>= 1.0.0`.** Pack V2 is mandatory; v0.x layouts are not
@@ -48,9 +54,12 @@ instances coexist; both route to the same watchstander pool.
 
 ## Configure providers
 
-Bluewater ratings are pre-stamped with model tiers (Strategic/Tactical/
-Operational/Worker) that map onto Opus/Sonnet/Haiku. Provider per-
-rating is set so two-key launches naturally span providers:
+Bluewater ratings are pre-stamped with **model tiers**
+(Strategic/Tactical/Operational/Worker, mapping to Opus/Sonnet/Haiku
+respectively) and a default LLM provider. The provider assignments are
+chosen so **two-key launches** (high-stakes operations requiring two
+agents to concur) naturally span different LLM providers — defending
+against single-provider blind spots:
 
 | Officer / role | Default provider | Default model tier |
 |----------------|------------------|--------------------|
@@ -81,6 +90,29 @@ Expected output includes:
 - `[ok] watchstation_bindings.toml lints clean`
 - `[ok] doctrine/brevity template fragments resolve`
 - `[warn] only one provider configured` — only if you have one provider
+
+## Telemetry plumbing
+
+Bluewater's burn-rate / provider-health / credit-balance alarms read
+events of types `bluewater.burn_rate.minute`,
+`bluewater.provider.error`, and `bluewater.provider.credit_balance`
+from the Gas City event bus. **These events are not yet emitted
+natively by Gas City** — bring-up requires a small bridge.
+
+Two paths:
+
+1. **Stub emitter (`scripts/emit-stub-telemetry.sh`).** Ships
+   no-op by default. Edit the script to wire your own signal source
+   (your existing OTEL pipeline, billing API, provider health checks)
+   and run it on a 1-minute cron. The check scripts will pick up the
+   events and the alarm chain will fire correctly.
+2. **Defer to v0.2.** The alarm orders are runnable as-is — the check
+   scripts simply return "no alarm" when no events are present. The
+   pipeline structure is correct; signal can land later.
+
+Until you wire telemetry, treat the alarm chain as smoke-test-ready
+but quiet. See `scripts/check-burn-rate.sh` and
+`scripts/emit-stub-telemetry.sh` for the schema of each event.
 
 ## Next
 
