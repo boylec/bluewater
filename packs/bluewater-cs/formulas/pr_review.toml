@@ -1,0 +1,69 @@
+# pr_review — multi-provider code review.
+# Battle Bill: operational, OIC = CSO, order-triggered.
+# Implements Pack v2's "review formula" pattern with explicit
+# cross-provider concurrence so review and authoring naturally span
+# providers.
+
+formula = "pr_review"
+description = "Cross-provider code review. CSO OICs; one FC on a different provider than the work's GM does the review; JAG (optional) on license/compliance dimension. Outcome: approve, request changes, or block on a Sea Lawyer question."
+version = 1
+
+[vars.pr_url]
+description = "URL of the PR being reviewed."
+required = true
+
+[vars.author_provider]
+description = "Provider the GM that produced the work was running on."
+required = true
+
+[[steps]]
+id = "convene"
+title = "CSO assigns a reviewer on a different provider"
+description = """
+CSO selects an FC running on a provider != {{author_provider}}. SUPPO
+verifies the cross-provider constraint. JAG joins if the PR includes
+new dependencies, license-bearing files, or files matching the
+compliance allowlist.
+"""
+type = "task"
+
+[[steps]]
+id = "review"
+title = "FC reviews"
+description = """
+FC pulls the diff, reads in full, runs the test suite locally,
+verifies the success criteria from the originating bead match the PR
+body. Brevity does not apply (the review comments are read by humans
+too).
+
+Outcomes:
+- approve: comment 'WILCO. ROGER findings.' on the PR; mark approved.
+- request changes: comment with specific changes; reassign bead back
+  to the GM with metadata.rejection_reason.
+- block on JAG: comment 'STANDBY. JAG review required.' and mail JAG.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "jag_review"
+title = "JAG (conditional)"
+description = """
+JAG only spawns if FC blocked on a license/compliance question, or if
+the PR matches the compliance allowlist. JAG opines; FC re-reviews
+with JAG's opinion in hand.
+"""
+needs = ["review"]
+condition = "{{jag_required}}"
+type = "task"
+
+[[steps]]
+id = "land"
+title = "Land or refuse"
+description = """
+On approve: Helmsman picks up the bead from the Refinery and merges.
+On request-changes: bead routes back to GM pool with rejection_reason.
+On JAG-blocked: stays in JAG queue until JAG resolves.
+"""
+needs = ["jag_review"]
+type = "task"

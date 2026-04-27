@@ -1,0 +1,11 @@
+# merge_conflict_persistent — fire collision_at_sea when conflicts
+# persist after a polecat retry.
+[order]
+description = "If the same bead has been bounced from the refinery 2+ times with metadata.rejection_reason containing 'conflict', sound collision_at_sea."
+trigger = "condition"
+check = "gc bd ready --json | jq -e '.[] | select(.metadata.rejection_count // 0 | tonumber > 1) | select(.metadata.rejection_reason | test(\"conflict\"))'"
+formula = "collision_at_sea"
+pool = "ood"
+interval = "5m"
+timeout = "30s"
+enabled = true

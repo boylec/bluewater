@@ -1,0 +1,19 @@
+# GM — Gunner's Mate. Implementation polecat.
+#
+# Tier: Worker (Haiku) for striker GMs and most GMs; Operational (Sonnet)
+# for senior GMs (GM1) on harder beads. The base tier is Haiku — that's
+# the load-bearing cost decision.
+# This is THE polecat — the one who writes most of the code.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/gm/prompt.template.md"
+nudge = "Run gc hook; it checks assigned work first, then routed pool work."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "2h"
+min_active_sessions = 0
+max_active_sessions = 8
+default_sling_formula = "mol-polecat-work"
+
+[option_defaults]
+model = "haiku"

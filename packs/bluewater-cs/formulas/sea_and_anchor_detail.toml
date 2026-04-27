@@ -1,0 +1,58 @@
+# sea_and_anchor_detail — choreographed deploy.
+# Battle Bill: operational, OIC = XO, command-triggered.
+# When bluewater-air is installed, ownership shifts to Air Boss
+# (packs/bluewater-air/formulas/sea_and_anchor_detail.toml takes
+# precedence via Pack V2 import resolution).
+
+formula = "sea_and_anchor_detail"
+description = "Choreographed deploy. Sea Detail OOD steers, Conning Officer specifies maneuvers, Helmsman executes. Normal OOD remains in command of the rest of the ship. CS-flavored variant; Air-flavored variant in bluewater-air takes precedence when installed."
+version = 1
+
+[vars.target]
+description = "Deploy target identifier (rig/branch/version)."
+required = true
+
+[[steps]]
+id = "brief"
+title = "XO briefs the deploy team"
+description = "Watchstations: XO (OIC), OOD (sea-detail), Helmsman, FC, GM (per Battle Bill counts). Yeoman logs."
+type = "task"
+
+[[steps]]
+id = "preflight"
+title = "Pre-deploy checks"
+description = """
+- Tests pass on the deploy branch
+- Refinery queue is empty for the affected rig
+- No active casualties affecting the rig
+- SUPPO confirms credentials are current
+- MAA confirms no blocking pre-tool-use refusals against the deploy
+  user identity
+"""
+needs = ["brief"]
+type = "task"
+
+[[steps]]
+id = "deploy"
+title = "Helmsman executes deploy"
+description = """
+Helmsman runs the deploy command; FC monitors observability for
+abnormal signal. Two-key launch required if target is production
+(see safety provisions in doctrine).
+"""
+needs = ["preflight"]
+type = "task"
+
+[[steps]]
+id = "verify"
+title = "Verify"
+description = "Smoke tests against the deployed target. If green, secure. If red, OOD declares casualty (typically fire_in_compartment) and rolls back."
+needs = ["deploy"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from sea and anchor detail"
+description = "Yeoman logs the deploy and outcome. BoI optional unless rollback occurred."
+needs = ["verify"]
+type = "task"

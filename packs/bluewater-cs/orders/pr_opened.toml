@@ -1,0 +1,9 @@
+# pr_opened — fire pr_review when a PR opens.
+[order]
+description = "When a PR opens against any repo this city tracks, fire pr_review under CSO."
+trigger = "event"
+on = "github.pr_opened"
+formula = "pr_review"
+pool = "cso"
+timeout = "60s"
+enabled = true

@@ -1,0 +1,18 @@
+# FC — Fire Controlman.
+#
+# Tier: Operational (Sonnet) for FC1/FC2, Worker (Haiku) for striker FCs.
+# Translates XO/CSO intent into specific bead parameters. Sets target
+# branches, success criteria, dependency graph.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/fc/prompt.template.md"
+nudge = "Check FC queue: targeting requests from XO/CSO, pr_review participation."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-polecat-work"
+
+[option_defaults]
+model = "sonnet"

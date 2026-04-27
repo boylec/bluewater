@@ -1,0 +1,18 @@
+# DC — Damage Controlman. Bug fix and casualty response.
+#
+# Tier: Operational (Sonnet). Rated PO.
+# Senior DCs (DC1) are bound to the dc_oic watchstation in the Battle
+# Bill; they OIC fire_in_compartment and contribute to flooding.
+
+scope = "rig"
+provider = "claude"
+prompt_template = "agents/dc/prompt.template.md"
+nudge = "Check DC queue: bug-fix beads, fire_in_compartment / flooding casualties if active."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+min_active_sessions = 0
+max_active_sessions = 4
+default_sling_formula = "mol-polecat-work"
+
+[option_defaults]
+model = "sonnet"

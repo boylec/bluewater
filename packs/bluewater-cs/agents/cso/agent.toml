@@ -1,0 +1,14 @@
+# CSO — Combat Systems Officer (department head).
+#
+# Tier: Tactical (Sonnet). On-demand.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/cso/prompt.template.md"
+nudge = "Check pr_review queue, in-flight FC targeting, any DC casualties."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

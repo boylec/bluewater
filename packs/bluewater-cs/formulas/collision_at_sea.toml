@@ -1,0 +1,51 @@
+# collision_at_sea — two agents have produced conflicting changes.
+# Battle Bill: casualty, severity high, OIC = OOD.
+
+formula = "collision_at_sea"
+description = "Two GMs (or one GM and a Helmsman attempt) produced changes that cannot be auto-merged. Pick a winner (FC's call); reset the loser's branch and reassign their bead with a rejection reason."
+version = 1
+
+[vars.bead_a]
+description = "First conflicting bead."
+required = true
+
+[vars.bead_b]
+description = "Second conflicting bead."
+required = true
+
+[[steps]]
+id = "convene"
+title = "OOD calls collision_at_sea"
+description = "Watchstations: OOD (OIC), CSO, FC, Helmsman, Yeoman. OOD presents the two conflicting branches. FC analyzes which represents the correct intent."
+type = "task"
+
+[[steps]]
+id = "decide"
+title = "FC picks the winner"
+description = """
+FC names the bead whose intent is canonical. Reasons:
+- The bead with the more specific success criterion wins.
+- If both are equally specific, the bead filed first wins.
+- If both are equally specific and filed at the same time, defer to
+  XO via mail; FC says STANDBY.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "reset_loser"
+title = "Reset the loser's branch"
+description = """
+Helmsman: reset the loser's branch, file a fresh bead with a
+rejection_reason of 'collision; rebase from <winner-bead-id>'. Loser
+GM picks up the new bead and rebases. Winner proceeds to Refinery.
+"""
+needs = ["decide"]
+type = "task"
+
+[[steps]]
+id = "log"
+title = "Yeoman logs"
+description = "BoI mandatory at severity high — XO files. Pattern detection: if the same FC produces colliding beads repeatedly, COB calls a rating board for review."
+needs = ["reset_loser"]
+type = "task"

@@ -1,0 +1,62 @@
+# fire_in_compartment — localized failure; isolate.
+# Battle Bill: casualty, severity high, OIC = DC OIC.
+
+formula = "fire_in_compartment"
+description = "A subsystem is failing — a specific rig is broken, a specific service is down, a specific class of tests is failing repeatedly. Compartmentalize, isolate, then fix. Goal: prevent the failure from spreading."
+version = 1
+
+[vars.compartment]
+description = "Subsystem identifier — rig name, service name, or test-class label."
+required = true
+
+[[steps]]
+id = "alarm"
+title = "DC OIC receives the alarm"
+description = "Identify the affected compartment from the alarm payload. Spawn DC team alpha; ET joins for infra investigation. Yeoman starts logging."
+type = "task"
+
+[[steps]]
+id = "isolate"
+title = "Isolate the compartment"
+description = """
+Stop new work flowing to the failing compartment:
+- Suspend any pool routing to that rig (`gc agent suspend` for affected
+  agents).
+- Update the WorkQuery on dispatchers to skip beads tagged with the
+  failing compartment.
+- Mail XO so dispatch decisions know about the freeze.
+"""
+needs = ["alarm"]
+type = "task"
+
+[[steps]]
+id = "diagnose"
+title = "Diagnose root cause"
+description = """
+DC team investigates: what changed (recent commits to the compartment),
+what's failing (specific tests, services), is it transient
+(infrastructure) or persistent (bug in the compartment).
+"""
+needs = ["isolate"]
+type = "task"
+
+[[steps]]
+id = "fix"
+title = "File and assign the fix bead"
+description = """
+DC team produces a fix bead with full repro and a failing test. FC
+prioritizes; a GM (or DC) picks it up; standard pr_review flow.
+"""
+needs = ["diagnose"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from fire — re-open compartment"
+description = """
+After the fix lands and tests pass twice in a row: lift the suspend,
+restore pool routing, mail XO with the post-mortem summary. BoI
+mandatory at severity high.
+"""
+needs = ["fix"]
+type = "task"

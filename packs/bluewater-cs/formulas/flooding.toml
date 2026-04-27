@@ -1,0 +1,49 @@
+# flooding — runaway resource consumption.
+# Battle Bill: casualty, severity high, OIC = DC OIC.
+# Trigger order: bluewater-eng/orders/burn_rate_exceeded.toml fires this.
+
+formula = "flooding"
+description = "Burn rate, session count, or other resource is out of bounds. Stop the bleed first, fix later. CHENG sets the brake; DC OIC executes."
+version = 1
+
+[[steps]]
+id = "alarm"
+title = "DC OIC and CHENG converge"
+description = "Both arrive. CHENG names the offending pool/agent based on the burn-rate decomposition. Yeoman logs."
+type = "task"
+
+[[steps]]
+id = "throttle"
+title = "Throttle the runaway resource"
+description = """
+Action depends on the source:
+- Polecat in a loop: gc agent drain <name>; if drain fails, suspend.
+- Polecat pool too large: lower max_active_sessions on the pool.
+- A formula that's spawning subroots faster than they finish: pause
+  dispatch on that formula via `gc orders disable <name>`.
+- Provider rate-limit interaction (rare): SUPPO routes to alternate
+  provider tier.
+"""
+needs = ["alarm"]
+type = "task"
+
+[[steps]]
+id = "verify"
+title = "Verify the burn rate is back inside the envelope"
+description = "EOOW polls every 60s. When fraction-of-cap drops back below 0.7, declare the bleed stopped."
+needs = ["throttle"]
+type = "task"
+
+[[steps]]
+id = "remediate"
+title = "Fix the underlying cause"
+description = "After the bleed is stopped, file a fix bead. Typical: a polecat looping on a bad input → fix the input validation; a pool sized wrong → adjust the pool config in the city; a formula's spawn pattern misbehaving → file a formula bug bead in the originating pack."
+needs = ["verify"]
+type = "task"
+
+[[steps]]
+id = "secure"
+title = "Secure from flooding"
+description = "BoI mandatory at severity high. Yeoman logs; XO files BoI."
+needs = ["remediate"]
+type = "task"
