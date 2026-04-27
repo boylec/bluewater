@@ -1,0 +1,9 @@
+# convoy_landed — Yeoman summarizes; Captain's Mast consideration.
+[order]
+description = "When a convoy completes, Yeoman summarizes. If any constituent bead had a refusal-counted incident, COB considers Captain's Mast."
+trigger = "event"
+on = "convoy.closed"
+formula = "convoy_landed_review"
+pool = "yeoman"
+timeout = "60s"
+enabled = true

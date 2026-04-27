@@ -1,0 +1,34 @@
+# convoy_landed_review — Yeoman summarizes a closed convoy; COB
+# reviews for Captain's Mast triggers.
+
+formula = "convoy_landed_review"
+description = "Yeoman summarizes a closed convoy and routes summary to COB for Captain's Mast consideration."
+version = 1
+
+[[steps]]
+id = "summarize"
+title = "Yeoman summarizes the convoy"
+description = """
+Pull every bead in the convoy, every event-bus event tagged with the
+convoy ID. Compute: total beads, time-to-completion, providers used
+(distribution), refusals (count and pattern), brevity-linter findings,
+any casualty-class events that occurred inside the convoy. File
+summary as a log entry tagged convoy:{{convoy_id}}.
+"""
+type = "task"
+
+[[steps]]
+id = "review"
+title = "COB reviews for Captain's Mast triggers"
+description = """
+COB scans the summary. If any rated agent had:
+- ≥3 refusals attributed to them, OR
+- a casualty they were OIC of that landed in BoI mandatory, OR
+- brevity-linter findings exceeding the captain's-mast threshold (per
+  rating.toml demotion config),
+COB files a captains_mast bead naming the agent.
+
+Otherwise: 'no further action' note appended to the summary.
+"""
+needs = ["summarize"]
+type = "task"

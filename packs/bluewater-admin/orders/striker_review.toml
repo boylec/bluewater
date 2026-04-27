@@ -1,0 +1,10 @@
+# striker_review — nightly telemetry scan; propose strikers to COB.
+
+[order]
+description = "Nightly: scan telemetry for undesignated agents whose weighted score crosses striker_threshold over min_beads in any rate. Propose to COB."
+trigger = "cron"
+schedule = "0 2 * * *"   # 0200 ship time
+formula = "striker_review"
+pool = "cob"
+timeout = "10m"
+enabled = true

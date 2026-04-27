@@ -1,0 +1,9 @@
+# forbidden_action_executed — fires `grounding` casualty.
+[order]
+description = "An agent executed an action that should have been refused. Sound grounding casualty."
+trigger = "event"
+on = "audit.forbidden_action"
+formula = "grounding"
+pool = "maa"
+timeout = "30s"
+enabled = true

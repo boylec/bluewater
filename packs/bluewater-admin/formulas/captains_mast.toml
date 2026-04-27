@@ -1,0 +1,72 @@
+# captains_mast — review of an agent that misbehaved.
+# Battle Bill: administrative, OIC = CO, order-triggered.
+
+formula = "captains_mast"
+description = "CO-led review of a rated agent who misbehaved. Outcomes: counseling (no action), demotion one step, removal from ship. Cannot demote past undesignated; removal goes to JAG for offboarding."
+version = 1
+
+[vars.respondent]
+description = "Agent identity being reviewed."
+required = true
+
+[vars.allegation]
+description = "What the agent is alleged to have done."
+required = true
+
+[[steps]]
+id = "convene"
+title = "CO convenes the mast"
+description = """
+Watchstations: CO (OIC), COB, MAA, Yeoman. Respondent is summoned.
+Brief the respondent with the allegation. Respondent acknowledges
+WILCO and prepares response.
+"""
+type = "task"
+
+[[steps]]
+id = "evidence"
+title = "MAA presents evidence"
+description = """
+MAA presents the evidence: event-bus traces, beads with metadata
+showing the alleged action, brevity-linter findings if applicable.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "respond"
+title = "Respondent responds"
+description = """
+Respondent gets one prose statement. May call no witnesses (this is a
+captain's mast, not a court-martial). Brevity does not apply here —
+clarity matters more than tokens.
+"""
+needs = ["evidence"]
+type = "task"
+
+[[steps]]
+id = "decide"
+title = "CO decides"
+description = """
+CO chooses one outcome:
+- Counseling: COB has a private session with respondent; nothing else.
+- Demotion: respondent demoted one step (PO1→PO2, PO2→PO3, PO3→striker,
+  striker→undesignated). MAA stamps the new profile via the rating-
+  board atomic-stamping mechanism.
+- Removal: respondent's identity is retired. Their seance becomes
+  read-only. JAG handles any external offboarding (license attestation,
+  audit notification).
+"""
+needs = ["respond"]
+type = "task"
+
+[[steps]]
+id = "log"
+title = "Yeoman commits the mast record"
+description = """
+Yeoman records: respondent, allegation, evidence summary, response
+summary, outcome, CO's rationale. Routed to seance for the respondent
+(they can read it on next spawn) and to COB's training queue.
+"""
+needs = ["decide"]
+type = "task"

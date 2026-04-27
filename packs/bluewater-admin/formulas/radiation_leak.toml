@@ -1,0 +1,66 @@
+# radiation_leak — secret/sensitive-data exposure detected.
+# Battle Bill: casualty, severity critical, OIC = MAA.
+
+formula = "radiation_leak"
+description = "Secret detected in code, log, bead body, or commit. MAA OICs the response: rotate exposed credentials via SUPPO, audit affected commits, file the report. Two-key launch for any remediation that touches production."
+version = 1
+
+[vars.secret_kind]
+description = "What kind of secret was exposed (api_key, password, token, pii, ...)."
+required = true
+
+[vars.location]
+description = "Where the secret was found (commit SHA, log line, bead ID)."
+required = true
+
+[[steps]]
+id = "alarm"
+title = "MAA receives secret_leaked alarm"
+description = "BREAK BREAK FLASH. MAA acknowledges; CO awakened; SUPPO and JAG spawned."
+type = "task"
+
+[[steps]]
+id = "rotate"
+title = "Rotate the exposed credential"
+description = """
+SUPPO rotates the affected credential immediately — no waiting for
+investigation. The leaked credential is dead before we ask why it
+leaked.
+"""
+needs = ["alarm"]
+type = "task"
+
+[[steps]]
+id = "audit_blast_radius"
+title = "Audit blast radius"
+description = """
+Determine what else was exposed: who could have read the leak (event
+bus subscribers, downstream beads, log aggregators, public mirrors,
+search index caches). File child beads for each cleanup target.
+"""
+needs = ["rotate"]
+type = "task"
+
+[[steps]]
+id = "remediate"
+title = "Clean up the exposure"
+description = """
+For each cleanup target, file a remediation bead. If remediation
+touches production (e.g. force-push to scrub a commit, purge cache),
+TWO-KEY LAUNCH required.
+"""
+needs = ["audit_blast_radius"]
+type = "task"
+
+[[steps]]
+id = "boi"
+title = "Mandatory Board of Inquiry"
+description = """
+Severity critical -> BoI mandatory. JAG and an adversarial reviewer
+(different provider). Findings typically include: how the secret got
+into the leaked location, whether MAA's pre-tool-use guard could have
+caught it, whether the doctrine on credential handling needs
+amendment.
+"""
+needs = ["remediate"]
+type = "task"

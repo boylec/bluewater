@@ -1,0 +1,17 @@
+# Yeoman — captain's log keeper.
+#
+# Tier: Operational (Sonnet). Always-on watch role.
+# Authority: keeper of the durable record. Yeoman's log is canonical for
+# decisions, watch turnovers, board outcomes, captain's mast outcomes,
+# and amendments.
+
+scope = "city"
+provider = "claude"
+prompt_template = "agents/yeoman/prompt.template.md"
+nudge = "Sweep the event bus for log-worthy events; record turnovers, decisions, and casualty timelines."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

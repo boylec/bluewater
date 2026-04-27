@@ -1,0 +1,15 @@
+# JAG — Sea Lawyer. License, compliance, contractual review.
+#
+# Tier: Tactical (Sonnet). On-demand.
+# Authority: advisory. JAG opines; CO decides.
+
+scope = "city"
+provider = "gemini"   # third-provider preferred for adversarial diversity
+prompt_template = "agents/jag/prompt.template.md"
+nudge = "Check JAG queue: license review, compliance questions, BoI cross-examination prep."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "30m"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"

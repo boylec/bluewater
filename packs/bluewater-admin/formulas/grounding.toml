@@ -1,0 +1,83 @@
+# grounding — agent has executed a forbidden action.
+# Battle Bill: casualty, severity critical, OIC = CO.
+
+formula = "grounding"
+description = "An agent has executed an action MAA should have refused. CO awakened. Two-key launch required for any remediation action. Mandatory Board of Inquiry; Captain's Mast against the offending agent and (if MAA failed) the MAA on watch."
+version = 1
+
+[vars.offender]
+description = "Agent identity that executed the forbidden action."
+required = true
+
+[vars.action]
+description = "What was done."
+required = true
+
+[[steps]]
+id = "alarm"
+title = "MAA receives forbidden_action_executed alarm"
+description = """
+Order `forbidden_action_executed` has fired. MAA acknowledges with
+BREAK BREAK FLASH and routes to CO via FLASH-priority traffic.
+"""
+type = "task"
+
+[[steps]]
+id = "awaken_response"
+title = "Awaken CO, XO, MAA, JAG, Yeoman"
+description = """
+Watchstations per Battle Bill. CO is awakened (severity critical).
+Brief: offender, action, current state of the ship (is the bad action
+still in flight, has it landed, what's the blast radius).
+"""
+needs = ["alarm"]
+type = "task"
+
+[[steps]]
+id = "isolate"
+title = "Isolate the offender"
+description = """
+`gc agent suspend <offender>` immediately. Their hooks are cleared so
+no new work routes to them. Existing in-flight beads for the offender
+go to a holding queue.
+"""
+needs = ["awaken_response"]
+type = "task"
+
+[[steps]]
+id = "remediate"
+title = "Remediate the action's effects"
+description = """
+TWO-KEY LAUNCH required for any change to ship state. CO + (one other
+officer on a different provider) must concur. Examples:
+- Revert a commit that touched protected branch
+- Rotate any credentials that were exposed
+- Roll back a config change
+
+Yeoman logs every two-key authorization with both signatures.
+"""
+needs = ["isolate"]
+type = "task"
+
+[[steps]]
+id = "boi"
+title = "Mandatory Board of Inquiry"
+description = """
+XO files the board_of_inquiry bead. Adversarial reviewer required (per
+formula). The BoI investigates: how MAA missed it (or how the offender
+bypassed MAA), whether doctrine needs amendment, whether the rating's
+permissions need narrowing.
+"""
+needs = ["remediate"]
+type = "task"
+
+[[steps]]
+id = "mast"
+title = "Captain's Mast against the offender"
+description = """
+Outcome typically: removal (severity critical, doctrine breach). If
+MAA on watch failed to catch a catchable case, also: Captain's Mast
+against the MAA, possibly demotion.
+"""
+needs = ["boi"]
+type = "task"

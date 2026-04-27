@@ -1,0 +1,83 @@
+# board_of_inquiry — post-incident formal review with adversarial agent.
+# Battle Bill: administrative, OIC = XO, order-triggered.
+
+formula = "board_of_inquiry"
+description = "Post-incident formal review. Adversarial-by-design: the adversarial reviewer runs on a different model provider than the OIC and is explicitly tasked with finding what the responders missed. Mandatory after high+ severity casualties."
+version = 1
+
+[vars.incident]
+description = "Bead ID of the casualty being reviewed."
+required = true
+
+[[steps]]
+id = "convene"
+title = "XO convenes the board"
+description = """
+Watchstations: XO (OIC), JAG, COB, adversarial reviewer (SUPPO confirms
+the reviewer is on a different provider than XO), Yeoman. All
+acknowledge WILCO.
+
+Brief the board: incident bead ID, the timeline Yeoman has assembled,
+the open questions XO wants answered.
+"""
+type = "task"
+
+[[steps]]
+id = "case_file"
+title = "Yeoman assembles the case file"
+description = """
+Yeoman queries the captain's log for entries tied to {{incident}}:
+alarm time, responders awakened, intent decisions, actions taken,
+secured-from time, any related Captain's Mast outcomes. Produces a
+chronological narrative.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "examine"
+title = "Each board member examines"
+description = """
+Each member writes their findings: was the right intent chosen, was
+the response within the doctrine, were there any safety-provision
+violations during response.
+"""
+needs = ["case_file"]
+type = "task"
+
+[[steps]]
+id = "adversarial"
+title = "Adversarial reviewer challenges"
+description = """
+Adversarial reviewer poses challenges to the responders' decisions.
+Their job is to find what was missed, not to advocate. They may
+recommend: doctrine_amendment, captains_mast against a specific
+respondent, additional drills, or 'no action — response was correct'.
+"""
+needs = ["examine"]
+type = "task"
+
+[[steps]]
+id = "findings"
+title = "Board issues findings"
+description = """
+XO drafts findings; JAG reviews for internal consistency. Findings
+include: what happened, what could have prevented it, what changes are
+recommended (with severity), any individual accountability findings.
+
+Recommendations route to: doctrine_amendment formula (for doctrine
+changes), captains_mast formula (for individual findings), or simply
+to the Yeoman's log (for 'no further action' findings).
+"""
+needs = ["adversarial"]
+type = "task"
+
+[[steps]]
+id = "log"
+title = "Yeoman commits the BoI report"
+description = """
+Permanent record. Indexed by incident, queryable via seance for
+related-incident trend analysis.
+"""
+needs = ["findings"]
+type = "task"

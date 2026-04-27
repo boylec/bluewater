@@ -1,0 +1,50 @@
+# Rating-board signal weights and thresholds.
+#
+# Per doctrine/RATING_PROGRESSION.md. Strikers are surfaced from
+# undesignated workers via a weighted sum of telemetry signals; when an
+# agent's score crosses the threshold over the configured bead window,
+# COB convenes a rating_board. The board (not the metric) makes the call.
+
+[rating]
+# Overall threshold for striker proposal: weighted score must reach this
+# over at least `min_beads` work items in the target rate's category.
+striker_threshold = 0.7
+min_beads = 20
+
+# Signal weights — must sum to 1.0.
+# Each signal is normalized 0.0..1.0 by the telemetry pipeline before
+# weighting.
+[rating.weights]
+first_try_pass_rate = 0.25      # bead landed on first try (no rejection from refinery)
+review_pass_rate = 0.20         # cross-provider review passed
+time_to_completion = 0.15       # vs peer median (faster = higher)
+brevity_compliance = 0.10       # brevity linter clean rate
+casualty_drill = 0.15           # drill outcomes (when observed)
+seance_value = 0.15             # do successors find their work useful?
+
+# Per-rate overrides — a rate may care more about specific signals.
+# Each table merges over [rating.weights]; the result must still sum to 1.0.
+[rating.overrides.dc]
+# Damage Controlmen care about drills more
+casualty_drill = 0.30
+first_try_pass_rate = 0.20
+review_pass_rate = 0.15
+time_to_completion = 0.10
+brevity_compliance = 0.10
+seance_value = 0.15
+
+[rating.overrides.fc]
+# Fire Controlmen care about first-try and review pass
+first_try_pass_rate = 0.35
+review_pass_rate = 0.25
+time_to_completion = 0.15
+brevity_compliance = 0.10
+casualty_drill = 0.05
+seance_value = 0.10
+
+# Demotion thresholds (Captain's Mast → demote one step)
+[rating.demotion]
+sustained_brevity_violations = 20      # within rolling 30 days
+forbidden_action_attempts = 1          # any single attempt → mast
+casualty_drill_failures_in_a_row = 2
+co_finding_of_misconduct = 1

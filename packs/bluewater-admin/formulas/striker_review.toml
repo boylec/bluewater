@@ -1,0 +1,49 @@
+# striker_review — nightly telemetry scan for striker candidates.
+# Spec: doctrine/RATING_PROGRESSION.md.
+
+formula = "striker_review"
+description = "Read telemetry; weight signals per rating.toml; propose any candidate whose weighted score >= striker_threshold over min_beads to COB. COB decides whether to convene rating_board."
+version = 1
+
+[[steps]]
+id = "pull_telemetry"
+title = "Pull last 30 days of telemetry per undesignated agent"
+description = """
+Per RATING_PROGRESSION.md signals:
+- bead-landed-on-first-try rate, by category
+- code review pass rate from cross-provider review
+- time-to-completion vs peer median
+- brevity protocol compliance
+- casualty drill performance (where observed)
+- predecessor seance value
+
+Aggregate per-agent, per-category. Write to a workspace temp file.
+"""
+type = "task"
+
+[[steps]]
+id = "score"
+title = "Score against rating.toml"
+description = """
+For each (agent, candidate-rate) pair, compute weighted score using
+rating.toml [rating.weights] (or [rating.overrides.<rate>] if set).
+Filter: agent has >= min_beads in candidate-rate's category, score >=
+striker_threshold.
+"""
+needs = ["pull_telemetry"]
+type = "task"
+
+[[steps]]
+id = "propose"
+title = "File proposal beads to COB"
+description = """
+For each candidate, file a bead addressed to COB:
+- title: 'Striker proposal: <agent> for <rate>'
+- body: summary of signals, score, recommended sponsor
+- tag: striker-proposal
+
+COB decides whether to convene a rating_board. The proposal is not a
+promotion; it is a recommendation to consider.
+"""
+needs = ["score"]
+type = "task"

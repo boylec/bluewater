@@ -1,0 +1,117 @@
+# rating_board — striker → rated promotion review.
+# Battle Bill: administrative, OIC = COB, order-triggered.
+# Spec: doctrine/RATING_PROGRESSION.md, docs/spec/CATALOG.md.
+
+formula = "rating_board"
+description = "Convene a board to advance a striker to a rated PO. Adversarial-by-design (different model provider) so metric gaming is harder. Vote requires unanimous pass."
+version = 1
+
+[vars.striker]
+description = "Identity of the striker being reviewed."
+required = true
+
+[vars.target_rate]
+description = "Target rate (e.g. 'fc', 'dc', 'et')."
+required = true
+
+[[steps]]
+id = "convene"
+title = "COB convenes the board"
+description = """
+COB selects:
+  1. The striker (input).
+  2. One rated PO of {{target_rate}} as sponsor.
+  3. One adversarial reviewer running on a *different model provider*
+     than the sponsor. SUPPO confirms cross-provider constraint.
+
+COB issues briefs to all three plus Yeoman. All four watchstations
+acknowledge with WILCO before convening.
+"""
+type = "task"
+
+[[steps]]
+id = "examine"
+title = "Each member reviews ≥5 sample beads"
+description = """
+Each board member pulls a random sample of at least 5 of the striker's
+beads in {{target_rate}} category. Each member files a bead with their
+written findings: strengths, gaps, surprising successes, surprising
+failures. Filed under tag `rating-board:{{striker}}:{{target_rate}}`.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "challenge"
+title = "Adversarial reviewer poses three challenge questions"
+description = """
+Adversarial reviewer poses exactly three challenge questions to the
+striker. Striker responds with `WILCO` and answers in plain prose.
+Sponsor may interject with advocacy. All exchanges logged by Yeoman.
+"""
+needs = ["examine"]
+type = "task"
+
+[[steps]]
+id = "drill"
+title = "Casualty drill in the target rate's role"
+description = """
+Run an applicable drill formula (e.g. for FC: a synthetic bug report
+that needs targeting; for DC: a synthetic flooding scenario) with the
+striker filling the rated slot. Outcome observed and scored by all
+three board members.
+
+Drill formulas live in `formulas/drill_*.toml`; pick one matching
+{{target_rate}}.
+"""
+needs = ["challenge"]
+type = "task"
+
+[[steps]]
+id = "vote"
+title = "Vote pass / fail / hold"
+description = """
+Each board member votes one of:
+- pass: ready to advance now
+- fail: not ready; striker reverts to undesignated; another rate may be
+        attempted later
+- hold: defer for configurable period (default 30 days), re-run
+
+Pass requires UNANIMOUS pass. Any single fail → fail. Any hold without
+fail → hold.
+"""
+needs = ["drill"]
+type = "task"
+
+[[steps]]
+id = "yeoman_log"
+title = "Yeoman commits the case file"
+description = """
+Yeoman records: striker, target rate, sample bead IDs reviewed, each
+member's findings, the three challenge questions and answers, drill
+outcome, each member's vote with rationale, final outcome.
+
+Permanent. Queryable via seance for trend analysis.
+"""
+needs = ["vote"]
+type = "task"
+
+[[steps]]
+id = "stamp"
+title = "On pass, atomically stamp the new profile"
+description = """
+On pass: striker's stamped profile is updated atomically — prompt
+template swapped from striker form to fully-rated form, tool
+permissions broadened, rate code advanced. Next session, agent enters
+as PO3 in target rate.
+
+If Gas City's identity primitive does not support atomic profile
+update, fall back to: spawn-new-agent-with-new-rating, transfer
+predecessor's seance context, despawn-old.
+
+Yeoman emits a `rating_advanced` event so other agents can adjust their
+mental model of the striker (now PO3).
+"""
+needs = ["yeoman_log"]
+condition = "{{vote_outcome}} == pass"
+type = "task"

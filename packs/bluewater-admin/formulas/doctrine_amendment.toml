@@ -1,0 +1,82 @@
+# doctrine_amendment — proposed change to doctrine documents.
+# Battle Bill: administrative, OIC = COB, order-triggered.
+
+formula = "doctrine_amendment"
+description = "Amend a doctrine document. Process per doctrine/AMENDMENTS.md: unified diff, rationale, simulation, COB sign-off (or CO sign-off for ship-wide doctrine)."
+version = 1
+
+[vars.target_doc]
+description = "Path to the doctrine document being amended (e.g. doctrine/BREVITY.md)."
+required = true
+
+[vars.diff]
+description = "Proposed unified diff against the current doctrine document."
+required = true
+
+[vars.rationale]
+description = "Why this amendment is being proposed; reference Board of Inquiry if applicable."
+required = true
+
+[[steps]]
+id = "convene"
+title = "COB convenes the amendment review"
+description = """
+Watchstations: COB (OIC), CO, XO, JAG, Yeoman. COB presents:
+- Target document: {{target_doc}}
+- Proposed diff
+- Rationale
+- BoI reference if applicable
+"""
+type = "task"
+
+[[steps]]
+id = "internal_consistency"
+title = "JAG reviews internal consistency"
+description = """
+JAG verifies: amendment does not conflict with safety provisions in
+DOCTRINE.md. Does not conflict with brevity protocol. Does not invent
+a new authority outside the chain of command. Files NEGAT with reason
+if any of these fail; otherwise WILCO.
+"""
+needs = ["convene"]
+type = "task"
+
+[[steps]]
+id = "simulate"
+title = "Run a casualty drill exercising the changed behavior"
+description = """
+COB picks a drill formula that exercises the changed behavior. Run it
+with the amendment applied (in a test rig). Record outcomes.
+
+If the drill fails, the amendment goes back to draft.
+"""
+needs = ["internal_consistency"]
+type = "task"
+
+[[steps]]
+id = "sign_off"
+title = "CO or COB signs off"
+description = """
+- For changes to BREVITY.md, RATING_PROGRESSION.md, GLOSSARY.md,
+  WATCH_BILL.md: COB sign-off sufficient.
+- For changes to DOCTRINE.md or BATTLE_BILL.md: CO sign-off required.
+
+Refusal returns the amendment to draft with feedback.
+"""
+needs = ["simulate"]
+type = "task"
+
+[[steps]]
+id = "apply"
+title = "Apply the amendment, log the change"
+description = """
+On sign-off:
+1. Apply the diff to the target doctrine document.
+2. Append an entry to doctrine/AMENDMENTS.md: id, date, originator,
+   reason, diff hash, BoI reference if any.
+3. Bump the doctrine layer's prompt-cache key so next agent spawn picks
+   up the new doctrine.
+4. Yeoman commits the amendment record.
+"""
+needs = ["sign_off"]
+type = "task"

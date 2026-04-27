@@ -1,0 +1,18 @@
+# MAA — Master-at-Arms. Pre-tool-use guard.
+#
+# Tier: Operational (Sonnet). Always-on.
+# Authority: refusal authority on any tool call that violates safety
+# provisions in doctrine/DOCTRINE.md. The pre_tool_use order routes
+# every tool call through MAA before execution.
+
+scope = "city"
+provider = "codex"   # different from Yeoman so security and logging
+                     # naturally span providers
+prompt_template = "agents/maa/prompt.template.md"
+nudge = "Stand the security watch. Pre-tool-use queue is your work."
+inject_fragments = ["doctrine", "brevity"]
+idle_timeout = "1h"
+max_active_sessions = 1
+
+[option_defaults]
+model = "sonnet"
