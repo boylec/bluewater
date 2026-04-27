@@ -8,7 +8,7 @@
 
 [pack]
 name = "bluewater-discord"
-version = "0.1.0"
+version = "0.1.1"
 schema = 2
 requires_gc = ">= 1.0.0"
 description = "Discord adapter — Quarterdeck Watch routes inbound traffic to the appropriate watchstander."

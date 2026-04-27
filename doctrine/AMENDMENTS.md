@@ -133,3 +133,89 @@ match real-navy organization for the metaphor to hold up.
 by old name. `agents/et/` and `agents/dc/` content updated to reflect
 their correct departments; directory paths unchanged (rate codes did
 not change for those, only department assignment did).
+
+---
+
+## A0003 — v0.1.1 corrections: CLI validity, gastown respect, accessibility
+
+**Date:** 2026-04-27
+**Originator:** v0.1.1 post-ship review.
+**Reason:** v0.1.0 shipped to `boylec/bluewater` (PR #6 open at
+`gastownhall/gascity-packs`). Post-ship review surfaced three
+cross-cutting issues warranting a same-day patch release.
+
+**Findings and resolutions:**
+
+1. **CLI commands in many docs were invalid.** A complete audit
+   against current `gastownhall/gascity` (v1.0.0) found ~28% of
+   distinct invocations were wrong. Most importantly, three
+   load-bearing order `check` shell commands referenced a
+   `gc telemetry` subcommand that does not exist — meaning the alarm
+   pipeline didn't fire on a real Gas City install. Other invalid
+   forms: `gc events fire X --kind Y` (real CLI: `gc event emit X
+   --payload '{"kind":"Y"}'`), `gc events tail N --filter "k=v"`
+   (real CLI: `gc events --type X --since 30m`), `gc orders disable`
+   (no such subcommand), `gc dolt status` (not public), `--filter`
+   flag (real CLI: `--type` and `--payload-match`).
+
+   **Resolution:** wrote `scripts/check-burn-rate.sh`,
+   `check-provider-health.sh`, `check-provider-credits.sh`,
+   `emit-stub-telemetry.sh` to replace the bogus `gc telemetry`
+   calls. Updated `orders/burn_rate_exceeded.toml`, `provider_outage.toml`,
+   `provider_credit_low.toml` to call the scripts. Fixed all `gc
+   events fire/tail`, `--filter`, `gc orders disable`, `gc dolt
+   status` references across `docs/use_cases.mdx`, `docs/quickstart.mdx`,
+   `docs/first_watch.mdx`, `docs/install.mdx`, `agents/cheng/prompt.template.md`,
+   `agents/eoow/prompt.template.md`, `formulas/flooding.toml`. Verified
+   with grep: zero hits remaining.
+
+2. **README was hostile to gastown.** The "Why this pack instead of
+   gastown" section read as competitive when bluewater is in
+   gastown's lineage and benefits from the same SDK. The
+   "designed to run cheaper than gastown" framing read as throwing
+   shade.
+
+   **Resolution:** rewrote README to acknowledge lineage explicitly
+   ("shares gastown's foundations and adds a stricter command
+   structure"), reframed "Why this pack instead of gastown" → "When
+   Bluewater fits" (presents the situations where this design is
+   useful without implying gastown is deficient), reframed cost
+   section to describe the actual mechanism (CHENG burn-rate
+   authority + doctrine prompt-cache amortization).
+
+3. **The pack was opaque to readers without a Navy background.**
+   Terms like wardroom, battle bill, watch standing, passdown brief,
+   two-key launch, and rate codes (FC/GM/ET/MN/HM/etc.) appeared
+   without inline explanation.
+
+   **Resolution:** added a plain-English layer alongside the naval
+   one (the naval theming itself stays — it's the design's identity).
+   New `docs/concepts.mdx` walks through the metaphor in
+   software-engineering terms; new `docs/glossary.mdx` is a
+   two-column lookup covering ~50 naval terms. Every
+   `agents/*/agent.toml`, `formulas/*.toml`, `orders/*.toml` got an
+   "In plain SE terms:" line in its header comment block. Every
+   `agents/*/prompt.template.md` got an "In plain English:" preamble
+   right after the role headline (read by the agent and by humans
+   reviewing the prompt). README rewrote install code-block comments,
+   added an "In SE terms" column to the department table, added a
+   "New here?" banner pointing to concepts.mdx and glossary.mdx. The
+   four MDX docs (install, quickstart, use_cases, first_watch) got
+   "background reading" callouts and inline first-use glosses.
+
+   No changes to canonical doctrine markdown (DOCTRINE.md, BREVITY.md,
+   etc.) — the spec voice is preserved; the gloss layer lives in the
+   new accessibility docs and in TOML/prompt headers.
+
+**Files affected:** all `agents/*/agent.toml` (~30 files), all
+`agents/*/prompt.template.md` (~25 files), all `formulas/*.toml`
+(~24 files), all `orders/*.toml` (~14 files), plus `README.md`,
+`docs/{install,quickstart,use_cases,first_watch}.mdx`,
+`agents/cheng/prompt.template.md`, `agents/eoow/prompt.template.md`,
+`formulas/flooding.toml`, `orders/{burn_rate_exceeded,provider_outage,provider_credit_low}.toml`,
+plus new `docs/concepts.mdx`, `docs/glossary.mdx`,
+`scripts/{check-burn-rate,check-provider-health,check-provider-credits,emit-stub-telemetry}.sh`.
+
+**Result:** The pack is now structurally CLI-correct (alarm pipeline
+runnable), gracious about gastown lineage, and accessible to readers
+without naval background. v0.1.1 tagged.

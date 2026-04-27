@@ -4,6 +4,70 @@ All notable changes to Bluewater are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/); the project
 adheres to [Semantic Versioning](https://semver.org).
 
+## [0.1.1] — 2026-04-27
+
+Same-day patch release. No new functionality; corrections,
+accessibility, and gastown respect. See `doctrine/AMENDMENTS.md`
+A0003 for the full record.
+
+### Fixed
+
+- **CLI commands across docs and prompts.** A complete audit against
+  current `gastownhall/gascity` (v1.0.0) found ~28% of distinct
+  invocations were invalid. Three of them were in load-bearing order
+  `check` shell commands (`gc telemetry burn-rate`, `provider-health`,
+  `credit-balance` — none of which are real subcommands), meaning the
+  alarm pipeline didn't fire on a real install. Replaced with stub
+  scripts under `scripts/` (`check-burn-rate.sh`,
+  `check-provider-health.sh`, `check-provider-credits.sh`) plus a
+  `scripts/emit-stub-telemetry.sh` that documents how to wire real
+  signal in. Other CLI fixes: `gc events fire X --kind Y` →
+  `gc event emit X --payload '{"kind":"Y"}'`; `gc events tail N
+  --filter "k=v"` → `gc events --type X --since 30m`; `gc orders
+  disable` → `enabled = false` + `gc reload`; `gc dolt status` →
+  `gc doctor`; `--filter` → `--type` / `--payload-match`. Verified
+  with grep.
+
+### Changed
+
+- **README is no longer hostile to gastown.** Rewrote the section
+  framing: "Why this pack instead of `gastown`" → "When Bluewater
+  fits"; "designed to run cheaper than gastown" → "designed for the
+  cost envelope of gastown" with the actual mechanism (CHENG burn-rate
+  authority + doctrine prompt-cache amortization). Lineage section
+  expanded to acknowledge gastown explicitly as forefather.
+
+### Added
+
+- **Plain-English layer alongside the naval one.** The naval theming
+  stays — it's the design's identity — but every term now has a
+  software-engineering gloss alongside it.
+  - New `docs/concepts.mdx` — plain-English walkthrough of the
+    metaphor for readers without a Navy background (~700 words).
+  - New `docs/glossary.mdx` — two-column lookup table covering ~50
+    naval terms with their software-engineering meanings.
+  - Every `agents/*/agent.toml`, `formulas/*.toml`, `orders/*.toml`
+    got an "In plain SE terms:" line in its header comment block (90
+    files updated).
+  - Every `agents/*/prompt.template.md` got an "In plain English:"
+    preamble immediately after the role headline (37 files updated).
+  - README install code-block comments rewrote with SE-friendly
+    language; department table gained "In SE terms" column; "New
+    here?" banner at top points to concepts/glossary.
+  - The four MDX docs (install, quickstart, use_cases, first_watch)
+    got "background reading" callouts and inline first-use glosses.
+- **`scripts/`** directory now hosts `cook-check.sh` (existing) plus
+  the four new check/emit scripts.
+
+### Build statistics (v0.1.1)
+
+- 184 files (108 TOML, 60 markdown, 5 mdx, 5 shell), ~9100 lines of
+  pack content.
+- Lint: all 24 evolutions resolve; all 29 watchstations bound; all
+  TOML parses; 100% plain-English coverage across
+  agents/formulas/orders/prompts; zero invalid CLI invocations
+  outside `docs/spec/` historical snapshot.
+
 ## [0.1.0] — 2026-04-27
 
 Initial release. Naval-doctrine multi-agent orchestration as a Gas
@@ -169,4 +233,5 @@ formula every rated worker uses (replaces gastown's
   available DC rather than enforcing seniority — documented as
   v0.2.0 enhancement.
 
+[0.1.1]: https://github.com/boylec/bluewater/releases/tag/v0.1.1
 [0.1.0]: https://github.com/boylec/bluewater/releases/tag/v0.1.0

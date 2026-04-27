@@ -13,7 +13,7 @@
 
 [pack]
 name = "bluewater-air"
-version = "0.1.0"
+version = "0.1.1"
 schema = 2
 requires_gc = ">= 1.0.0"
 description = "Air department: Air Boss + Yellow/Purple/Red/Green/Brown/Blue/White flight-deck colors. Production-deploy choreography."

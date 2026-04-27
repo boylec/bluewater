@@ -22,7 +22,7 @@
 
 [pack]
 name = "bluewater"
-version = "0.1.0"
+version = "0.1.1"
 schema = 2
 requires_gc = ">= 1.0.0"
 description = "Naval-doctrine multi-agent orchestration: CO/XO/OOD chain of command, watch standing, pre-composed casualty response, cross-provider two-key launches."

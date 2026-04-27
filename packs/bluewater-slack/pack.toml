@@ -15,7 +15,7 @@
 
 [pack]
 name = "bluewater-slack"
-version = "0.1.0"
+version = "0.1.1"
 schema = 2
 requires_gc = ">= 1.0.0"
 description = "Slack adapter — Quarterdeck Watch routes inbound Slack traffic to the appropriate watchstander."
