@@ -1,6 +1,10 @@
 # pre_tool_use — every tool call routes through MAA before execution.
 # This is the load-bearing security gate. Per safety provisions in
 # doctrine/DOCTRINE.md, no agent may bypass it.
+#
+# In plain SE terms: routes every tool call through MA before execution.
+# The load-bearing security gate.
+#
 
 [order]
 description = "Route every tool call through MAA's pre-tool-use guard before execution."

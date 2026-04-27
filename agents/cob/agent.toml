@@ -3,6 +3,12 @@
 # Tier: Strategic (Opus). On-demand for: rating board, captain's mast
 # (as advisor), doctrine amendments (chair for non-DOCTRINE/non-
 # BATTLE_BILL changes), striker review, training-queue ownership.
+#
+# In plain SE terms: the training and amendment coordinator. Runs rating
+# boards (promotion reviews), owns the training queue (low-priority
+# remediation beads), chairs doctrine amendments below CO sign-off
+# threshold. Runs on a third LLM provider for adversarial diversity.
+#
 
 scope = "city"
 provider = "gemini"   # third provider — COB independent of CO/XO for

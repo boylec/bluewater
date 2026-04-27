@@ -1,4 +1,8 @@
 # discord_intake_route — process one Discord interaction.
+#
+# In plain SE terms: process one Discord interaction: classify (slash
+# command vs mention), authorize, route to target watchstander.
+#
 formula = "discord_intake_route"
 description = "Process a single Discord interaction (slash command, mention, message) routed by the underlying discord-intake service."
 version = 1

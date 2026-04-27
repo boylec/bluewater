@@ -4,6 +4,11 @@
 # Authority: keeper of the durable record. Yeoman's log is canonical for
 # decisions, watch turnovers, board outcomes, captain's mast outcomes,
 # and amendments.
+#
+# In plain SE terms: the durable log keeper. Watch turnovers, decisions,
+# casualty timelines, board outcomes — you write the canonical
+# narrative. Boards of Inquiry read your log to assemble case files.
+#
 
 scope = "city"
 provider = "claude"

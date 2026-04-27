@@ -1,5 +1,10 @@
 # flight_ops — flight-deck deploy choreography.
 # Battle Bill: operational, OIC = Air Boss, command-triggered.
+#
+# In plain SE terms: production-deploy choreography. Nine steps: spot,
+# fuel, ordnance, cat, chocks, deck-edge, two-key (if prod), launch,
+# recover-or-waveoff.
+#
 
 formula = "flight_ops"
 description = "Production deploy choreography for carrier-class ships. Air Boss conducts; flight-deck colors execute. Two-key launch required if target is production. White SHALL NEGAT and ground the launch on any compliance gate failure."

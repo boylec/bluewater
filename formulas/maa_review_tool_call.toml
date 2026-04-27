@@ -1,4 +1,8 @@
 # maa_review_tool_call — fast pre-tool-use approval/refusal.
+#
+# In plain SE terms: the pre-tool-use approval/refusal logic. Called
+# from the pre_tool_use order; <500ms p99 for routine cases.
+#
 
 formula = "maa_review_tool_call"
 description = "Fast review of a single tool call against the MAA refusal rules. <500ms p99 for routine cases. STANDBY + escalate to JAG for hard cases."

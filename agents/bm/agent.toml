@@ -5,6 +5,12 @@
 # (Seaman/Fireman/Airman). For us: lead on small-bead "mess decks"
 # work — doc nits, lint cleanups, format-only changes, simple
 # refactors. Mentors strikers heading toward designated rates.
+#
+# In plain SE terms: the working-party leader. Leads SN/FN/AN
+# (undesignated) workers on the smallest beads — doc nits, lint,
+# formatting, well-scoped one-line refactors. Mentors strikers heading
+# toward designated rates.
+#
 
 scope = "rig"
 provider = "claude"

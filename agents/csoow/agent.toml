@@ -3,6 +3,11 @@
 # Tier: Operational (Sonnet). On-demand — only spawned at General
 # Quarters or higher. Splits the kill chain off the OOD's command
 # during casualty response.
+#
+# In plain SE terms: spawns only at sev1 (General Quarters). Splits the
+# kill chain (FC retargeting, DC dispatch, Helmsman) off OOD so OOD can
+# keep ship-survival authority.
+#
 
 scope = "city"
 provider = "codex"

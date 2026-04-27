@@ -1,5 +1,9 @@
 # sigint_collection — CT division. Optional (carrier-class).
 # Battle Bill: not yet a row, but present in CATALOG as optional.
+#
+# In plain SE terms: CT walks configured external intel sources
+# (advisory feeds, CVE digests), produces a digest bead.
+#
 
 formula = "sigint_collection"
 description = "CT walks configured external sources (advisory feeds, CVEs, abuse reports), produces a digest, files as a bead tagged sigint. Action belongs to OPS or CSO based on findings."

@@ -3,6 +3,11 @@
 #
 # This is the most-frequently-run formula in the pack. Six steps per
 # WATCH_BILL.md.
+#
+# In plain SE terms: the on-call handoff procedure. Six steps: bell
+# (1-min warning), passdown brief, read-back, Yeoman log, conn transfer,
+# despawn. Yeoman scores the handoff (40/30/30 weights).
+#
 
 formula = "watch_turnover"
 description = "Six-step watch handoff: bell, passdown brief, read-back, Yeoman log, conn transfer, despawn. Yeoman computes handoff quality score (40/30/30 weights per watch_bill.toml) and routes anything below 0.6 to COB; below 0.3 triggers Captain's Mast against outgoing."

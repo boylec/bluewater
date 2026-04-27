@@ -1,5 +1,9 @@
 # captains_mast — review of an agent that misbehaved.
 # Battle Bill: administrative, OIC = CO, order-triggered.
+#
+# In plain SE terms: review of an agent that misbehaved. Outcomes:
+# counsel / demote one step / remove from ship.
+#
 
 formula = "captains_mast"
 description = "CO-led review of a rated agent who misbehaved. Outcomes: counseling (no action), demotion one step, removal from ship. Cannot demote past undesignated; removal goes to JAG for offboarding."

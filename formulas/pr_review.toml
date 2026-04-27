@@ -3,6 +3,11 @@
 # Implements Pack v2's "review formula" pattern with explicit
 # cross-provider concurrence so review and authoring naturally span
 # providers.
+#
+# In plain SE terms: multi-provider code review. Reviewer FC must run on
+# a different LLM provider than the GM that authored the PR. JAG joins
+# for license/compliance gates when applicable.
+#
 
 formula = "pr_review"
 description = "Cross-provider code review. CSO OICs; one FC on a different provider than the work's GM does the review; JAG (optional) on license/compliance dimension. Outcome: approve, request changes, or block on a Sea Lawyer question."

@@ -2,6 +2,11 @@
 # Battle Bill: casualty, severity medium, OIC = OOD.
 # Note: spec says OIC = OOD but Corpsman is the operator who actually
 # investigates. OOD has command authority; Corpsman is dispatched.
+#
+# In plain SE terms: stalled-agent recovery procedure. Corpsman
+# investigates (process check, heartbeat, looping, hallucination), picks
+# one intervention, OOD has command authority.
+#
 
 formula = "man_overboard"
 description = "Stalled, hung, looping, or hallucinating agent. OOD has command authority; Corpsman investigates and intervenes. Outcome: nudge / drain / seance recovery / captains_mast (on pattern)."

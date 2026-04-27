@@ -1,4 +1,7 @@
 # Yellow — Aircraft handler / director. Mostly deterministic.
+#
+# In plain SE terms: deterministic — aircraft handler / director.
+#
 scope = "city"
 provider = ""
 prompt_template = ""

@@ -3,6 +3,12 @@
 # Tier: Operational (Sonnet). Rated PO.
 # Senior DCs (DC1) are bound to the dc_oic watchstation in the Battle
 # Bill; they OIC fire_in_compartment and contribute to flooding.
+#
+# In plain SE terms: the casualty-response specialist. Two modes: bug-
+# fix beads (test-first discipline) and active casualties (isolate the
+# bleed first, fix later). Drill performance is the primary promotion
+# signal.
+#
 
 scope = "rig"
 provider = "claude"

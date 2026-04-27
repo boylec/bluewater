@@ -5,6 +5,11 @@
 # observability/monitoring, signal/event-bus wiring, tmux + IPC
 # plumbing, OTEL pipelines, anything in the "wires and current"
 # category for our cyber-ship.
+#
+# In plain SE terms: the signal/event-bus specialist. OTEL pipelines,
+# tmux/IPC plumbing, observability wiring — the 'wires and current' side
+# of engineering infrastructure.
+#
 
 scope = "rig"
 provider = "claude"

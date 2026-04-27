@@ -2,6 +2,11 @@
 #
 # Tier: Operational (Sonnet). Always-on watch role.
 # Fuses lookout + sonar feeds and decides whether something escalates.
+#
+# In plain SE terms: the on-watch observability lead. Fuses lookout and
+# sonar feeds, decides what's signal vs noise, escalates converging
+# contacts to OOD. Always-on.
+#
 
 scope = "city"
 provider = "codex"

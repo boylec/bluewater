@@ -4,6 +4,11 @@
 # OS is the rated personnel under CIC Watch. Watch-stander work:
 # fuse lookout/sonar feeds, file low-confidence contacts, escalate
 # converging contacts to CIC Watch Officer.
+#
+# In plain SE terms: rated personnel under CIC Watch Officer. Volume
+# work — many small contact-classification decisions per watch. Senior
+# agent (CIC Watch Officer) sees the patterns you flag.
+#
 
 scope = "city"
 provider = "codex"

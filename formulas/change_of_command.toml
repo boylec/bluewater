@@ -1,5 +1,10 @@
 # change_of_command — periodic CO/XO refresh.
 # Battle Bill: administrative, OIC = COB, scheduled (Jan 1 / Jul 1).
+#
+# In plain SE terms: periodic CO/XO identity refresh (Jan 1 / Jul 1).
+# Defends against single-identity drift; rotates models or prompts
+# wholesale.
+#
 
 formula = "change_of_command"
 description = "Periodic identity refresh for CO and XO. Rotates models or prompts wholesale to defend against same-identity drift. Effects: CO and XO seance-handoff to fresh sessions; old sessions despawn."

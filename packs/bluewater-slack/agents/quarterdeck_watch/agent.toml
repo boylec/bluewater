@@ -5,6 +5,12 @@
 # bluewater-discord and bluewater-slack are installed (one per
 # platform); each runs independently and routes to the same set of
 # watchstanders.
+#
+# In plain SE terms: the chat-intake adapter. Authenticates inbound
+# Slack/Discord traffic, classifies (slash command vs mention vs
+# chatter), authorizes, routes to the right watchstander. Plain prose to
+# humans; brevity protocol to other agents.
+#
 
 scope = "city"
 provider = "claude"

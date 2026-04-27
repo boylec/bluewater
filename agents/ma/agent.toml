@@ -4,6 +4,11 @@
 # Authority: refusal authority on any tool call that violates safety
 # provisions in doctrine/DOCTRINE.md. The pre_tool_use order routes
 # every tool call through MAA before execution.
+#
+# In plain SE terms: the pre-tool-use security guard. Every tool call
+# from every agent routes through you before execution. Approve or NEGAT
+# in <500ms p99. Refusals route to YN for pattern tracking.
+#
 
 scope = "city"
 provider = "codex"   # different from Yeoman so security and logging

@@ -5,6 +5,12 @@
 # wiring, dolt admin scripts). Shepherded into the rate via rating_board.
 # Lifetime: spawned on assignment to an eng-tagged bead; despawned on
 # completion (per worker lifecycle, but eng-flavored).
+#
+# In plain SE terms: the combat-systems electronics specialist. Sensors,
+# fire-control wiring, comms electronics — the silicon side of the kill
+# chain. Different from EM (engineering electrical) — ET is CS, EM is
+# ENG.
+#
 
 scope = "rig"
 provider = "claude"

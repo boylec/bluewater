@@ -1,5 +1,10 @@
 # doctrine_amendment — proposed change to doctrine documents.
 # Battle Bill: administrative, OIC = COB, order-triggered.
+#
+# In plain SE terms: the amendment-process formula for changing a
+# doctrine document. Internal-consistency review (JAG), simulation
+# drill, sign-off (COB or CO), apply diff, log.
+#
 
 formula = "doctrine_amendment"
 description = "Amend a doctrine document. Process per doctrine/AMENDMENTS.md: unified diff, rationale, simulation, COB sign-off (or CO sign-off for ship-wide doctrine)."

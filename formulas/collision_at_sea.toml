@@ -1,5 +1,9 @@
 # collision_at_sea — two agents have produced conflicting changes.
 # Battle Bill: casualty, severity high, OIC = OOD.
+#
+# In plain SE terms: two agents produced conflicting changes. FC picks
+# the winner; Helmsman resets the loser's branch.
+#
 
 formula = "collision_at_sea"
 description = "Two GMs (or one GM and a Helmsman attempt) produced changes that cannot be auto-merged. Pick a winner (FC's call); reset the loser's branch and reassign their bead with a rejection reason."

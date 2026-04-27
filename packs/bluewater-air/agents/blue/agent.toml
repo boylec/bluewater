@@ -1,4 +1,8 @@
 # Blue — Chocks / chains. Rollback and feature-flag guardrails.
+#
+# In plain SE terms: deterministic — chocks/chains (rollback + feature-
+# flag guardrails).
+#
 scope = "city"
 provider = ""
 prompt_template = ""

@@ -1,4 +1,8 @@
 # striker_review — nightly telemetry scan; propose strikers to COB.
+#
+# In plain SE terms: nightly cron at 0200. Reads per-agent telemetry,
+# scores against rating.toml, files striker proposals to COB.
+#
 
 [order]
 description = "Nightly: scan telemetry for undesignated agents whose weighted score crosses striker_threshold over min_beads in any rate. Propose to COB."

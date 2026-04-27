@@ -1,6 +1,12 @@
 # Corpsman — agent intervention.
 #
 # Tier: Operational (Sonnet). On-demand.
+#
+# In plain SE terms: the agent-intervention specialist. Triage agents
+# that have stalled, hung, or started looping. Pick one intervention
+# (nudge, drain, seance handoff, captains_mast) and commit. Don't fix
+# the bead — fix the agent.
+#
 
 scope = "city"
 provider = "claude"

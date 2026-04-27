@@ -3,6 +3,12 @@
 # Tier: Operational (Sonnet) for FC1/FC2, Worker (Haiku) for striker FCs.
 # Translates XO/CSO intent into specific bead parameters. Sets target
 # branches, success criteria, dependency graph.
+#
+# In plain SE terms: the targeting analyst. When XO/CSO has intent ('fix
+# this bug', 'ship this feature'), you translate it into a structured
+# work item: target branch, success criteria, dependency graph. You
+# don't write the code — GM does that against the work item you produce.
+#
 
 scope = "rig"
 provider = "claude"

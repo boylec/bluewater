@@ -1,5 +1,10 @@
 # liberty_call — designated rest period.
 # Battle Bill: routine, OIC = CO, scheduled.
+#
+# In plain SE terms: the scheduled overnight quiet hours. Risky
+# evolutions paused, two-key launches deferred, worker spawn rate
+# throttled. Lookouts, sonar, and casualty alarms still fire.
+#
 
 formula = "liberty_call"
 description = "Designated quiet hours. Risky evolutions are paused; on-demand spawns require CO authorization (or CO's pre-issued night order). Reduces overnight burn."

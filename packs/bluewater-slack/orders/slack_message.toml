@@ -1,4 +1,8 @@
 # slack_message — fire slack_intake_route on each inbound event.
+#
+# In plain SE terms: fires slack_intake_route on each inbound Slack
+# event.
+#
 [order]
 description = "Each inbound Slack event (slash command, app mention, message) fires the routing formula under Quarterdeck Watch."
 trigger = "event"

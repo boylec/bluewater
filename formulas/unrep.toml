@@ -1,5 +1,9 @@
 # unrep — Underway Replenishment.
 # Battle Bill: operational, OIC = SUPPO, command-triggered.
+#
+# In plain SE terms: underway replenishment. Refresh external context
+# (docs/deps/creds) without stopping in-flight work.
+#
 
 formula = "unrep"
 description = "Refresh external context (docs, dependencies, credential rotations) without stopping in-flight work. SUPPO orchestrates; SK does the work."

@@ -1,6 +1,11 @@
 # CT — Cryptologic Technician. SIGINT and threat intel. Optional.
 #
 # Tier: Operational (Sonnet). On-demand for sigint_collection formula.
+#
+# In plain SE terms: the SIGINT collector. Walks configured external
+# sources (advisory feeds, dependency CVEs, abuse reports), produces
+# digests, files as beads tagged sigint. IS or OPS act on them.
+#
 
 scope = "city"
 provider = "gemini"

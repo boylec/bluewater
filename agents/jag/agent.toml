@@ -2,6 +2,11 @@
 #
 # Tier: Tactical (Sonnet). On-demand.
 # Authority: advisory. JAG opines; CO decides.
+#
+# In plain SE terms: license/compliance/Board-of-Inquiry adversary.
+# Advises; CO decides. Runs on a third provider so BoI cross-examination
+# naturally spans providers. Spawns on demand.
+#
 
 scope = "city"
 provider = "gemini"   # third-provider preferred for adversarial diversity

@@ -1,6 +1,11 @@
 # agent_stalled — fires `man_overboard` casualty.
 # The Cook (deterministic, scripts) detects the stall pattern; this order
 # fires the formula.
+#
+# In plain SE terms: fires man_overboard. Calls scripts/cook-check.sh
+# every 60s; the script detects stalled/hung agents and signals when
+# intervention is needed.
+#
 
 [order]
 description = "Detect stalled / hung / looping agent via Cook's deterministic checks; sound man_overboard."

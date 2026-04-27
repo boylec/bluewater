@@ -3,6 +3,11 @@
 # When bluewater-air is installed, ownership shifts to Air Boss
 # (packs/bluewater-air/formulas/sea_and_anchor_detail.toml takes
 # precedence via Pack V2 import resolution).
+#
+# In plain SE terms: choreographed deploy procedure. CSO-flavored
+# variant; bluewater-air ships an Air-Boss-flavored variant that takes
+# precedence when installed.
+#
 
 formula = "sea_and_anchor_detail"
 description = "Choreographed deploy. Sea Detail OOD steers, Conning Officer specifies maneuvers, Helmsman executes. Normal OOD remains in command of the rest of the ship. CS-flavored variant; Air-flavored variant in bluewater-air takes precedence when installed."

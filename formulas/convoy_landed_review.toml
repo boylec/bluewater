@@ -1,5 +1,10 @@
 # convoy_landed_review — Yeoman summarizes a closed convoy; COB
 # reviews for Captain's Mast triggers.
+#
+# In plain SE terms: post-convoy summary. YN aggregates the convoy's
+# beads + events into a log entry; COB reviews for Captain's Mast
+# triggers.
+#
 
 formula = "convoy_landed_review"
 description = "Yeoman summarizes a closed convoy and routes summary to COB for Captain's Mast consideration."

@@ -3,6 +3,11 @@
 # Tier: Operational (Sonnet). On-demand per deploy.
 # The live LLM rep for whichever service is being deployed. Different
 # services pull different prompts (configured via city overlay).
+#
+# In plain SE terms: service-owning engineer agent (one per service
+# deployed). Live LLM rep during flight ops; service-specific prompt
+# loaded via city overlay.
+#
 
 scope = "rig"
 provider = "claude"

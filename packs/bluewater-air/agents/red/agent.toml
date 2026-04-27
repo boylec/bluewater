@@ -1,4 +1,8 @@
 # Red — Ordnance. Verifies artifact integrity (checksums, signatures).
+#
+# In plain SE terms: deterministic — ordnance (artifact integrity
+# verifier).
+#
 scope = "city"
 provider = ""
 prompt_template = ""

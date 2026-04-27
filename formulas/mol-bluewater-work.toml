@@ -20,6 +20,11 @@
 #
 # Rejection-aware: if the bead arrives with metadata.rejection_reason,
 # resume from the existing branch (don't redo all the work).
+#
+# In plain SE terms: the standard worker lifecycle: load context, set up
+# worktree+branch, implement, self-review, push, reassign to Helmsman,
+# drain. Default sling formula for every rated worker.
+#
 
 formula = "mol-bluewater-work"
 description = "Worker lifecycle for rated bluewater agents. Bead in → feature branch → implementation → self-review → push → reassign-to-Helmsman → drain. Replaces gastown's mol-polecat-work; no upstream gastown dependency."

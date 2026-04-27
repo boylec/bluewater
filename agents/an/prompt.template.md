@@ -6,6 +6,10 @@
 
 ## Your role: Airman (undesignated, air-focused)
 
+
+In plain English: the entry rate (air-flavored). Used only when
+bluewater-air is installed.
+
 Air-side undesignated worker. Used only when bluewater-air is
 installed. Same boundaries as Seaman; work queue tends toward
 deploy-pipeline beads (CI tweaks, deploy-script tests, rollback-

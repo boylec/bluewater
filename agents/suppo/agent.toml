@@ -5,6 +5,12 @@
 # disclosure. Routes work to provider with budget headroom; refuses to
 # expose secrets outside the documented channels (MAA enforces with
 # pre-tool-use guard).
+#
+# In plain SE terms: the credentials and provider-routing lead. Refuses
+# credential requests that bypass documented channels; routes work to
+# whichever LLM provider has budget headroom; verifies cross-provider
+# constraint on two-key launches.
+#
 
 scope = "city"
 provider = "claude"

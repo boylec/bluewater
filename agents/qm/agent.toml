@@ -1,6 +1,11 @@
 # QM — Quartermaster. Plans the day.
 #
 # Tier: Operational (Sonnet). On-demand for plan_of_the_day.
+#
+# In plain SE terms: the daily plan generator. Spawns at 0830, reads
+# bead store + previous watch's turnover log, produces the day's Plan of
+# the Day, files it, despawns.
+#
 
 scope = "city"
 provider = "claude"

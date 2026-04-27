@@ -1,6 +1,11 @@
 # flooding — runaway resource consumption.
 # Battle Bill: casualty, severity high, OIC = DC OIC.
 # Trigger order: bluewater-eng/orders/burn_rate_exceeded.toml fires this.
+#
+# In plain SE terms: runaway resource consumption. CHENG names the brake
+# (usually a worker in a loop, an oversized pool, or a formula spawning
+# subroots faster than they finish); DC OIC executes.
+#
 
 formula = "flooding"
 description = "Burn rate, session count, or other resource is out of bounds. Stop the bleed first, fix later. CHENG sets the brake; DC OIC executes."

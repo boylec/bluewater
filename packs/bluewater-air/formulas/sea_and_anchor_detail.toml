@@ -3,6 +3,11 @@
 # This variant takes precedence over packs/bluewater-cs/formulas/sea_and_anchor_detail.toml
 # via Pack V2 import resolution (most-recent-import-wins; bluewater-air is
 # imported after bluewater-cs in the umbrella pack.toml).
+#
+# In plain SE terms: choreographed deploy procedure. CSO-flavored
+# variant; bluewater-air ships an Air-Boss-flavored variant that takes
+# precedence when installed.
+#
 
 formula = "sea_and_anchor_detail"
 description = "Air-led deploy choreography. Wraps flight_ops for the deploy phase, plus pre-flight (testing, queue clearance, casualty checks) and post-flight (verification, BoI on rollback)."

@@ -1,5 +1,9 @@
 # morning_quarters — daily ops brief.
 # Battle Bill: routine, OIC = XO, scheduled (0800).
+#
+# In plain SE terms: the daily 0800 stand-up. XO presides; department
+# heads report status; XO sets day's intent.
+#
 
 formula = "morning_quarters"
 description = "XO opens the day. All department heads attend. XO sets day's intent, reviews overnight events, addresses any night-order changes."

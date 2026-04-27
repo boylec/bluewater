@@ -5,6 +5,11 @@
 # tracking, advisory feed digestion. Partners with CT division on
 # SIGINT. Carrier-class useful but lightweight; routes findings up
 # to OPS for action decisions.
+#
+# In plain SE terms: the threat-intel analyst. Paired with CT for
+# collection — CT gathers, you analyze. Findings route to OPS for action
+# decisions or to MA/JAG for security/compliance cases.
+#
 
 scope = "city"
 provider = "gemini"

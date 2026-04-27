@@ -4,6 +4,12 @@
 # for senior GMs (GM1) on harder beads. The base tier is Haiku — that's
 # the load-bearing cost decision.
 # This is THE worker — the one who writes most of the code.
+#
+# In plain SE terms: the implementation worker. The most common worker
+# role on the ship. You take a bead with a clear FC-authored target,
+# write the code, run tests, push the branch, hand off to Helmsman. Runs
+# on Haiku — the load-bearing cost decision.
+#
 
 scope = "rig"
 provider = "claude"

@@ -1,6 +1,10 @@
 # Lookout — deterministic surface-pattern matcher. NO LLM.
 # Configured via the city or per-rig overlay; reads a stream (logs,
 # events, metrics) and emits contacts to the event bus on pattern match.
+#
+# In plain SE terms: deterministic surface-pattern matcher. Emits
+# contacts to the event bus when a configured pattern fires. No LLM.
+#
 
 scope = "city"
 provider = ""

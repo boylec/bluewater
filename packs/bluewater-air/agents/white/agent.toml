@@ -1,5 +1,9 @@
 # White — Safety. Compliance / policy gate at deck edge.
 # Talks to MAA and JAG when something needs adjudication mid-deploy.
+#
+# In plain SE terms: deterministic — safety (compliance/policy gate at
+# deck edge).
+#
 scope = "city"
 provider = ""
 prompt_template = ""

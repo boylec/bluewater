@@ -3,6 +3,12 @@
 # Tier: Operational (Sonnet). Always-on (intake never closes).
 # Authenticates inbound Discord traffic, logs to Yeoman, routes to the
 # right watchstander based on content.
+#
+# In plain SE terms: the chat-intake adapter. Authenticates inbound
+# Slack/Discord traffic, classifies (slash command vs mention vs
+# chatter), authorizes, routes to the right watchstander. Plain prose to
+# humans; brevity protocol to other agents.
+#
 
 scope = "city"
 provider = "claude"

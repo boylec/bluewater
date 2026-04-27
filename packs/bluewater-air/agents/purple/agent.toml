@@ -1,4 +1,7 @@
 # Purple — Fuel. Wraps SUPPO's credential delivery for deploys.
+#
+# In plain SE terms: deterministic — fuel (credential delivery wrapper).
+#
 scope = "city"
 provider = ""
 prompt_template = ""

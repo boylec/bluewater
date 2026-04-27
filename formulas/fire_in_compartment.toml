@@ -1,5 +1,9 @@
 # fire_in_compartment — localized failure; isolate.
 # Battle Bill: casualty, severity high, OIC = DC OIC.
+#
+# In plain SE terms: localized subsystem failure. Compartmentalize (stop
+# work flowing in), diagnose, fix, re-open.
+#
 
 formula = "fire_in_compartment"
 description = "A subsystem is failing — a specific rig is broken, a specific service is down, a specific class of tests is failing repeatedly. Compartmentalize, isolate, then fix. Goal: prevent the failure from spreading."

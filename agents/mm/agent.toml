@@ -5,6 +5,11 @@
 # behavior, worker lifecycle, restart loops, scaling rules,
 # convergence loop bugs. Anything that moves moving parts inside the
 # ship's runtime.
+#
+# In plain SE terms: the daemon/process specialist. Controller behavior,
+# agent lifecycle hooks, scaling rules, restart loops. The 'moving
+# parts' side of engineering.
+#
 
 scope = "rig"
 provider = "claude"

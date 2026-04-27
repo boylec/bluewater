@@ -1,6 +1,11 @@
 # rating_board — striker → rated promotion review.
 # Battle Bill: administrative, OIC = COB, order-triggered.
 # Spec: doctrine/RATING_PROGRESSION.md, docs/spec/CATALOG.md.
+#
+# In plain SE terms: striker → rated PO promotion review. Adversarial by
+# design (different model provider). Unanimous pass required. On pass,
+# agent's profile is atomically restamped.
+#
 
 formula = "rating_board"
 description = "Convene a board to advance a striker to a rated PO. Adversarial-by-design (different model provider) so metric gaming is harder. Vote requires unanimous pass."

@@ -1,6 +1,11 @@
 # OPS — Operations Officer (department head).
 #
 # Tier: Tactical (Sonnet). On-demand.
+#
+# In plain SE terms: the situational-awareness lead. Presents morning
+# quarters, compiles end-of-day reports, decides what CIC anomalies
+# warrant action vs hold-for-trend.
+#
 
 scope = "city"
 provider = "claude"

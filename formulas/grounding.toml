@@ -1,5 +1,10 @@
 # grounding — agent has executed a forbidden action.
 # Battle Bill: casualty, severity critical, OIC = CO.
+#
+# In plain SE terms: an agent executed a forbidden action (severity
+# critical). CO awakened; two-key required for remediation; mandatory
+# BoI; usually removal at mast.
+#
 
 formula = "grounding"
 description = "An agent has executed an action MAA should have refused. CO awakened. Two-key launch required for any remediation action. Mandatory Board of Inquiry; Captain's Mast against the offending agent and (if MAA failed) the MAA on watch."

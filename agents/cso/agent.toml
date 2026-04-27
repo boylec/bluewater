@@ -1,6 +1,12 @@
 # CSO — Combat Systems Officer (department head).
 #
 # Tier: Tactical (Sonnet). On-demand.
+#
+# In plain SE terms: the merge-pipeline lead. Owns code review
+# (pr_review formula), coordinates targeting (FC) and implementation
+# (GM) workers, OICs CS-flavored casualties (collision_at_sea,
+# fire_in_compartment).
+#
 
 scope = "city"
 provider = "claude"

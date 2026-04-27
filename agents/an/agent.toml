@@ -2,6 +2,10 @@
 #
 # Used only when bluewater-air is installed. Same tier and boundaries
 # as SN/FN.
+#
+# In plain SE terms: the entry rate (air-flavored). Used only when
+# bluewater-air is installed.
+#
 
 scope = "rig"
 provider = "claude"

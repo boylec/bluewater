@@ -4,6 +4,11 @@
 # (Haiku) and same boundaries as SN. The split into SN/FN/AN exists
 # so that telemetry signals show which department a striker is
 # trending toward.
+#
+# In plain SE terms: the entry rate (engineering-flavored). Same
+# boundaries as SN; work queue tends toward eng-flavored beads. Striker
+# target rates: EM, MM, HT, DC.
+#
 
 scope = "rig"
 provider = "claude"

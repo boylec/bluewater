@@ -1,4 +1,8 @@
 # slack_intake_route — process one Slack event.
+#
+# In plain SE terms: process one Slack event: classify (slash command vs
+# app mention), authorize, route to target watchstander.
+#
 formula = "slack_intake_route"
 description = "Process a single Slack event (slash command, app mention, message) routed by the underlying slack-intake service."
 version = 1

@@ -1,5 +1,9 @@
 # loss_of_propulsion — provider-wide outage; CHENG OIC.
 # Battle Bill: casualty, severity high. CO awakened, BoI mandatory.
+#
+# In plain SE terms: provider-wide outage casualty. CHENG decides
+# intent; fail-over requires two-key cross-provider concurrence.
+#
 
 formula = "loss_of_propulsion"
 description = "Provider-wide outage. CHENG decides fight-through (continue with degraded latency), fall-back (queue work, stop dispatching), or fail-over (route via SUPPO to alternate provider). Two-key launch required for fail-over (cross-provider concurrence)."

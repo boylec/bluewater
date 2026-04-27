@@ -1,4 +1,8 @@
 # prod_alert — fires general_quarters at higher severity (critical).
+#
+# In plain SE terms: fires general_quarters at critical severity when a
+# production paging-grade alert fires.
+#
 [order]
 description = "Production-impacting alert (paging-grade) — sound general quarters at critical severity."
 trigger = "event"

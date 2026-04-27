@@ -1,5 +1,9 @@
 # eight_o_clock_reports — end-of-day department status to XO.
 # Battle Bill: routine, OIC = XO, scheduled (2000).
+#
+# In plain SE terms: the daily 2000 end-of-day roll-up. Department heads
+# report, XO compiles for CO (CO reads at leisure).
+#
 
 formula = "eight_o_clock_reports"
 description = "Department heads report status for end of duty day. XO compiles for CO. Brevity in effect."

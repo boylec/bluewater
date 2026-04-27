@@ -1,4 +1,8 @@
 # convoy_landed — Yeoman summarizes; Captain's Mast consideration.
+#
+# In plain SE terms: fires convoy_landed_review when a convoy closes. YN
+# summarizes; COB scans for Captain's Mast triggers.
+#
 [order]
 description = "When a convoy completes, Yeoman summarizes. If any constituent bead had a refusal-counted incident, COB considers Captain's Mast."
 trigger = "event"

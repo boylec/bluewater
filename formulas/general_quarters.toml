@@ -1,6 +1,12 @@
 # general_quarters — full-crew alarm response.
 # Battle Bill: casualty, severity high, OIC = CO.
 # Wired from orders/ci_failed_on_main.toml and orders/prod_alert.toml.
+#
+# In plain SE terms: the sev1 incident-response runbook. Triggered by
+# ci.failed or prod.alert events. CO awakened, wardroom spawned, watch
+# splits, intent decided (fight-through/fall-back/fail-over), execute,
+# secure after 30 min stable.
+#
 
 formula = "general_quarters"
 description = "Ship-threatening casualty. Full-crew alarm. CO awakened, wardroom spawned, watch splits (OOD retains ship-survival, CSOOW takes kill chain). Intent: fight through / fall back / fail over. BoI mandatory."

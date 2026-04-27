@@ -1,6 +1,11 @@
 # Air Boss — flight-deck commander.
 #
 # Tier: Tactical (Sonnet). On-demand for sea_and_anchor_detail / flight_ops.
+#
+# In plain SE terms: production-deploy commander. When bluewater-air is
+# installed, takes ownership of sea_and_anchor_detail from CSO and runs
+# the flight-deck choreography.
+#
 
 scope = "city"
 provider = "claude"

@@ -5,6 +5,12 @@
 # orders to spawn more workers if breach of configured burn rate is
 # imminent. Override only by CO (and logged).
 # Lifetime: on-demand (spawn at start of duty day, despawn at end).
+#
+# In plain SE terms: the cost-control / runtime-budget agent. Refuses
+# requests that would breach the configured token-burn envelope. Owns
+# runtime hygiene and weekly tech-debt cleanup. Wakes on burn-rate
+# alarms; otherwise stays asleep.
+#
 
 scope = "city"
 provider = "claude"

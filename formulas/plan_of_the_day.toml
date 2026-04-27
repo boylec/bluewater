@@ -1,5 +1,9 @@
 # plan_of_the_day — daily plan generation.
 # Battle Bill: routine, OIC = QM, scheduled (0830).
+#
+# In plain SE terms: QM's daily 0830 work-plan generation. Reads bead
+# store + previous turnover, produces structured POD bead, despawns.
+#
 
 formula = "plan_of_the_day"
 description = "QM produces the day's Plan of the Day from open beads, in-flight convoys, and CO night orders. Filed as one bead tagged 'pod'."

@@ -1,4 +1,8 @@
 # ci_failed_on_main — fires general_quarters at high severity.
+#
+# In plain SE terms: fires general_quarters when CI fails on main. The
+# most common sev1 trigger.
+#
 [order]
 description = "When CI fails on main (any tracked rig), sound general quarters."
 trigger = "event"

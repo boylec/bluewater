@@ -4,6 +4,12 @@
 # (Haiku). Work scope: smallest beads, working-party assignments
 # from BM, mess-decks duty. No striker designation yet — work product
 # accumulates telemetry that surfaces strike candidacy.
+#
+# In plain SE terms: the entry rate (deck-flavored). Default landing for
+# new agent identities. Haiku tier, minimal tool permissions. Work
+# product feeds rating-board telemetry; ~20 beads + 0.7 score → striker
+# candidacy.
+#
 
 scope = "rig"
 provider = "claude"

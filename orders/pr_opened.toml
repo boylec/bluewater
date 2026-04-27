@@ -1,4 +1,8 @@
 # pr_opened — fire pr_review when a PR opens.
+#
+# In plain SE terms: fires pr_review when a GitHub PR opens against a
+# tracked rig.
+#
 [order]
 description = "When a PR opens against any repo this city tracks, fire pr_review under CSO."
 trigger = "event"

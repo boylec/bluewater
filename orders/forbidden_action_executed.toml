@@ -1,4 +1,8 @@
 # forbidden_action_executed — fires `grounding` casualty.
+#
+# In plain SE terms: fires grounding when an agent has executed an
+# action MA should have refused.
+#
 [order]
 description = "An agent executed an action that should have been refused. Sound grounding casualty."
 trigger = "event"

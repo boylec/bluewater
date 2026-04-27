@@ -1,5 +1,10 @@
 # radiation_leak — secret/sensitive-data exposure detected.
 # Battle Bill: casualty, severity critical, OIC = MAA.
+#
+# In plain SE terms: secret/sensitive-data exposure. MA OICs; SUPPO
+# rotates the credential immediately (before investigation); blast-
+# radius audit; mandatory BoI.
+#
 
 formula = "radiation_leak"
 description = "Secret detected in code, log, bead body, or commit. MAA OICs the response: rotate exposed credentials via SUPPO, audit affected commits, file the report. Two-key launch for any remediation that touches production."

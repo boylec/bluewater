@@ -7,6 +7,11 @@
 #
 # Different provider than XO so any two-key requiring CO + dept head
 # spans providers.
+#
+# In plain SE terms: the strategic decision-maker / incident commander.
+# Wakes only for sev1, two-key auths, scope expansions, and doctrine
+# sign-offs. Most days the ship runs without spawning CO.
+#
 
 scope = "city"
 provider = "claude"

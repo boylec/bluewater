@@ -1,5 +1,10 @@
 # striker_review — nightly telemetry scan for striker candidates.
 # Spec: doctrine/RATING_PROGRESSION.md.
+#
+# In plain SE terms: nightly telemetry scan. Reads per-agent signals vs
+# rating.toml weights; surfaces candidates scoring ≥ 0.7 over ≥ 20
+# beads. COB decides whether to convene a board.
+#
 
 formula = "striker_review"
 description = "Read telemetry; weight signals per rating.toml; propose any candidate whose weighted score >= striker_threshold over min_beads to COB. COB decides whether to convene rating_board."

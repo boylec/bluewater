@@ -4,6 +4,11 @@
 # This role wraps the Gas City Helmsman; in Bluewater terms, the
 # Helmsman is the agent that physically executes the merge after FC
 # targeting and GM implementation are complete.
+#
+# In plain SE terms: the merge agent. Wraps the merge queue. Pulls the
+# branch, rebases, runs tests, fast-forward merges or rejects with
+# rejection_reason. Never bypasses pre-tool-use checks.
+#
 
 scope = "rig"
 provider = "claude"

@@ -1,6 +1,11 @@
 # field_day — weekly tech-debt/cleanup convoy.
 # Battle Bill: routine, OIC = COB, watchstations = [cob, cheng, et*]
 # Spec: docs/spec/CATALOG.md (field_day section)
+#
+# In plain SE terms: weekly cleanup convoy. COB orchestrates, CHENG
+# budgets, ETs/MMs/HTs do the work. Targets stale worktrees, idle
+# sessions, dolt orphans, linter drift.
+#
 
 formula = "field_day"
 description = "Weekly cleanup convoy. COB orchestrates; CHENG holds the budget envelope; ET division does the work. Targets: stale worktrees, idle sessions past their idle_timeout, dolt orphan databases, brevity-linter rule drift, runtime config divergence."

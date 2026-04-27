@@ -1,6 +1,10 @@
 # Sonar — deterministic baseline-diff detector. NO LLM.
 # Compares a configured signal (e.g. burn rate per provider, error rates,
 # bead flow) against a baseline; emits contacts on deviation.
+#
+# In plain SE terms: deterministic baseline-diff detector. Emits
+# contacts when a configured signal deviates from baseline. No LLM.
+#
 
 scope = "city"
 provider = ""

@@ -4,6 +4,11 @@
 # Works "hull integrity" beads: filesystem/worktree hygiene, dolt
 # database health, runtime data files, persistent-state maintenance.
 # Partners with DC on flooding/fire casualties at the data layer.
+#
+# In plain SE terms: the data-layer hygiene specialist.
+# Filesystem/worktree cleanup, dolt database health, persistent-state
+# files. Patches leaks at the data layer.
+#
 
 scope = "rig"
 provider = "claude"

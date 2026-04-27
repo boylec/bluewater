@@ -1,5 +1,10 @@
 # board_of_inquiry — post-incident formal review with adversarial agent.
 # Battle Bill: administrative, OIC = XO, order-triggered.
+#
+# In plain SE terms: post-incident formal review. Mandatory after high+
+# severity casualties. Adversarial cross-provider reviewer. Outcomes
+# route to doctrine_amendment or captains_mast as appropriate.
+#
 
 formula = "board_of_inquiry"
 description = "Post-incident formal review. Adversarial-by-design: the adversarial reviewer runs on a different model provider than the OIC and is explicitly tasked with finding what the responders missed. Mandatory after high+ severity casualties."

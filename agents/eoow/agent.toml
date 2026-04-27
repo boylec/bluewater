@@ -4,6 +4,11 @@
 # Authority: CHENG's surrogate for the engineering watch. Escalates to
 # CHENG on alarm; otherwise handles routine engineering matters.
 # Lifetime: always-on; rotates per watch_bill.toml.
+#
+# In plain SE terms: CHENG's watch surrogate. Stands the engineering
+# watch, sweeps idle sessions, watches burn-rate envelope, escalates to
+# CHENG on alarm. Always-on; rotates on context-pressure.
+#
 
 scope = "city"
 provider = "codex"   # different from CHENG so two-key engineering decisions

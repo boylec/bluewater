@@ -1,4 +1,8 @@
 # Green — Catapult / arresting gear. CI/build system wrapper.
+#
+# In plain SE terms: deterministic — catapult/arresting gear (CI/build
+# wrapper).
+#
 scope = "city"
 provider = ""
 prompt_template = ""

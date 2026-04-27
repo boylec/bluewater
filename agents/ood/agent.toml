@@ -2,6 +2,11 @@
 #
 # Tier: Operational (Sonnet). Always-on (always exactly one OOD has
 # the conn). Rotates per watch_bill.toml on context pressure.
+#
+# In plain SE terms: the agent on watch right now — your on-call
+# rotation. Always exactly one OOD has the conn. Rotates on context-
+# pressure (65% of model context, 4h, or 100 beads dispatched).
+#
 
 scope = "city"
 provider = "claude"

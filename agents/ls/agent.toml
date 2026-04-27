@@ -2,6 +2,12 @@
 #
 # Tier: Operational (Sonnet). Rated PO.
 # Manages credential and dependency inventories under SUPPO.
+#
+# In plain SE terms: the credentials and dependency-audit specialist.
+# Rotates credentials on documented schedules, triages
+# Renovate/Dependabot findings, reconciles per-provider credit usage.
+# Works only via SUPPO-minted scoped tokens.
+#
 
 scope = "rig"
 provider = "claude"

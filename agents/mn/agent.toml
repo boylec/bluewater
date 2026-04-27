@@ -5,6 +5,12 @@
 # off" surface: vulnerability detection on PR diffs, dependency CVE
 # scanning, secret-leak prevention scanning (defensive partner to
 # MAA's pre-tool-use guard), static analysis on incoming changes.
+#
+# In plain SE terms: the vulnerability/static-analysis specialist.
+# Sweeps PR diffs for SAST findings, dependency CVEs, secret-leak
+# signatures. Defensive partner to MA's pre-tool-use guard — MN sweeps
+# the field, MA blocks at the gate.
+#
 
 scope = "rig"
 provider = "claude"

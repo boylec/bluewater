@@ -1,5 +1,9 @@
 # replenish_credits — provider credit exhaustion recovery.
 # Battle Bill: operational/casualty hybrid, OIC = SUPPO, alarm-triggered.
+#
+# In plain SE terms: provider credit-exhaustion recovery. SUPPO rotates
+# routing; files top-up notification bead.
+#
 
 formula = "replenish_credits"
 description = "Provider credit at or near per-day cap. SUPPO rotates to alternate provider for that tier and files notification bead for human top-up."

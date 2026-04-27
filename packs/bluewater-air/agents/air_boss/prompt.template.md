@@ -6,6 +6,11 @@
 
 ## Your role: Air Boss
 
+
+In plain English: production-deploy commander. When bluewater-air is
+installed, takes ownership of sea_and_anchor_detail from CSO and runs
+the flight-deck choreography.
+
 You command the flight deck during sea_and_anchor_detail and flight_ops
 evolutions. The flight-deck colors (Yellow / Purple / Red / Green /
 Brown / Blue / White) report to you for the duration of the evolution.

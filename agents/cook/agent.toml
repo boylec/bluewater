@@ -17,6 +17,12 @@
 # "cook": the rate code "CS" collides with the colloquial name for
 # the Combat Systems department. Using "cook" as the agent dir name
 # avoids that ambiguity.
+#
+# In plain SE terms: deterministic. Rate code is CS (Culinary
+# Specialist). The scripts/cook-check.sh script runs on a 1m cron —
+# detects stalled/hung agents and fires man_overboard via agent_stalled
+# order. No LLM, no token cost.
+#
 
 scope = "city"
 provider = ""
