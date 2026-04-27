@@ -1,0 +1,239 @@
+# Bluewater Battle Bill — routing table for evolutions and casualties.
+#
+# Per doctrine/BATTLE_BILL.md. Formulas SHALL NOT hard-code role
+# assignments that exist here; they SHALL read this table at dispatch
+# time and resolve watchstations via watchstation_bindings.toml.
+#
+# Trigger taxonomy (mapped to Gas City v1.0.0 order triggers per
+# doctrine/AMENDMENTS.md A0001):
+#   alarm     -> Gas City "event"   (with `on = "<event-name>"`)
+#   scheduled -> Gas City "cron"    (configured in schedule.toml)
+#   command   -> Gas City "manual"
+#   order     -> not an order at all; encoded as a step inside another
+#               formula (see formulas/CATALOG.md)
+#
+# Severity ladder (casualty-class only):
+#   low      — XO handles, CO informed only, BoI optional
+#   medium   — XO leads, CO informed, BoI COB's call
+#   high     — CO awakened, CSO+CHENG involved, BoI mandatory
+#   critical — CO awakened, two-key launch required, external BoI chair if
+#              Wasteland configured
+#
+# Required-vs-optional watchstation flags live in watchstation_bindings.toml,
+# not here.
+
+# ---------------------------------------------------------------------------
+# Routine evolutions
+# ---------------------------------------------------------------------------
+
+[[evolution]]
+id = "morning_quarters"
+trigger = "scheduled"
+oic = "xo"
+watchstations = ["xo", "ood", "ops", "cso", "cheng", "suppo", "yeoman"]
+formula = "packs/bluewater-ops/formulas/morning_quarters.toml"
+description = "Daily ops brief; XO presents Plan of the Day to department heads."
+
+[[evolution]]
+id = "watch_turnover"
+trigger = "scheduled"   # actually context-pressure; see watch_bill.toml
+oic = "ood"
+watchstations = ["ood", "yeoman"]
+formula = "packs/bluewater-ops/formulas/watch_turnover.toml"
+description = "Formal handoff between OOD watches."
+
+[[evolution]]
+id = "plan_of_the_day"
+trigger = "scheduled"
+oic = "qm"
+watchstations = ["qm", "xo", "yeoman"]
+formula = "packs/bluewater-ops/formulas/plan_of_the_day.toml"
+description = "Overnight plan generation by Quartermaster."
+
+[[evolution]]
+id = "eight_o_clock_reports"
+trigger = "scheduled"
+oic = "xo"
+watchstations = ["xo", "ops", "cso", "cheng", "suppo", "yeoman"]
+formula = "packs/bluewater-ops/formulas/eight_o_clock_reports.toml"
+description = "Department status roll-up to XO."
+
+[[evolution]]
+id = "liberty_call"
+trigger = "scheduled"
+oic = "co"
+watchstations = ["co", "xo", "ood"]
+formula = "formulas/liberty_call.toml"
+description = "Designated rest period; risky evolutions paused."
+
+[[evolution]]
+id = "field_day"
+trigger = "scheduled"
+oic = "cob"
+watchstations = ["cob", "cheng", { rating = "et", count = { min = 1, max = 4 } }]
+formula = "packs/bluewater-eng/formulas/field_day.toml"
+description = "Tech-debt and runtime-hygiene cleanup convoy."
+
+# ---------------------------------------------------------------------------
+# Operational evolutions
+# ---------------------------------------------------------------------------
+
+[[evolution]]
+id = "sea_and_anchor_detail"
+trigger = "command"
+oic = "xo"
+watchstations = ["xo", "ood", "air_boss", "helmsman", { rating = "fc", count = 1 }, { rating = "gm", count = { min = 1, max = 4 } }, "yeoman"]
+formula = "packs/bluewater-cs/formulas/sea_and_anchor_detail.toml"
+description = "Choreographed deploy. (When bluewater-air present, ownership shifts to Air Boss via packs/bluewater-air/formulas/sea_and_anchor_detail.toml.)"
+
+[[evolution]]
+id = "flight_ops"
+trigger = "command"
+oic = "air_boss"
+watchstations = ["air_boss", "yellow", "purple", "red", "green", "brown", "blue", "white", "yeoman"]
+formula = "packs/bluewater-air/formulas/flight_ops.toml"
+description = "Flight-deck deploy choreography (carrier-class)."
+
+[[evolution]]
+id = "unrep"
+trigger = "command"
+oic = "suppo"
+watchstations = ["suppo", { rating = "sk", count = 1 }]
+formula = "packs/bluewater-supply/formulas/unrep.toml"
+description = "Underway replenishment — refresh external context without stopping work."
+
+[[evolution]]
+id = "replenish_credits"
+trigger = "alarm"
+oic = "suppo"
+watchstations = ["suppo", { rating = "sk", count = 1 }]
+formula = "packs/bluewater-supply/formulas/replenish_credits.toml"
+description = "Provider-credit exhaustion recovery."
+
+[[evolution]]
+id = "pr_review"
+trigger = "order"   # invoked as step inside other formulas; also bound to pr_opened
+oic = "cso"
+watchstations = ["cso", { rating = "fc", count = 1 }, { rating = "jag", count = 1, optional = true }]
+formula = "packs/bluewater-cs/formulas/pr_review.toml"
+description = "Multi-provider code review (Pack v2 review formula)."
+
+# ---------------------------------------------------------------------------
+# Casualty evolutions
+# ---------------------------------------------------------------------------
+
+[[evolution]]
+id = "general_quarters"
+trigger = "alarm"
+oic = "co"
+watchstations = ["co", "xo", "ood", "csoow", "cic_watch", "cheng", "eoow", "dc_team_alpha", "dc_team_bravo", "fc_team", "suppo", "yeoman"]
+formula = "formulas/general_quarters.toml"
+severity_min = "high"
+description = "Ship-threatening casualty; full-crew alarm response."
+
+[[evolution]]
+id = "man_overboard"
+trigger = "alarm"
+oic = "ood"
+watchstations = ["ood", "corpsman", "yeoman"]
+formula = "packs/bluewater-medical/formulas/man_overboard.toml"
+severity_min = "medium"
+description = "Stalled or hung agent recovery."
+
+[[evolution]]
+id = "fire_in_compartment"
+trigger = "alarm"
+oic = "dc_oic"
+watchstations = ["dc_oic", "dc_team_alpha", { rating = "et", count = 1 }, "yeoman"]
+formula = "packs/bluewater-cs/formulas/fire_in_compartment.toml"
+severity_min = "high"
+description = "Localized failure; compartmentalize and isolate the affected subsystem."
+
+[[evolution]]
+id = "loss_of_propulsion"
+trigger = "alarm"
+oic = "cheng"
+watchstations = ["cheng", "eoow", "suppo", "yeoman"]
+formula = "packs/bluewater-eng/formulas/loss_of_propulsion.toml"
+severity_min = "high"
+description = "Provider-wide outage; failover routing via SUPPO."
+
+[[evolution]]
+id = "flooding"
+trigger = "alarm"
+oic = "dc_oic"
+watchstations = ["dc_oic", "cheng", "dc_team_alpha", "yeoman"]
+formula = "packs/bluewater-cs/formulas/flooding.toml"
+severity_min = "high"
+description = "Runaway resource consumption — burn rate or session count out of bounds."
+
+[[evolution]]
+id = "collision_at_sea"
+trigger = "alarm"
+oic = "ood"
+watchstations = ["ood", "cso", { rating = "fc", count = 1 }, "helmsman", "yeoman"]
+formula = "packs/bluewater-cs/formulas/collision_at_sea.toml"
+severity_min = "high"
+description = "Two agents have produced conflicting changes that cannot be auto-merged."
+
+[[evolution]]
+id = "grounding"
+trigger = "alarm"
+oic = "co"
+watchstations = ["co", "xo", "maa", "jag", "yeoman"]
+formula = "packs/bluewater-admin/formulas/grounding.toml"
+severity_min = "critical"
+description = "Agent has executed a forbidden action."
+
+[[evolution]]
+id = "radiation_leak"
+trigger = "alarm"
+oic = "maa"
+watchstations = ["maa", "co", "jag", "suppo", "yeoman"]
+formula = "packs/bluewater-admin/formulas/radiation_leak.toml"
+severity_min = "critical"
+description = "Secret or sensitive-data exposure detected."
+
+# ---------------------------------------------------------------------------
+# Administrative evolutions
+# ---------------------------------------------------------------------------
+
+[[evolution]]
+id = "captains_mast"
+trigger = "order"
+oic = "co"
+watchstations = ["co", "cob", "maa", "yeoman"]
+formula = "packs/bluewater-admin/formulas/captains_mast.toml"
+description = "Review of an agent that misbehaved; demotion / counseling / removal."
+
+[[evolution]]
+id = "board_of_inquiry"
+trigger = "order"
+oic = "xo"
+watchstations = ["xo", "jag", "cob", { rating = "adversarial_reviewer", count = 1 }, "yeoman"]
+formula = "packs/bluewater-admin/formulas/board_of_inquiry.toml"
+description = "Post-incident formal review with adversarial cross-provider reviewer."
+
+[[evolution]]
+id = "rating_board"
+trigger = "order"
+oic = "cob"
+watchstations = ["cob", { rating = "rated_po_in_target_rate", count = 1 }, { rating = "adversarial_reviewer", count = 1 }, "yeoman"]
+formula = "packs/bluewater-admin/formulas/rating_board.toml"
+description = "Striker → rated promotion review."
+
+[[evolution]]
+id = "doctrine_amendment"
+trigger = "order"
+oic = "cob"
+watchstations = ["cob", "co", "xo", "jag", "yeoman"]
+formula = "packs/bluewater-admin/formulas/doctrine_amendment.toml"
+description = "Proposed change to doctrine documents — amendment process."
+
+[[evolution]]
+id = "change_of_command"
+trigger = "scheduled"
+oic = "cob"
+watchstations = ["cob", "co", "xo", "yeoman"]
+formula = "formulas/change_of_command.toml"
+description = "Periodic CO/XO identity refresh; rotates models or prompts wholesale."

@@ -1,0 +1,270 @@
+# Bluewater watchstation bindings — maps each named watchstation in
+# battle_bill.toml to a rating + count + required flag.
+#
+# When a formula dispatches, the dispatcher reads battle_bill.toml, looks
+# up each watchstation here, and spawns or assigns agents accordingly. If a
+# `required = true` watchstation cannot be filled (rating not available,
+# budget exhausted, all candidates context-saturated), the dispatcher
+# SHALL escalate to the OIC of the evolution before proceeding.
+#
+# The acceptance suite includes a linter that validates: every watchstation
+# referenced in any formula has a binding here, and every binding's rating
+# corresponds to an actual `agents/<rating>/agent.toml` somewhere in the
+# composed pack tree. The linter SHALL pass before tagging a release.
+
+# ---------------------------------------------------------------------------
+# Wardroom (umbrella)
+# ---------------------------------------------------------------------------
+
+[watchstation.co]
+rating = "co"
+count = 1
+required = true
+
+[watchstation.xo]
+rating = "xo"
+count = 1
+required = true
+
+[watchstation.ood]
+rating = "ood"
+count = 1
+required = true
+
+[watchstation.cob]
+rating = "cob"
+count = 1
+required = true
+
+[watchstation.csoow]
+rating = "csoow"
+count = 1
+required = true   # required at General Quarters and above
+
+# ---------------------------------------------------------------------------
+# Department heads
+# ---------------------------------------------------------------------------
+
+[watchstation.cso]
+rating = "cso"
+count = 1
+required = true
+
+[watchstation.cheng]
+rating = "cheng"
+count = 1
+required = true
+
+[watchstation.ops]
+rating = "ops"
+count = 1
+required = true
+
+[watchstation.suppo]
+rating = "suppo"
+count = 1
+required = true
+
+[watchstation.air_boss]
+rating = "air_boss"
+count = 1
+required = false   # only present when bluewater-air installed
+
+# ---------------------------------------------------------------------------
+# Watch positions (continuously manned)
+# ---------------------------------------------------------------------------
+
+[watchstation.cic_watch]
+rating = "cic_watch_officer"
+count = 1
+required = true
+
+[watchstation.eoow]
+rating = "eoow"
+count = 1
+required = true
+
+[watchstation.bmow]
+rating = "bmow"
+count = 1
+required = false
+
+[watchstation.helmsman]
+rating = "helmsman"
+count = 1
+required = false   # only when active merge in progress
+
+# ---------------------------------------------------------------------------
+# Combat Systems
+# ---------------------------------------------------------------------------
+
+[watchstation.fc_team]
+rating = "fc"
+count = { min = 1, max = 4 }
+required = true
+
+[watchstation.gunner_team]
+rating = "gm"
+count = { min = 0, max = 8 }
+required = false
+
+[watchstation.dc_oic]
+rating = "dc1"   # senior DC
+count = 1
+required = true
+
+[watchstation.dc_team_alpha]
+rating = "dc"
+count = { min = 1, max = 3 }
+required = true
+
+[watchstation.dc_team_bravo]
+rating = "dc"
+count = { min = 1, max = 3 }
+required = false   # spawned at high+ severity
+
+# ---------------------------------------------------------------------------
+# Engineering
+# ---------------------------------------------------------------------------
+
+[watchstation.et_team]
+rating = "et"
+count = { min = 0, max = 4 }
+required = false
+
+# ---------------------------------------------------------------------------
+# Supply
+# ---------------------------------------------------------------------------
+
+[watchstation.sk_team]
+rating = "sk"
+count = { min = 0, max = 2 }
+required = false
+
+# ---------------------------------------------------------------------------
+# Operations / CT
+# ---------------------------------------------------------------------------
+
+[watchstation.qm]
+rating = "qm"
+count = 1
+required = true
+
+[watchstation.ct_team]
+rating = "ct"
+count = { min = 0, max = 4 }
+required = false   # SIGINT division, bluewater-ops optional formulas
+
+# ---------------------------------------------------------------------------
+# Air (carrier-class)
+# ---------------------------------------------------------------------------
+
+[watchstation.yellow]
+rating = "yellow"
+count = { min = 1, max = 2 }
+required = false
+
+[watchstation.purple]
+rating = "purple"
+count = 1
+required = false
+
+[watchstation.red]
+rating = "red"
+count = 1
+required = false
+
+[watchstation.green]
+rating = "green"
+count = 1
+required = false
+
+[watchstation.brown]
+rating = "brown"
+count = 1
+required = false
+
+[watchstation.blue]
+rating = "blue"
+count = 1
+required = false
+
+[watchstation.white]
+rating = "white"
+count = 1
+required = false
+
+# ---------------------------------------------------------------------------
+# Medical
+# ---------------------------------------------------------------------------
+
+[watchstation.corpsman]
+rating = "corpsman"
+count = 1
+required = true   # bluewater-medical mandatory in long-running ships
+
+[watchstation.cook]
+rating = "cook"   # deterministic, no LLM
+count = 1
+required = false
+
+# ---------------------------------------------------------------------------
+# Admin
+# ---------------------------------------------------------------------------
+
+[watchstation.yeoman]
+rating = "yeoman"
+count = 1
+required = true   # always logging
+
+[watchstation.maa]
+rating = "maa"
+count = 1
+required = true   # pre-tool-use guard
+
+[watchstation.jag]
+rating = "jag"
+count = 1
+required = false
+
+# ---------------------------------------------------------------------------
+# Special-purpose (board pass-throughs)
+# ---------------------------------------------------------------------------
+
+# An adversarial_reviewer is any rated agent of an *appropriate* rate
+# running on a *different model provider* than the OIC of the evolution
+# (per ARCHITECTURE.md, "Two-key launch with cross-provider concurrence").
+# The dispatcher resolves this at runtime by selecting from the available
+# pool with provider != OIC.provider.
+[watchstation.adversarial_reviewer]
+rating = "any_rated"
+count = 1
+required = true
+constraint = "different_provider_than_oic"
+
+# rated_po_in_target_rate is filled by any rated PO whose rating matches
+# the target rate of the rating board being convened.
+[watchstation.rated_po_in_target_rate]
+rating = "rated_po"
+count = 1
+required = true
+constraint = "rate_matches_target"
+
+# Discord adapter
+[watchstation.quarterdeck_watch]
+rating = "quarterdeck_watch"
+count = 1
+required = false
+
+# Lookouts and Sonar — deterministic, no LLM until alarm
+[watchstation.lookouts]
+rating = "lookout"
+count = { min = 0, max = 4 }
+required = false
+deterministic = true
+
+[watchstation.sonar]
+rating = "sonar"
+count = { min = 0, max = 2 }
+required = false
+deterministic = true

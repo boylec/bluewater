@@ -1,0 +1,54 @@
+# Bluewater Watch Bill — watch rotation rules and thresholds.
+#
+# Per doctrine/WATCH_BILL.md. Watch standing rotates on context pressure,
+# not clock time, because LLM session degradation is driven by context
+# utilization, not wall-clock fatigue. Thresholds are configurable
+# overrides; defaults reflect spec recommendations.
+#
+# Continuously-manned watch positions: OOD (always exactly one), CIC Watch,
+# EOOW. BMOW conditional (when polecats awake). CSOOW only at General
+# Quarters. Helmsman only when active merge in progress. Lookouts and Sonar
+# are deterministic processes, not LLM sessions, until alarm.
+
+[watch_bill]
+# Context-utilization threshold for relief (fraction of model's context window).
+# Below this, the watch may continue. At or above, dispatcher spawns a
+# relief and conducts watch_turnover.
+ood_context_threshold = 0.65
+cic_context_threshold = 0.65
+eoow_context_threshold = 0.70   # CHENG's watch can run hotter
+bmow_context_threshold = 0.70
+
+# Wall-clock cap as fallback when context utilization is unavailable.
+ood_max_wall_clock_hours = 4
+cic_max_wall_clock_hours = 4
+eoow_max_wall_clock_hours = 4
+bmow_max_wall_clock_hours = 4
+
+# Bead-dispatched cap: relieves watch after this many beads have been
+# dispatched, regardless of context.
+ood_max_beads_dispatched = 100
+
+# Handoff quality scoring thresholds (Yeoman computes per-turnover).
+# Below "min" → COB low-priority training bead.
+# Below "mast" → outgoing watch attends Captain's Mast for failure to brief.
+turnover_min_quality_score = 0.6
+turnover_mast_quality_score = 0.3
+
+# Handoff quality weights (must sum to 1.0):
+#   complete_brief — outgoing brief covered all five categories
+#   correct_readback — incoming watch read situation back correctly first time
+#   retroactive — incoming watch caught items outgoing failed to mention
+[watch_bill.handoff_weights]
+complete_brief = 0.40
+correct_readback = 0.30
+retroactive = 0.30
+
+# Department heads (CSO, CHENG, OPS, SUPPO) are NOT watch-standers. They
+# spawn at start of duty day, despawn at end. Re-spawn on demand during
+# duty hours via [[named_session]] mode = "on_demand" in their packs.
+
+[watch_bill.duty_day]
+start = "08:00"
+end = "20:00"
+timezone = "ship_local"

@@ -1,0 +1,53 @@
+# Bluewater scheduled evolutions.
+#
+# Each entry corresponds to an evolution in battle_bill.toml whose
+# `trigger = "scheduled"`. The cron-like schedules are translated to
+# Gas City `[order] trigger = "cron" schedule = "..."` orders at pack
+# generation time (see formulas/scheduled_orders.toml in the umbrella
+# `formulas/` directory for the order generators).
+#
+# Scheduled evolutions:
+#   morning_quarters       — XO opens day, sets POD priorities
+#   plan_of_the_day        — QM publishes the day's beads/convoys
+#   eight_o_clock_reports  — XO compiles, CO consumes
+#   liberty_call           — CO authorizes overnight quiet hours
+#   field_day              — COB orchestrates pack/repo cleanup (CHENG owns budget)
+#   change_of_command      — periodic CO/XO refresh (rare, via formula)
+#
+# Watch turnover is NOT scheduled here — it triggers on context-pressure
+# per watch_bill.toml, not the clock.
+
+[schedule.morning_quarters]
+cron = "0 8 * * *"          # 0800 daily
+formula = "morning_quarters"
+description = "XO calls morning quarters; sets day's intent."
+
+[schedule.plan_of_the_day]
+cron = "30 8 * * *"         # 0830 daily, after morning quarters
+formula = "plan_of_the_day"
+description = "QM publishes the day's bead and convoy plan."
+
+[schedule.eight_o_clock_reports]
+cron = "0 20 * * *"         # 2000 daily
+formula = "eight_o_clock_reports"
+description = "XO compiles end-of-day reports for CO."
+
+[schedule.liberty_call]
+cron = "0 22 * * *"         # 2200 daily, opens night-orders mode
+formula = "liberty_call"
+description = "CO authorizes overnight quiet hours; only XO/OOD active."
+
+[schedule.field_day]
+cron = "0 9 * * 6"          # 0900 Saturday
+formula = "field_day"
+description = "Weekly pack/repo cleanup, runtime hygiene."
+
+[schedule.change_of_command]
+cron = "0 8 1 1,7 *"        # 0800 on Jan 1 and Jul 1
+formula = "change_of_command"
+description = "Semi-annual CO/XO identity refresh."
+
+[schedule.replenish_credits]
+cron = "0 6 * * *"          # 0600 daily
+formula = "replenish_credits"
+description = "SUPPO inventories provider credits and rotates if low."

@@ -1,0 +1,21 @@
+# Bluewater Brevity Protocol — enforcement configuration.
+#
+# Per doctrine/BREVITY.md, the brevity linter (deterministic, not LLM)
+# watches the event bus for agent-to-agent traffic and flags violations.
+# Findings route to COB; repeated violations by the same agent instance
+# trigger a low-priority training-queue bead.
+#
+# A fresh ship runs at "advisory" for the first 30 days while crew
+# adapts, then promotes to "strict". The COB is responsible for the
+# promotion via a doctrine_amendment to this file (and a Board of
+# Inquiry if the bump triggers excessive rejection traffic).
+
+[brevity]
+level = "advisory"   # "advisory" | "strict" | "off"
+max_inter_agent_tokens = 60
+warn_on_missing_terminator = true
+warn_on_missing_interrogative = true
+warn_on_unprefixed_refusal = true
+findings_route_to = "cob"
+training_bead_threshold = 5   # violations within a watch from one agent
+                              # before COB files a training-queue bead
